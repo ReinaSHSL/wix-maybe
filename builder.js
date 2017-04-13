@@ -1,18 +1,18 @@
 // Enumerations of card property values.
 const TYPE = Object.freeze({
-  SIGNI: 'Type Signi',
-  LRIG: 'Type Lrig',
-  SPELL: 'Type Spell',
-  ARTS: 'Type Arts'
+  SIGNI: Symbol('Type Signi'),
+  LRIG: Symbol('Type Lrig'),
+  SPELL: Symbol('Type Spell'),
+  ARTS: Symbol('Type Arts')
 })
 const COLOR = Object.freeze({
-  RED: 'Color Red',
-  GREEN: 'Color Green',
-  BLUE: 'Color Blue'
+  RED: Symbol('Color Red'),
+  GREEN: Symbol('Color Green'),
+  BLUE: Symbol('Color Blue')
 })
 const CLASS = Object.freeze({
-  SOMECLASS: 'Class Someclass',
-  OTHERCLASS: 'Class Otherclass'
+  SOMECLASS: Symbol('Class Someclass'),
+  OTHERCLASS: Symbol('Class Otherclass')
 })
 
 // A listing of every card in its default state.
@@ -20,6 +20,7 @@ const ALLCARDS = Object.freeze([
   {
     id: 0,
     name: 'Something',
+    image: 'http://some.url',
     type: TYPE.SIGNI,
     color: COLOR.RED,
     class: CLASS.SOMECLASS,
@@ -30,6 +31,7 @@ const ALLCARDS = Object.freeze([
   {
     id: 1,
     name: 'Otherthing',
+    image: 'http://some.other.url',
     type: TYPE.LRIG,
     color: COLOR.GREEN,
     limit: 10,
