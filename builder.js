@@ -3,12 +3,16 @@ const TYPE = Object.freeze({
   SIGNI: Symbol('Type Signi'),
   LRIG: Symbol('Type Lrig'),
   SPELL: Symbol('Type Spell'),
-  ARTS: Symbol('Type Arts')
+  ART: Symbol('Type Art'),
+  RESONA: Symbol('Type Resona')
 })
 const COLOR = Object.freeze({
   RED: Symbol('Color Red'),
   GREEN: Symbol('Color Green'),
-  BLUE: Symbol('Color Blue')
+  BLUE: Symbol('Color Blue'),
+  BLACK: Symbol('Color Black'),
+  WHITE: Symbol('Color White'),
+  COLORLESS: Symbol('Color Colorless')
 })
 const CLASS = Object.freeze({
   SOMECLASS: Symbol('Class Someclass'),
@@ -42,3 +46,10 @@ const ALLCARDS = Object.freeze([
     level: 1
   }
 ])
+
+/*
+
+Other notes:
+- Signi and spells go in the main deck, while lrig, art, and resona go in the lrig deck
+
+*/
