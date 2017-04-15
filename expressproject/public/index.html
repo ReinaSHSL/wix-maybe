@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Batoru</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+  </head>
+  <body>
+    <!-- <img id="placeholder" src=http://i.imgur.com/zKrhNaW.png> -->
+    <!-- <img id="nanashi" src="http://i.imgur.com/YcMdHLJ.jpg" style="width:125px;height:175px;"> -->
+
+    <div id="col-right">
+      <!-- this shit searches out card names -->
+      <div id="search">
+        <input type="text" id="cardName" onkeyup="search()" placeholder="Card name">
+        <input type="text" id="cardLevel" onkeyup="search()" placeholder="Level">
+      </div>
+
+      <!-- List that will contain card placeholders - children are added dynamically -->
+      <ul id="results"></ul>
+    </div>
+
+    <!-- Scripts here at the end -->
+    <script src='javascripts/builder.js'></script>
+  </body>
+</html>
