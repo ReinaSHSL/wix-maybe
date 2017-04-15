@@ -19,7 +19,7 @@ function search(){
     // Check the name if one is set
     if (inputName) {
       // If the card's name doesn't contain the input, ignore the card
-      if (!(card.name.toLowerCase().includes(inputName.toLowerCase))) {
+      if (!(card.name.toLowerCase().includes(inputName.toLowerCase()))) {
         return false;
       }
     }
@@ -34,7 +34,7 @@ function search(){
 
     // Looks like all the checks passed, we'll use this card
     return true;
-  }
+  })
 
   // All right, we got all the matches, let's add them back to the page now
   for (var card of matchingCards) {
