@@ -9,7 +9,7 @@ function search(){
   // Get the search parameters from the interface
   var inputName = document.getElementById('cardName').value;
   var inputLevel = document.getElementById('cardLevel').value;
-  // If everything is empty, just return
+  // If everything is empty, just return - no point in listing every card
   if (!inputName && !inputLevel) {
     return
   }
