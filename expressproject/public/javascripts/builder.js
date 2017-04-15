@@ -9,8 +9,10 @@ function search(){
   // Get the search parameters from the interface
   var inputName = document.getElementById('cardName').value;
   var inputLevel = document.getElementById('cardLevel').value;
+  var stupidDropdown = document.getElementById('cardColor');
+  var inputColor = stupidDropdown.options[stupidDropdown.selectedIndex].value
   // If everything is empty, just return - no point in listing every card
-  if (!inputName && !inputLevel) {
+  if (!inputName && !inputLevel && !inputColor) {
     return
   }
 
@@ -34,6 +36,12 @@ function search(){
       }
     }
 
+    if(inputColor){
+      if(!card.color || card.color !== inputColor){
+        return false;
+      }
+    }
+
     // Looks like all the checks passed, we'll use this card
     return true;
   })
@@ -50,34 +58,8 @@ function search(){
   }
 }
 
-/*
-//this shit searches card level
-function levelSearch(){
-  var results = document.getElementById('results');
-  while (results.firstChild) {
-    results.removeChild(results.firstChild);
-}
-  var input, filter, ul, li, i;
-  input = document.getElementById('cardLevel');
-  filter = input.value;
-    if(filter===''){
-    return
-  }
-   //if found returns value to allcards.filter and by extension matchingCard
-  var matchingCards = ALLCARDS.filter(card => card.level.toLowerCase().includes(filter.toLowerCase()))
-  for(card of matchingCards){
-    var img = document.createElement('img')
-    img.src = card.image
-    img.classList.add('card-preview')
-    var listItem = document.createElement('li')
-    listItem.appendChild(img)
-    listItem.classList.add('card')
-    results.appendChild(img)
-  }
-}
-*/
-
 // Enumerations of card property values.
+/*
 const TYPE = Object.freeze({
   SIGNI: Symbol('Type Signi'),
   LRIG: Symbol('Type Lrig'),
@@ -97,6 +79,7 @@ const CLASS = Object.freeze({
   SOMECLASS: Symbol('Class Someclass'),
   OTHERCLASS: Symbol('Class Otherclass')
 })
+*/
 
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
@@ -104,9 +87,9 @@ const ALLCARDS = Object.freeze([
     id: 0,
     name: 'diabride',
     image: 'http://i.imgur.com/zvqh8zV.jpg',
-    type: TYPE.SIGNI,
-    color: COLOR.RED,
-    class: CLASS.SOMECLASS,
+    type: 'SIGNI',
+    color: 'Red',
+    class: '',
     attack: '...', // idk what type this is
     burst: true,
     level: '5',
@@ -115,24 +98,24 @@ const ALLCARDS = Object.freeze([
     id: 1,
     name: 'Nanashi, That Four Another',
     image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.BLACK,
-    limit: 11,
+    type: 'LRIG',
+    color: 'Black',
+    limit: '11',
     cost: {
-      amount: 3,
-      color: COLOR.BLACK
+      amount: '3',
+      color: 'Black'
     },
     level: '4',
     lrigType: 'Nanashi',
     Text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   },
    {
-    id: 0,
+    id: '0',
     name: 'diabride',
     image: 'http://i.imgur.com/zvqh8zV.jpg',
-    type: TYPE.SIGNI,
-    color: COLOR.RED,
-    class: CLASS.SOMECLASS,
+    type: 'SIGNI',
+    color: 'Green',
+    class: '  ',
     attack: '...', // idk what type this is
     burst: true,
     //level: '5',
