@@ -61,172 +61,18 @@ const ALLCARDS = Object.freeze([
   },
   {
     id: 1,
-    name: 'nanashi',
+    name: 'Nanashi, That Four Another',
     image: 'http://i.imgur.com/YcMdHLJ.jpg',
     type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
+    color: COLOR.BLACK,
+    limit: 11,
     cost: {
-      amount: 1,
-      color: COLOR.RED
+      amount: 3,
+      color: COLOR.BLACK
     },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
-  },
-    {
-    id: 1,
-    name: 'nanashi',
-    image: 'http://i.imgur.com/YcMdHLJ.jpg',
-    type: TYPE.LRIG,
-    color: COLOR.GREEN,
-    limit: 10,
-    cost: {
-      amount: 1,
-      color: COLOR.RED
-    },
-    level: 1
+    level: 4,
+    lrigType: 'Nanashi',
+    Text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   }
 ])
 
