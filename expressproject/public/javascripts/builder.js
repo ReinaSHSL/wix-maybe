@@ -10,9 +10,14 @@ function search(){
   var inputName = document.getElementById('cardName').value;
   var inputLevel = document.getElementById('cardLevel').value;
   var stupidDropdown = document.getElementById('cardColor');
+  var stupidDropdown2 = document.getElementById('cardType');
+  var stupidDropdown3 = document.getElementById('cardClass');
+  var checkBurst = document.getElementById('burst').checked;
   var inputColor = stupidDropdown.options[stupidDropdown.selectedIndex].value
+  var inputType = stupidDropdown2.options[stupidDropdown2.selectedIndex].value
+  var inputClass = stupidDropdown3.options[stupidDropdown3.selectedIndex].value
   // If everything is empty, just return - no point in listing every card
-  if (!inputName && !inputLevel && !inputColor) {
+  if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) {
     return
   }
 
@@ -41,6 +46,24 @@ function search(){
         return false;
       }
     }
+
+        if(inputType){        
+      if(!card.type || card.type !== inputType){
+        return false;
+      }
+    }
+
+        if(inputClass){
+      if(!card.class || card.class !== inputClass){
+        return false;
+      }
+    }
+
+      if(burst){
+        if(!burst){
+          return false;
+        }
+      }
 
     // Looks like all the checks passed, we'll use this card
     return true;
@@ -89,7 +112,7 @@ const ALLCARDS = Object.freeze([
     image: 'http://i.imgur.com/zvqh8zV.jpg',
     type: 'SIGNI',
     color: 'Red',
-    class: '',
+    class: 'Gem',
     attack: '...', // idk what type this is
     burst: true,
     level: '5',
@@ -110,15 +133,15 @@ const ALLCARDS = Object.freeze([
     Text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   },
    {
-    id: '0',
-    name: 'diabride',
-    image: 'http://i.imgur.com/zvqh8zV.jpg',
+    id: 2,
+    name: 'beigoma',
+    image: 'http://i.imgur.com/QemHU7N.jpg',
     type: 'SIGNI',
     color: 'Green',
-    class: '  ',
+    class: 'Playground Equipment',
     attack: '...', // idk what type this is
-    burst: true,
-    //level: '5',
+    burst: false,
+    level: '4',
   }
 ])
 
