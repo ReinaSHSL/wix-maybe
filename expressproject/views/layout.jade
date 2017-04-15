@@ -4,7 +4,18 @@ html
     title Batoru
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    <img id="placeholder" src=http://i.imgur.com/zKrhNaW.png>
-    <img id="nanashi" src="http://i.imgur.com/YcMdHLJ.jpg" style="width:125px;height:175px;">
+    //<img id="placeholder" src=http://i.imgur.com/zKrhNaW.png>
+    //<img id="nanashi" src="http://i.imgur.com/YcMdHLJ.jpg" style="width:125px;height:175px;">
 
-    <script src='javascripts/mouseover.js'>  </script>
+    //this shit searches out card names
+    #search
+     <input type="text" id="cardName" onkeyup="search()" placeholder="Search for card name">
+    
+     //placeholder images for cards to take over
+     <ul id="placeholders">
+     <li><img id="placeholder0" src=http://i.imgur.com/zKrhNaW.png"></li>
+     <li><img id="placeholder1" src=http://i.imgur.com/zKrhNaW.png"></li>
+     </ul>
+
+     #scripts
+     <script src='javascripts/builder.js'></script>

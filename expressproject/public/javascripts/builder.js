@@ -1,3 +1,19 @@
+//this shit searches the name
+function search(){
+  var input, filter, ul, li, i;
+  input = document.getElementById('cardName');
+  filter = input.value;
+  //ul=document.getElementById("placeholders")
+  //li = ul.getElementsByTagName('li')
+   //if found returns value to allcards.find and by extension matchingCard
+  var matchingCards = ALLCARDS.filter(card => card.name.toLowerCase().includes(filter.toLowerCase()))
+  for(card of matchingCards){
+  if (card) {
+    document.getElementById('placeholder0').src = card.image
+    }
+  }
+}
+
 // Enumerations of card property values.
 const TYPE = Object.freeze({
   SIGNI: Symbol('Type Signi'),
@@ -23,14 +39,14 @@ const CLASS = Object.freeze({
 const ALLCARDS = Object.freeze([
   {
     id: 0,
-    name: 'Something',
-    image: 'http://some.url',
+    name: 'diabride',
+    image: 'http://i.imgur.com/zvqh8zV.jpg',
     type: TYPE.SIGNI,
     color: COLOR.RED,
     class: CLASS.SOMECLASS,
     attack: '...', // idk what type this is
     burst: true,
-    level: 1
+    level: 5
   },
   {
     id: 1,

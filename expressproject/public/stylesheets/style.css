@@ -5,8 +5,12 @@ body {
 
 #nanashi {
     float: right 
-
 }
+
 a {
   color: #00B7FF;
+}
+
+#search{
+	float:right;
 }
