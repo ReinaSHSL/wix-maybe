@@ -1,20 +1,43 @@
 //this shit searches the name
 function search(){
+  // Clear out the search results element
   var results = document.getElementById('results');
   while (results.firstChild) {
     results.removeChild(results.firstChild);
-}
-  var inputName, inputLevel, filter, ul, li, i;
-  //oh god who art in heaven please forgive me for my following crimes
-  inputName = document.getElementById('cardName').value;
-  inputLevel = document.getElementById('cardLevel').value;
-  filterName = inputName.value;
+  }
+
+  // Get the search parameters from the interface
+  var inputName = document.getElementById('cardName').value;
+  var inputLevel = document.getElementById('cardLevel').value;
+  // If everything is empty, just return
   if (!inputName && !inputLevel) {
     return
   }
-   //if found returns value to allcards.filter and by extension matchingCard
-  var matchingCards = ALLCARDS.filter(card=>(inputLevel ? (card.level && card.level.includes(inputLevel)) : true) && card.name.toLowerCase().includes(inputName.toLowerCase()))
-  for(card of matchingCards){
+
+  // Execute the search and store matches
+  var matchingCards = ALLCARDS.filter(card => {
+    // Check the name if one is set
+    if (inputName) {
+      // If the card's name doesn't contain the input, ignore the card
+      if (!(card.name.toLowerCase().includes(inputName.toLowerCase))) {
+        return false;
+      }
+    }
+
+    // Check the level if one is set
+    if (inputLevel) {
+      // If the card has no level, or if the card's level doesn't match, ignore the card
+      if (!card.level || card.level !== inputLevel) {
+        return false;
+      }
+    }
+
+    // Looks like all the checks passed, we'll use this card
+    return true;
+  }
+
+  // All right, we got all the matches, let's add them back to the page now
+  for (var card of matchingCards) {
     var img = document.createElement('img')
     img.src = card.image
     img.classList.add('card-preview')
