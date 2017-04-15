@@ -7,6 +7,9 @@ function search(){
   var input, filter, ul, li, i;
   input = document.getElementById('cardName');
   filter = input.value;
+    if(filter===''){
+    return
+  }
   //ul=document.getElementById("placeholders")
   //li = ul.getElementsByTagName('li')
    //if found returns value to allcards.find and by extension matchingCard
@@ -14,8 +17,10 @@ function search(){
   for(card of matchingCards){
     var img = document.createElement('img')
     img.src = card.image
+    img.classList.add('card-preview')
     var listItem = document.createElement('li')
     listItem.appendChild(img)
+    listItem.classList.add('card')
     results.appendChild(img)
   }
 }
@@ -55,6 +60,162 @@ const ALLCARDS = Object.freeze([
     level: 5
   },
   {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
+    id: 1,
+    name: 'nanashi',
+    image: 'http://i.imgur.com/YcMdHLJ.jpg',
+    type: TYPE.LRIG,
+    color: COLOR.GREEN,
+    limit: 10,
+    cost: {
+      amount: 1,
+      color: COLOR.RED
+    },
+    level: 1
+  },
+    {
     id: 1,
     name: 'nanashi',
     image: 'http://i.imgur.com/YcMdHLJ.jpg',

@@ -3,14 +3,27 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   }
 
-#nanashi {
-    float: right 
-}
-
 a {
   color: #00B7FF;
 }
 
-#search{
-	float:right;
+.card-preview{
+	width:100px;
+	margin:0px;
+}
+
+.search input{
+
+}
+
+ul {
+  padding: 0;
+}
+.card {
+  list-style: none;
+}
+
+#col-right{
+float:right;
+width:250px;	
 }
