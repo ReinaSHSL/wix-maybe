@@ -1,5 +1,9 @@
 //this shit searches the name
 function search(){
+  var results = document.getElementById('results');
+  while (results.firstChild) {
+    results.removeChild(results.firstChild);
+}
   var input, filter, ul, li, i;
   input = document.getElementById('cardName');
   filter = input.value;
@@ -8,9 +12,11 @@ function search(){
    //if found returns value to allcards.find and by extension matchingCard
   var matchingCards = ALLCARDS.filter(card => card.name.toLowerCase().includes(filter.toLowerCase()))
   for(card of matchingCards){
-  if (card) {
-    document.getElementById('placeholder0').src = card.image
-    }
+    var img = document.createElement('img')
+    img.src = card.image
+    var listItem = document.createElement('li')
+    listItem.appendChild(img)
+    results.appendChild(img)
   }
 }
 
