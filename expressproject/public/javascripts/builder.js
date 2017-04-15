@@ -4,16 +4,16 @@ function search(){
   while (results.firstChild) {
     results.removeChild(results.firstChild);
 }
-  var input, filter, ul, li, i;
-  input = document.getElementById('cardName');
-  filter = input.value;
-    if(filter===''){
+  var inputName, inputLevel, filter, ul, li, i;
+  //oh god who art in heaven please forgive me for my following crimes
+  inputName = document.getElementById('cardName').value;
+  inputLevel = document.getElementById('cardLevel').value;
+  filterName = inputName.value;
+  if (!inputName && !inputLevel) {
     return
   }
-  //ul=document.getElementById("placeholders")
-  //li = ul.getElementsByTagName('li')
-   //if found returns value to allcards.find and by extension matchingCard
-  var matchingCards = ALLCARDS.filter(card => card.name.toLowerCase().includes(filter.toLowerCase()))
+   //if found returns value to allcards.filter and by extension matchingCard
+  var matchingCards = ALLCARDS.filter(card=>(inputLevel ? (card.level && card.level.includes(inputLevel)) : true) && card.name.toLowerCase().includes(inputName.toLowerCase()))
   for(card of matchingCards){
     var img = document.createElement('img')
     img.src = card.image
@@ -24,6 +24,33 @@ function search(){
     results.appendChild(img)
   }
 }
+
+/*
+//this shit searches card level
+function levelSearch(){
+  var results = document.getElementById('results');
+  while (results.firstChild) {
+    results.removeChild(results.firstChild);
+}
+  var input, filter, ul, li, i;
+  input = document.getElementById('cardLevel');
+  filter = input.value;
+    if(filter===''){
+    return
+  }
+   //if found returns value to allcards.filter and by extension matchingCard
+  var matchingCards = ALLCARDS.filter(card => card.level.toLowerCase().includes(filter.toLowerCase()))
+  for(card of matchingCards){
+    var img = document.createElement('img')
+    img.src = card.image
+    img.classList.add('card-preview')
+    var listItem = document.createElement('li')
+    listItem.appendChild(img)
+    listItem.classList.add('card')
+    results.appendChild(img)
+  }
+}
+*/
 
 // Enumerations of card property values.
 const TYPE = Object.freeze({
@@ -57,7 +84,7 @@ const ALLCARDS = Object.freeze([
     class: CLASS.SOMECLASS,
     attack: '...', // idk what type this is
     burst: true,
-    level: 5
+    level: '5',
   },
   {
     id: 1,
@@ -70,9 +97,20 @@ const ALLCARDS = Object.freeze([
       amount: 3,
       color: COLOR.BLACK
     },
-    level: 4,
+    level: '4',
     lrigType: 'Nanashi',
     Text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
+  },
+   {
+    id: 0,
+    name: 'diabride',
+    image: 'http://i.imgur.com/zvqh8zV.jpg',
+    type: TYPE.SIGNI,
+    color: COLOR.RED,
+    class: CLASS.SOMECLASS,
+    attack: '...', // idk what type this is
+    burst: true,
+    //level: '5',
   }
 ])
 
