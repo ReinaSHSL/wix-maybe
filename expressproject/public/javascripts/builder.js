@@ -18,6 +18,7 @@ function search(){
   var matchingCards = ALLCARDS.filter(card => {
     // Check the name if one is set
     if (inputName) {
+      console.log('There\'s a thing here.')
       // If the card's name doesn't contain the input, ignore the card
       if (!(card.name.toLowerCase().includes(inputName.toLowerCase()))) {
         return false;
@@ -26,6 +27,7 @@ function search(){
 
     // Check the level if one is set
     if (inputLevel) {
+      console.log("There's also a thing here.")
       // If the card has no level, or if the card's level doesn't match, ignore the card
       if (!card.level || card.level !== inputLevel) {
         return false;
