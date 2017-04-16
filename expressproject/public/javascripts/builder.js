@@ -1,4 +1,4 @@
-//this shit searches the name
+//<!--Search Function-->
 function search(){
   // Clear out the search results element
   var results = document.getElementById('results');
@@ -60,7 +60,6 @@ function search(){
     }
 
         if(checkBurst){
-          console.log('test')
       if(!card.burst || card.burst !== checkBurst){
         return false
       }
@@ -82,28 +81,21 @@ function search(){
   }
 }
 
-// Enumerations of card property values.
-/*
-const TYPE = Object.freeze({
-  SIGNI: Symbol('Type Signi'),
-  LRIG: Symbol('Type Lrig'),
-  SPELL: Symbol('Type Spell'),
-  ART: Symbol('Type Art'),
-  RESONA: Symbol('Type Resona')
-})
-const COLOR = Object.freeze({
-  RED: Symbol('Color Red'),
-  GREEN: Symbol('Color Green'),
-  BLUE: Symbol('Color Blue'),
-  BLACK: Symbol('Color Black'),
-  WHITE: Symbol('Color White'),
-  COLORLESS: Symbol('Color Colorless')
-})
-const CLASS = Object.freeze({
-  SOMECLASS: Symbol('Class Someclass'),
-  OTHERCLASS: Symbol('Class Otherclass')
-})
-*/
+//<!-- Search function ends here -->
+
+//!--Preview Function start-->
+
+document.getElementsByClassName('card-preview').onmouseover = function preview(){
+  console.log('test')
+   var prev = document.createElement('img')
+  img.src = card.image
+  var listItem = document.createElement('li')
+  listItem.appendChild(img)
+  listItem.classList.add('card')
+  preview.appendChild(img)
+}
+
+//!--Preview Function End-->
 
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
