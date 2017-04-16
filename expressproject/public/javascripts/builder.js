@@ -12,10 +12,10 @@ function search(){
   var stupidDropdown = document.getElementById('cardColor');
   var stupidDropdown2 = document.getElementById('cardType');
   var stupidDropdown3 = document.getElementById('cardClass');
-  var checkBurst = document.getElementById('burst').checked;
   var inputColor = stupidDropdown.options[stupidDropdown.selectedIndex].value
   var inputType = stupidDropdown2.options[stupidDropdown2.selectedIndex].value
   var inputClass = stupidDropdown3.options[stupidDropdown3.selectedIndex].value
+  var checkBurst = document.getElementById('burst').checked;
   // If everything is empty, just return - no point in listing every card
   if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) {
     return
@@ -59,11 +59,12 @@ function search(){
       }
     }
 
-      if(burst){
-        if(!burst){
-          return false;
-        }
+        if(checkBurst){
+          console.log('test')
+      if(!card.burst || card.burst !== checkBurst){
+        return false
       }
+    }
 
     // Looks like all the checks passed, we'll use this card
     return true;
