@@ -85,9 +85,12 @@ function search(){
 
 //!--Preview Function start-->
 
-document.getElementsByClassName('card-preview').onmouseover = function preview(){
+//THIS SHIT DONT WORK PLS TO HELP. Function doesn't even activate on mouseover
+
+document.getElementsByClassName('card-preview').onmouseover = function(){preview()}
+  function preview(){
   console.log('test')
-   var prev = document.createElement('img')
+  var prev = document.createElement('img')
   img.src = card.image
   var listItem = document.createElement('li')
   listItem.appendChild(img)
