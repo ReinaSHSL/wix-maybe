@@ -84,18 +84,8 @@ function search(){
 //<!-- Search function ends here -->
 
 //!--Preview Function start-->
-
-//THIS SHIT DONT WORK PLS TO HELP. Function doesn't even activate on mouseover
-
-document.getElementsByClassName('card-preview').onmouseover = function(){preview()}
   function preview(){
-  console.log('test')
-  var prev = document.createElement('img')
-  img.src = card.image
-  var listItem = document.createElement('li')
-  listItem.appendChild(img)
-  listItem.classList.add('card')
-  preview.appendChild(img)
+  document.getElementById('previewCard').src=document.getElementsByClassName('card-preview').value
 }
 
 //!--Preview Function End-->
