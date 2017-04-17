@@ -19,6 +19,7 @@ a {
 ul {
   padding: 0;
 }
+
 .card {
   list-style: none;
 }
@@ -28,11 +29,6 @@ float:right;
 width:250px;	
 }
 
-#col-left{
-margin:0px;
-padding:0px;
-}
-
-p#col-left{
-
+#col-left p{
+display:inline;
 }
