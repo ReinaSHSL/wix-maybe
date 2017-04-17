@@ -77,14 +77,34 @@ function search(){
     var listItem = document.createElement('li')
     listItem.appendChild(img)
     listItem.classList.add('card')
-    results.appendChild(img)
+    results.appendChild(listItem)
+    img.setAttribute('dataName', card.name || "")
+    img.setAttribute('dataType', card.type || "")
+    img.setAttribute('dataColor', card.color || "")
+    img.setAttribute('dataLevel', card.level || "")
+    img.setAttribute('dataCost', card.cost || "")
+    img.setAttribute('dataAttack', card.attack || "")
+    img.setAttribute('dataClass', card.class || "")
+    img.setAttribute('dataLrigType', card.lrigType || "")
+    img.setAttribute('dataLimit', card.limit || "")
+    img.setAttribute('dataText', card.text || "")
   }
-  var searchCardImgs = document.getElementsByClassName('card-preview');
-var bigPreviewImg = document.getElementById('previewCard'); // This is the ID of the <img> on the left side
+var searchCardImgs = document.getElementsByClassName('card-preview');
+var bigPreviewImg = document.getElementById('previewCard');
 for (var i = 0; i < searchCardImgs.length; i++) {
   var card = searchCardImgs[i];
   card.addEventListener('mouseenter', function (event) {
     bigPreviewImg.src = event.target.src;
+    document.getElementById('cardsName').textContent = event.target.getAttribute('dataName');
+    document.getElementById('cardsType').textContent = event.target.getAttribute('dataType');
+    document.getElementById('cardsColor').textContent = event.target.getAttribute('dataColor');
+    document.getElementById('cardsLevel').textContent = event.target.getAttribute('dataLevel');
+    document.getElementById('cardsCost').textContent = event.target.getAttribute('dataCost');
+    document.getElementById('cardsAttack').textContent = event.target.getAttribute('dataAttack');
+    document.getElementById('cardsClass').textContent = event.target.getAttribute('dataClass');
+    document.getElementById('cardsLrigType').textContent = event.target.getAttribute('dataLrigType');
+    document.getElementById('cardsLimit').textContent = event.target.getAttribute('dataLimit');
+    document.getElementById('cardsText').innerHTML = event.target.getAttribute('dataText');
   });
  }
  // Dereference the objects so when they're removed they don't memleak the event handlers
@@ -94,29 +114,19 @@ if (card) card = null;
 
 // Search function ends here
 
-//Prev func
-//THIS SHIT DONT FUCKIN WORK
-/*
-document.getElementById('results').onmouseover = function(){preview()}
-function preview(previewImg[i]){
- console.log('hello')
- document.getElementById('previewCard').src=previewImg[i]
-}*/
-
-//prev func end
-
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
   {
     id: 0,
-    name: 'diabride',
+    name: 'Diabride, Natural Pyroxene ※',
     image: 'http://i.imgur.com/zvqh8zV.jpg',
     type: 'SIGNI',
     color: 'Red',
     class: 'Gem',
-    attack: '...', // idk what type this is
+    attack: 'Attack: 15000', 
     burst: true,
-    level: '5',
+    level: 'Level: 5',
+    text: "Hanayo Limited<br>[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.<br>[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)<br>Life Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
   },
   {
     id: 1,
@@ -124,25 +134,23 @@ const ALLCARDS = Object.freeze([
     image: 'http://i.imgur.com/YcMdHLJ.jpg',
     type: 'LRIG',
     color: 'Black',
-    limit: '11',
-    cost: {
-      amount: '3',
-      color: 'Black'
-    },
-    level: '4',
+    limit: 'Limit: 11',
+    cost: 'Grow: Black 3',
+    level: 'Level: 4',
     lrigType: 'Nanashi',
-    Text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
+    text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.<br>[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.<br>[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get <br>[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   },
    {
     id: 2,
-    name: 'beigoma',
+    name: 'Beigoma, Fourth Play Princess ※',
     image: 'http://i.imgur.com/QemHU7N.jpg',
     type: 'SIGNI',
     color: 'Green',
     class: 'Playground Equipment',
-    attack: '...', // idk what type this is
-    burst: false,
-    level: '4',
+    attack: 'Attack: 12000', // idk what type this is
+    burst: true,
+    level: 'Level: 4',
+    text: "[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.<br>Life Burst: [Ener Charge 2]"
   }
 ])
 
