@@ -16,6 +16,7 @@ function search(){
   var inputType = stupidDropdown2.options[stupidDropdown2.selectedIndex].value
   var inputClass = stupidDropdown3.options[stupidDropdown3.selectedIndex].value
   var checkBurst = document.getElementById('burst').checked;
+  var checkNoBurst = document.getElementById('noBurst').checked;
   // If everything is empty, just return - no point in listing every card
   if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) {
     return
@@ -64,6 +65,13 @@ function search(){
         return false
       }
     }
+
+        if(checkNoBurst){
+      if(card.burst || card.burst == checkBurst){
+        return false
+      }
+    }
+
 
     // Looks like all the checks passed, we'll use this card
     return true;
