@@ -1,4 +1,4 @@
-//<!--Search Function-->
+//Search Function
 function search(){
   // Clear out the search results element
   var results = document.getElementById('results');
@@ -79,16 +79,31 @@ function search(){
     listItem.classList.add('card')
     results.appendChild(img)
   }
+  var searchCardImgs = document.getElementsByClassName('card-preview');
+var bigPreviewImg = document.getElementById('previewCard'); // This is the ID of the <img> on the left side
+for (var i = 0; i < searchCardImgs.length; i++) {
+  var card = searchCardImgs[i];
+  card.addEventListener('mouseenter', function (event) {
+    bigPreviewImg.src = event.target.src;
+  });
+ }
+ // Dereference the objects so when they're removed they don't memleak the event handlers
+searchCardImgs = null;
+if (card) card = null;
 }
 
-//<!-- Search function ends here -->
+// Search function ends here
 
-//!--Preview Function start-->
-  function preview(){
-  document.getElementById('previewCard').src=document.getElementsByClassName('card-preview').value
-}
+//Prev func
+//THIS SHIT DONT FUCKIN WORK
+/*
+document.getElementById('results').onmouseover = function(){preview()}
+function preview(previewImg[i]){
+ console.log('hello')
+ document.getElementById('previewCard').src=previewImg[i]
+}*/
 
-//!--Preview Function End-->
+//prev func end
 
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
