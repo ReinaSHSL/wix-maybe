@@ -134,7 +134,7 @@ const ALLCARDS = Object.freeze([
     attack: 'Attack: 15000', 
     burst: true,
     level: 'Level: 5',
-    text: "Hanayo Limited<br>[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.<br>[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)<br>Life Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
+    text: "Hanayo Limited\n[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.\n[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)\nLife Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
   },
   {
     id: 1,
@@ -146,7 +146,7 @@ const ALLCARDS = Object.freeze([
     cost: 'Grow: Black 3',
     level: 'Level: 4',
     lrigType: 'Nanashi',
-    text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.<br>[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.<br>[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get <br>[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
+    text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   },
    {
     id: 2,
@@ -158,7 +158,7 @@ const ALLCARDS = Object.freeze([
     attack: 'Attack: 12000', // idk what type this is
     burst: true,
     level: 'Level: 4',
-    text: "[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.<br>Life Burst: [Ener Charge 2]"
+    text: "[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]"
   }
 ])
 
