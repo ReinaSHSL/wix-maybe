@@ -1,13 +1,15 @@
 body {
-	margin: 5px 5px 0;
+	margin: 0;
 	padding: 0;
-	/*width: 1500px;*/
 }
 
 a {
   color: #00B7FF;
 }
 
+.card {
+  display: linline-block;
+}
 .card-preview{
 	width:100px;
 	margin:0px;
@@ -34,6 +36,7 @@ ul {
 
 #col-left {
   width: 250px;
+  margin: 10px;
 }
 
 #previewCard{
@@ -42,34 +45,22 @@ ul {
     width:100%;
 }
 
-table, th, td {
-	border: 1px solid black;
-	padding: 0;
-	text-align: center;
-	padding:15px;
-	margin:10px;
+#cardInfo p {
+  margin: 5px 0;
 }
-table {
-	border-collapse: collapse;
-	border-spacing: 0px;
-	empty-cells: hide;
+
+#cardsName {
+  text-align: center;
 }
 
 #cardsText {
     height:250px;
-    width:200px;
-    overflow:scroll;
-    margin:10px;
+    width:100%;
+    overflow:scroll-y;
+    margin: 0;
     resize: none;
 }
 
 textarea#cardsText:empty{
 	display:none;
-}
-
-#cardsName{
-	margin-left:10px;
-	padding: 0px;
-	margin-top:0px;
-	margin-bottom: 5px;
 }
