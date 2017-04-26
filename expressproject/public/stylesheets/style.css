@@ -7,11 +7,25 @@ a {
   color: #00B7FF;
 }
 
+/* Right column - search stuff */
+
+#col-right{
+  float:right;
+  width:250px;
+  margin: 10px;
+}
+
 .card {
-  display: linline-block;
+  display: inline-block;
+  width: 120px;
+  list-style: none;
+  margin: 0 0 10px;
+}
+.card:nth-of-type(2n) {
+  margin-left: 10px;
 }
 .card-preview{
-	width:100px;
+	width:100%;
 	margin:0px;
 }
 
@@ -21,15 +35,6 @@ a {
 
 ul {
     padding: 0;
-}
-
-.card {
-    list-style: none;
-}
-
-#col-right{
-    float:right;
-    width:250px;
 }
 
 /* Here starts the left sidebar stuff */
