@@ -51,6 +51,7 @@ ul {
 
 #cardsName {
   text-align: center;
+  font-weight: bold;
 }
 
 #cardsText {
