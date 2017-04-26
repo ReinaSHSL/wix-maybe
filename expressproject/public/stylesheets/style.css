@@ -1,7 +1,7 @@
 body {
 	margin: 5px 5px 0;
 	padding: 0;
-	width: 1500px;
+	/*width: 1500px;*/
 }
 
 a {
@@ -27,14 +27,19 @@ ul {
 
 #col-right{
     float:right;
-    width:250px;	
+    width:250px;
+}
+
+/* Here starts the left sidebar stuff */
+
+#col-left {
+  width: 250px;
 }
 
 #previewCard{
-	margin-left: 10px;
 	margin-bottom: 0px;
 	padding: 0px;
-    width:200px;
+    width:100%;
 }
 
 table, th, td {

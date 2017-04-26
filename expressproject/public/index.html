@@ -72,20 +72,25 @@
     <div id="col-left">
       <!-- This will be the card preview and shit -->
       <img id='previewCard' src='http://i.imgur.com/zKrhNaW.png'>
-      <b><p id='cardsName'></p></b>
-      <table id="cardTable">
-        <tr><td><p id='cardsType'></p></td>
-        <td><p id='cardsColor'></p></td>
-        <td><p id='cardsLevel'></p></td>
-        <td><p id='cardsClass'></p></td></tr>
-        <td><p id='cardsLimit'></p></td>
-        <td><p id='cardsCost'></p></td>
-        <td><p id='cardsAttack'></p></td>
-        <td><p id='cardsLrigType'></p></td>
-      </table>
+      <div id="cardInfo">
+        <p>
+          <span id='cardsName'></span>
+        </p>
+        <p>
+          <span id='cardsType'></span>
+          <span id='cardsColor' style="float:right;"></span>
+        </p>
+        <!-- <table id="cardTable"> -->
+          <p id='cardsLevel'></p>
+          <p id='cardsAttack'></p>
+          <p id='cardsCost'></p>
+          <p id='cardsLimit'></p>
+          <p id='cardsClass'></p>
+          <p id='cardsLrigType'></p>>
+        <!-- </table> -->
 
-      <textarea id="cardsText" name="txt"></textarea>
-
+        <textarea id="cardsText" name="txt"></textarea>
+      </div>
     </div>
 
     <!-- Scripts here at the end -->
