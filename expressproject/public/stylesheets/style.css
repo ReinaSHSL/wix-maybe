@@ -77,4 +77,5 @@ textarea#cardsText:empty{
 	position:fixed;
     top:0;
     margin-left:300px;
+    margin-top:10px;
 }
