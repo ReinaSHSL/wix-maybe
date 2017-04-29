@@ -70,3 +70,11 @@ ul {
 textarea#cardsText:empty{
 	display:none;
 }
+
+/*Top stuff*/
+
+#top{
+	position:fixed;
+    top:0;
+    margin-left:300px;
+}
