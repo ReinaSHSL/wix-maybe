@@ -113,6 +113,11 @@ for (var i = 0; i < searchCardImgs.length; i++) {
     document.getElementById('cardsLrigType').textContent = event.target.getAttribute('dataLrigType');
     document.getElementById('cardsLimit').textContent = event.target.getAttribute('dataLimit');
     document.getElementById('cardsText').innerHTML = event.target.getAttribute('dataText');
+//Adding cards function starts here
+  var currentDeck=[];
+  card.addEventListener('click', function(event){
+    currentDeck.push(event.target.card.id);
+  });
   });
  }
  // Dereference the objects so when they're removed they don't memleak the event handlers
@@ -122,7 +127,6 @@ if (card) card = null;
 
 // Search function ends here
 
-//Buttons/Dropdown
 
 
 // A listing of every card in its default state.
