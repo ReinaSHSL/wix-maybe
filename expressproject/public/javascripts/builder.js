@@ -72,31 +72,31 @@ function search(){
       }
     }
 
-        if(inputType){
+    if(inputType){
       if(!card.type || card.type !== inputType){
         return false;
       }
     }
 
-        if(inputClass){
+    if(inputClass){
       if(!card.class || card.class !== inputClass){
         return false;
       }
     }
 
-        if(checkBurst){
+    if(checkBurst){
       if(!card.burst || card.burst !== checkBurst){
         return false
       }
     }
 
-        if(checkNoBurst){
+    if(checkNoBurst){
       if(card.burst || card.burst == checkBurst){
         return false
       }
     }
 
-
+    
     // Looks like all the checks passed, we'll use this card
     return true;
   })
@@ -105,32 +105,32 @@ function search(){
   for (var card of matchingCards) {
     results.appendChild(cardElementFromData(card))
   }
-var searchCardImgs = document.getElementsByClassName('card-preview');
-var bigPreviewImg = document.getElementById('previewCard');
-for (var i = 0; i < searchCardImgs.length; i++) {
-  var card = searchCardImgs[i];
-  card.addEventListener('mouseenter', function (event) {
-    bigPreviewImg.src = event.target.src;
-    document.getElementById('cardsName').textContent = event.target.getAttribute('dataName');
-    document.getElementById('cardsType').textContent = event.target.getAttribute('dataType');
-    document.getElementById('cardsColor').textContent = event.target.getAttribute('dataColor');
-    document.getElementById('cardsLevel').textContent = event.target.getAttribute('dataLevel');
-    document.getElementById('cardsCost').textContent = event.target.getAttribute('dataCost');
-    document.getElementById('cardsAttack').textContent = event.target.getAttribute('dataAttack');
-    document.getElementById('cardsClass').textContent = event.target.getAttribute('dataClass');
-    document.getElementById('cardsLrigType').textContent = event.target.getAttribute('dataLrigType');
-    document.getElementById('cardsLimit').textContent = event.target.getAttribute('dataLimit');
-    document.getElementById('cardsText').innerHTML = event.target.getAttribute('dataText');
+  var searchCardImgs = document.getElementsByClassName('card-preview');
+  var bigPreviewImg = document.getElementById('previewCard');
+  for (var i = 0; i < searchCardImgs.length; i++) {
+    var card = searchCardImgs[i];
+    card.addEventListener('mouseenter', function (event) {
+      bigPreviewImg.src = event.target.src;
+      document.getElementById('cardsName').textContent = event.target.getAttribute('dataName');
+      document.getElementById('cardsType').textContent = event.target.getAttribute('dataType');
+      document.getElementById('cardsColor').textContent = event.target.getAttribute('dataColor');
+      document.getElementById('cardsLevel').textContent = event.target.getAttribute('dataLevel');
+      document.getElementById('cardsCost').textContent = event.target.getAttribute('dataCost');
+      document.getElementById('cardsAttack').textContent = event.target.getAttribute('dataAttack');
+      document.getElementById('cardsClass').textContent = event.target.getAttribute('dataClass');
+      document.getElementById('cardsLrigType').textContent = event.target.getAttribute('dataLrigType');
+      document.getElementById('cardsLimit').textContent = event.target.getAttribute('dataLimit');
+      document.getElementById('cardsText').innerHTML = event.target.getAttribute('dataText');
     });
-//Adding cards function starts here
-  card.addEventListener('click', function(event){
-    currentDeck.push(event.target.getAttribute('dataCardId'));
-  });
- }
+    //Adding cards function starts here
+    card.addEventListener('click', function(event){
+      currentDeck.push(event.target.getAttribute('dataCardId'));
+    });
+  }
 
- // Dereference the objects so when they're removed they don't memleak the event handlers
-searchCardImgs = null;
-if (card) card = null;
+  // Dereference the objects so when they're removed they don't memleak the event handlers
+  searchCardImgs = null;
+  if (card) card = null;
 }
 
 // Search function ends here
@@ -163,7 +163,7 @@ const ALLCARDS = Object.freeze([
     lrigType: 'Nanashi',
     text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   },
-   {
+  {
     id: 2,
     name: 'Beigoma, Fourth Play Princess ※',
     image: 'http://i.imgur.com/QemHU7N.jpg',
