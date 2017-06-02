@@ -4,25 +4,42 @@ body {
 }
 
 a {
-  color: #00B7FF;
+	color: #00B7FF;
 }
 
-/* Right column - search stuff */
-
-#col-right{
-  float:right;
-  width:250px;
-  margin: 10px;
+/* Column and layout stuff */
+body {
+	display: flex;
+	margin: 0;
+	background: #EEE;
+}
+#left {
+	background: #AAA;
+	flex: 0 1 250px;
+	order: 0;
+}
+#center {
+	background: #888;
+	flex: 1;
+	order: 1;
+}
+#right {
+	background: #666;
+	flex: 0 1 250px;
+	order: 2;
+}
+#top {
+	background: #DDD;
 }
 
 .card {
-  display: inline-block;
-  width: 120px;
-  list-style: none;
-  margin: 0 0 10px;
+	display: inline-block;
+	width: 120px;
+	list-style: none;
+	margin: 0 0 10px;
 }
 .card:nth-of-type(2n) {
-  margin-left: 10px;
+	margin-left: 10px;
 }
 .card-preview{
 	width:100%;
@@ -30,52 +47,43 @@ a {
 }
 
 #search input{
-    text-align: center;
+	text-align: center;
 }
 
 ul {
-    padding: 0;
+	padding: 0;
 }
 
 /* Here starts the left sidebar stuff */
 
 #col-left {
-  width: 250px;
-  margin: 10px;
+	width: 250px;
+	margin: 10px;
 }
 
 #previewCard{
 	margin-bottom: 0px;
 	padding: 0px;
-    width:100%;
+	width:100%;
 }
 
 #cardInfo p {
-  margin: 5px 0;
+	margin: 5px 0;
 }
 
 #cardsName {
-  text-align: center;
-  font-weight: bold;
+	text-align: center;
+	font-weight: bold;
 }
 
 #cardsText {
-    height:250px;
-    width:100%;
-    overflow:scroll-y;
-    margin: 0;
-    resize: none;
+	height:250px;
+	width:100%;
+	overflow:scroll-y;
+	margin: 0;
+	resize: none;
 }
 
 textarea#cardsText:empty{
 	display:none;
-}
-
-/*Top stuff*/
-
-#top{
-	position:fixed;
-    top:0;
-    margin-left:300px;
-    margin-top:10px;
 }

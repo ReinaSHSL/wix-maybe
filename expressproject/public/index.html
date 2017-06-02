@@ -5,8 +5,48 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
   </head>
   <body>
+    <!-- Preview column -->
+    <div id="left">
+      <!-- This will be the card preview and shit -->
+      <img id='previewCard' src='http://i.imgur.com/zKrhNaW.png'>
+      <div id="cardInfo">
+        <p id='cardsName'></p>
+        <p>
+          <span id='cardsType'></span>
+          <span id='cardsColor' style="float:right;"></span>
+        </p>
+        <p id='cardsLevel'></p>
+        <p id='cardsAttack'></p>
+        <p id='cardsCost'></p>
+        <p id='cardsLimit'></p>
+        <p id='cardsClass'></p>
+        <p id='cardsLrigType'></p>
 
-    <div id="col-right">
+        <textarea id="cardsText" name="txt"></textarea>
+      </div>
+    </div>
+
+    <!-- The area for useful things -->
+    <div id="center">
+      <!-- This will be the buttons and shit -->
+      <div id="top">
+        <label></label>
+            <select id = "deckList">
+            <!--Shit will be added dynamically-->
+            <option value=''>Blank Deck</option>
+            </select>
+        <button type="button">New Deck</button>
+        <button type="button">Rename Deck</button>
+        <button type="button">Delete Deck</button>
+        <button type="button">Export/Import</button>
+      </div>
+
+      <!-- Cards live here -->
+      <ul id="deckDisplay"></ul>
+    </div>
+
+    <!-- Searching and all that good stuff -->
+    <div id="right">
       <!-- this shit searches out cards -->
       <div id="search">
         <input type="text" id="cardName" onkeyup="search()" placeholder="Card name">
@@ -67,45 +107,6 @@
       <div>
         <ul id="results"></ul>
       </div>
-    </div>
-
-    <div id="col-left">
-      <!-- This will be the card preview and shit -->
-      <img id='previewCard' src='http://i.imgur.com/zKrhNaW.png'>
-      <div id="cardInfo">
-        <p id='cardsName'></p>
-        <p>
-          <span id='cardsType'></span>
-          <span id='cardsColor' style="float:right;"></span>
-        </p>
-        <p id='cardsLevel'></p>
-        <p id='cardsAttack'></p>
-        <p id='cardsCost'></p>
-        <p id='cardsLimit'></p>
-        <p id='cardsClass'></p>
-        <p id='cardsLrigType'></p>
-
-        <textarea id="cardsText" name="txt"></textarea>
-      </div>
-    </div>
-
-    <!-- This will be the buttons and shit -->
-    <div id="top">
-      <label></label>
-          <select id = "deckList">
-          <!--Shit will be added dynamically-->
-          <option value=''>Blank Deck</option>
-          </select>
-      <button type="button">New Deck</button>
-      <button type="button">Rename Deck</button>
-      <button type="button">Delete Deck</button>
-      <button type="button">Export/Import</button>
-    </div>
-
-
-    <!-- Deck Display -->
-    <div id="center">
-      <ul id="deckDisplay"></ul>
     </div>
 
     <!-- Scripts here at the end -->
