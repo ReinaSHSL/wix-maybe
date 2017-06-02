@@ -1,3 +1,4 @@
+var currentDeck=[];
 //Search Function
 function search(){
   // Clear out the search results element
@@ -113,13 +114,13 @@ for (var i = 0; i < searchCardImgs.length; i++) {
     document.getElementById('cardsLrigType').textContent = event.target.getAttribute('dataLrigType');
     document.getElementById('cardsLimit').textContent = event.target.getAttribute('dataLimit');
     document.getElementById('cardsText').innerHTML = event.target.getAttribute('dataText');
+    });
 //Adding cards function starts here
-  var currentDeck=[];
   card.addEventListener('click', function(event){
-    currentDeck.push(event.target.card.id);
-  });
+    currentDeck.push(event.target.id);
   });
  }
+
  // Dereference the objects so when they're removed they don't memleak the event handlers
 searchCardImgs = null;
 if (card) card = null;
@@ -140,7 +141,7 @@ const ALLCARDS = Object.freeze([
     class: 'Gem',
     attack: 'Attack: 15000', 
     burst: true,
-    level: 'Level: 5',
+    level: '5',
     text: "Hanayo Limited\n[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.\n[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)\nLife Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
   },
   {
@@ -151,7 +152,7 @@ const ALLCARDS = Object.freeze([
     color: 'Black',
     limit: 'Limit: 11',
     cost: 'Grow: Black 3',
-    level: 'Level: 4',
+    level: '4',
     lrigType: 'Nanashi',
     text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
   },
@@ -164,7 +165,7 @@ const ALLCARDS = Object.freeze([
     class: 'Playground Equipment',
     attack: 'Attack: 12000', // idk what type this is
     burst: true,
-    level: 'Level: 4',
+    level: '4',
     text: "[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]"
   }
 ])
