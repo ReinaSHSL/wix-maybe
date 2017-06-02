@@ -1,7 +1,7 @@
 var currentDeck=[];
 
 // Function to take card data and make it into markup
-function makeCardElementFromData (card) {
+function cardElementFromData (card) {
   var img = document.createElement('img')
   img.src = card.image
   img.classList.add('card-preview')
@@ -103,7 +103,7 @@ function search(){
 
   // All right, we got all the matches, let's add them back to the page now
   for (var card of matchingCards) {
-    results.appendChild(listItem)
+    results.appendChild(cardElementFromData(card))
   }
 var searchCardImgs = document.getElementsByClassName('card-preview');
 var bigPreviewImg = document.getElementById('previewCard');
