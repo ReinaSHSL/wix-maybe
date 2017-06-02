@@ -1,4 +1,27 @@
 var currentDeck=[];
+
+// Function to take card data and make it into markup
+function makeCardElementFromData (card) {
+  var img = document.createElement('img')
+  img.src = card.image
+  img.classList.add('card-preview')
+  var listItem = document.createElement('li')
+  listItem.appendChild(img)
+  listItem.classList.add('card')
+  img.setAttribute('dataName', card.name || "")
+  img.setAttribute('dataType', card.type || "")
+  img.setAttribute('dataColor', card.color || "")
+  img.setAttribute('dataLevel', card.level || "")
+  img.setAttribute('dataCost', card.cost || "")
+  img.setAttribute('dataAttack', card.attack || "")
+  img.setAttribute('dataClass', card.class || "")
+  img.setAttribute('dataLrigType', card.lrigType || "")
+  img.setAttribute('dataLimit', card.limit || "")
+  img.setAttribute('dataText', card.text || "")
+  img.setAttribute('dataCardId', card.id)
+  return listItem
+}
+
 //Search Function
 function search(){
   // Clear out the search results element
@@ -49,7 +72,7 @@ function search(){
       }
     }
 
-        if(inputType){        
+        if(inputType){
       if(!card.type || card.type !== inputType){
         return false;
       }
@@ -80,23 +103,7 @@ function search(){
 
   // All right, we got all the matches, let's add them back to the page now
   for (var card of matchingCards) {
-    var img = document.createElement('img')
-    img.src = card.image
-    img.classList.add('card-preview')
-    var listItem = document.createElement('li')
-    listItem.appendChild(img)
-    listItem.classList.add('card')
     results.appendChild(listItem)
-    img.setAttribute('dataName', card.name || "")
-    img.setAttribute('dataType', card.type || "")
-    img.setAttribute('dataColor', card.color || "")
-    img.setAttribute('dataLevel', card.level || "")
-    img.setAttribute('dataCost', card.cost || "")
-    img.setAttribute('dataAttack', card.attack || "")
-    img.setAttribute('dataClass', card.class || "")
-    img.setAttribute('dataLrigType', card.lrigType || "")
-    img.setAttribute('dataLimit', card.limit || "")
-    img.setAttribute('dataText', card.text || "")
   }
 var searchCardImgs = document.getElementsByClassName('card-preview');
 var bigPreviewImg = document.getElementById('previewCard');
@@ -117,7 +124,7 @@ for (var i = 0; i < searchCardImgs.length; i++) {
     });
 //Adding cards function starts here
   card.addEventListener('click', function(event){
-    currentDeck.push(event.target.id);
+    currentDeck.push(event.target.getAttribute('dataCardId'));
   });
  }
 
@@ -139,7 +146,7 @@ const ALLCARDS = Object.freeze([
     type: 'SIGNI',
     color: 'Red',
     class: 'Gem',
-    attack: 'Attack: 15000', 
+    attack: 'Attack: 15000',
     burst: true,
     level: '5',
     text: "Hanayo Limited\n[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.\n[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)\nLife Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
