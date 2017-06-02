@@ -125,6 +125,7 @@ function search(){
     //Adding cards function starts here
     card.addEventListener('click', function(event){
       currentDeck.push(event.target.getAttribute('dataCardId'));
+      document.getElementById('deckDisplay').appendChild(event.target.cloneNode())
     });
   }
 
