@@ -139,13 +139,14 @@ $('#results').on('click', '.card', function () {
    	currentDecks.main.push($this.attr('dataCardId'));
    	$('#deckDisplay').append($this.clone())
    }
-})
+ })
 
 // When clicking on a card in the deck area, remove it from the deck
 // TODO: This should probably be triggered by another action
 $('#deckDisplay').on('click', '.card', function () {
   var $wrap = $(this)//.parent()
-  currentDeck.splice($wrap.index(), 1)
+  currentDecks.main.splice($wrap.index(), 1)
+  currentDecks.lrig.splice($wrap.index(), 1)
   $wrap.remove()
 })
 
