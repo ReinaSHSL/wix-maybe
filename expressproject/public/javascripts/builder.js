@@ -145,9 +145,16 @@ $('#results').on('click', '.card', function () {
 // TODO: This should probably be triggered by another action
 $('#deckDisplay').on('click', '.card', function () {
   var $wrap = $(this)//.parent()
-  currentDecks.main.splice($wrap.index(), 1)
-  currentDecks.lrig.splice($wrap.index(), 1)
-  $wrap.remove()
+  var cardsType = $wrap.attr('dataType')
+   if(cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS'){
+     currentDecks.lrig.splice($wrap.index(), 1)
+     $wrap.remove()
+     console.log('test')
+    }
+   else{
+     currentDecks.main.splice($wrap.index(), 1)
+     $wrap.remove()
+    }
 })
 
 
