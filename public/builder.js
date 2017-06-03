@@ -1,27 +1,5 @@
 var currentDecks = {lrig: [], main: []};
 
-// Function to take card data and make it into markup
-// function cardElementFromData (card) {
-//   var img = document.createElement('img')
-//   img.src = card.image
-//   img.classList.add('card-preview')
-//   var listItem = document.createElement('li')
-//   listItem.appendChild(img)
-//   listItem.classList.add('card')
-//   img.setAttribute('dataName', card.name || "")
-//   img.setAttribute('dataType', card.type || "")
-//   img.setAttribute('dataColor', card.color || "")
-//   img.setAttribute('dataLevel', card.level || "")
-//   img.setAttribute('dataCost', card.cost || "")
-//   img.setAttribute('dataAttack', card.attack || "")
-//   img.setAttribute('dataClass', card.class || "")
-//   img.setAttribute('dataLrigType', card.lrigType || "")
-//   img.setAttribute('dataLimit', card.limit || "")
-//   img.setAttribute('dataText', card.text || "")
-//   img.setAttribute('dataCardId', card.id)
-//   return listItem
-// }
-//
 function cardElementFromData (card) {
   var img = $('<img class="card-preview">')
     .attr('src', card.image)
