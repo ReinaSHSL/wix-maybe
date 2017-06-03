@@ -43,11 +43,6 @@ function cardElementFromData (card) {
 
 //Search Function
 function search(){
-  // Clear out the search results element
-  // var results = document.getElementById('results');
-  // while (results.firstChild) {
-  //   results.removeChild(results.firstChild);
-  // }
   var results = $('#results');
   results.empty();
 
@@ -118,7 +113,6 @@ function search(){
 
 // When hovering over any card preview, show it in the left column
 $('.cardList').on('mouseenter', '.card', function () {
-  console.log(this, $(this))
   var $this = $(this);
   $('#previewCard').attr('src', $this.find('.card-preview').attr('src'));
   $('#cardsName').text($this.attr('dataName'));
