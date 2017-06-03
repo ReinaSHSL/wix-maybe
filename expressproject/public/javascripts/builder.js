@@ -130,7 +130,7 @@ $('.cardList').on('mouseenter', '.card', function () {
   $('#cardsClass').text($this.attr('dataClass'));
   $('#cardsLrigType').text($this.attr('dataLrigType'));
   $('#cardsLimit').text($this.attr('dataLimit'));
-  $('#cardsText').innerHTML = $this.attr('dataText');
+  $('#cardsText').text($this.attr('dataText'));
 })
 
 // When clicking on a card in the right sidebar, add it to the deck
