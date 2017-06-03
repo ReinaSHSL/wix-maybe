@@ -1,141 +1,143 @@
 var currentDeck=[];
 
 // Function to take card data and make it into markup
+// function cardElementFromData (card) {
+//   var img = document.createElement('img')
+//   img.src = card.image
+//   img.classList.add('card-preview')
+//   var listItem = document.createElement('li')
+//   listItem.appendChild(img)
+//   listItem.classList.add('card')
+//   img.setAttribute('dataName', card.name || "")
+//   img.setAttribute('dataType', card.type || "")
+//   img.setAttribute('dataColor', card.color || "")
+//   img.setAttribute('dataLevel', card.level || "")
+//   img.setAttribute('dataCost', card.cost || "")
+//   img.setAttribute('dataAttack', card.attack || "")
+//   img.setAttribute('dataClass', card.class || "")
+//   img.setAttribute('dataLrigType', card.lrigType || "")
+//   img.setAttribute('dataLimit', card.limit || "")
+//   img.setAttribute('dataText', card.text || "")
+//   img.setAttribute('dataCardId', card.id)
+//   return listItem
+// }
+//
 function cardElementFromData (card) {
-  var img = document.createElement('img')
-  img.src = card.image
-  img.classList.add('card-preview')
-  var listItem = document.createElement('li')
-  listItem.appendChild(img)
-  listItem.classList.add('card')
-  img.setAttribute('dataName', card.name || "")
-  img.setAttribute('dataType', card.type || "")
-  img.setAttribute('dataColor', card.color || "")
-  img.setAttribute('dataLevel', card.level || "")
-  img.setAttribute('dataCost', card.cost || "")
-  img.setAttribute('dataAttack', card.attack || "")
-  img.setAttribute('dataClass', card.class || "")
-  img.setAttribute('dataLrigType', card.lrigType || "")
-  img.setAttribute('dataLimit', card.limit || "")
-  img.setAttribute('dataText', card.text || "")
-  img.setAttribute('dataCardId', card.id)
-  return listItem
+  var img = $('<img class="card-preview">')
+    .attr('src', card.image)
+  var listItem = $('<li class="card">')
+    .attr('dataName', card.name || '')
+    .attr('dataType', card.type || "")
+    .attr('dataColor', card.color || "")
+    .attr('dataLevel', card.level || "")
+    .attr('dataCost', card.cost || "")
+    .attr('dataAttack', card.attack || "")
+    .attr('dataClass', card.class || "")
+    .attr('dataLrigType', card.lrigType || "")
+    .attr('dataLimit', card.limit || "")
+    .attr('dataText', card.text || "")
+    .attr('dataCardId', card.id)
+    .append(img)
+  return listItem.eq(0) // TODO: Convert calls of this to use jQuery
 }
 
 //Search Function
 function search(){
   // Clear out the search results element
-  var results = document.getElementById('results');
-  while (results.firstChild) {
-    results.removeChild(results.firstChild);
-  }
+  // var results = document.getElementById('results');
+  // while (results.firstChild) {
+  //   results.removeChild(results.firstChild);
+  // }
+  var results = $('#results');
+  results.empty();
 
   // Get the search parameters from the interface
-  var inputName = document.getElementById('cardName').value;
-  var inputLevel = document.getElementById('cardLevel').value;
-  var stupidDropdown = document.getElementById('cardColor');
-  var stupidDropdown2 = document.getElementById('cardType');
-  var stupidDropdown3 = document.getElementById('cardClass');
-  var inputColor = stupidDropdown.options[stupidDropdown.selectedIndex].value
-  var inputType = stupidDropdown2.options[stupidDropdown2.selectedIndex].value
-  var inputClass = stupidDropdown3.options[stupidDropdown3.selectedIndex].value
-  var checkBurst = document.getElementById('burst').checked;
-  var checkNoBurst = document.getElementById('noBurst').checked;
+  var inputName = $('#cardName').val();
+  var inputLevel = $('#cardLevel').val();
+  var inputColor = $('#cardColor').val();
+  var inputType = $('#cardType').val();
+  var inputClass = $('#cardClass').val();
+  var checkBurst = $('#burst').is(':checked');
+  var checkNoBurst = $('#noBurst').is(':checked');
   // If everything is empty, just return - no point in listing every card
-  if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) {
-    return
-  }
+  if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) return
 
   // Execute the search and store matches
   var matchingCards = ALLCARDS.filter(card => {
-    // Check the name if one is set
     if (inputName) {
-      //console.log('There\'s a thing here.')
-      // If the card's name doesn't contain the input, ignore the card
       if (!(card.name.toLowerCase().includes(inputName.toLowerCase()))) {
         return false;
       }
     }
-
-    // Check the level if one is set
     if (inputLevel) {
-      //console.log("There's also a thing here.")
-      // If the card has no level, or if the card's level doesn't match, ignore the card
       if (!card.level || card.level !== inputLevel) {
         return false;
       }
     }
-
     if(inputColor){
       if(!card.color || card.color !== inputColor){
         return false;
       }
     }
-
     if(inputType){
       if(!card.type || card.type !== inputType){
         return false;
       }
     }
-
     if(inputClass){
       if(!card.class || card.class !== inputClass){
         return false;
       }
     }
-
     if(checkBurst){
       if(!card.burst || card.burst !== checkBurst){
         return false
       }
     }
-
     if(checkNoBurst){
       if(card.burst || card.burst == checkBurst){
         return false
       }
     }
-
-
     // Looks like all the checks passed, we'll use this card
     return true;
   })
 
   // All right, we got all the matches, let's add them back to the page now
   for (var card of matchingCards) {
-    results.appendChild(cardElementFromData(card))
-  }
-  var searchCardImgs = document.getElementsByClassName('card-preview');
-  var bigPreviewImg = document.getElementById('previewCard');
-  for (var i = 0; i < searchCardImgs.length; i++) {
-    var card = searchCardImgs[i];
-    card.addEventListener('mouseenter', function (event) {
-      bigPreviewImg.src = event.target.src;
-      document.getElementById('cardsName').textContent = event.target.getAttribute('dataName');
-      document.getElementById('cardsType').textContent = event.target.getAttribute('dataType');
-      document.getElementById('cardsColor').textContent = event.target.getAttribute('dataColor');
-      document.getElementById('cardsLevel').textContent = event.target.getAttribute('dataLevel');
-      document.getElementById('cardsCost').textContent = event.target.getAttribute('dataCost');
-      document.getElementById('cardsAttack').textContent = event.target.getAttribute('dataAttack');
-      document.getElementById('cardsClass').textContent = event.target.getAttribute('dataClass');
-      document.getElementById('cardsLrigType').textContent = event.target.getAttribute('dataLrigType');
-      document.getElementById('cardsLimit').textContent = event.target.getAttribute('dataLimit');
-      document.getElementById('cardsText').innerHTML = event.target.getAttribute('dataText');
-    });
-    //Adding cards function starts here
-    card.addEventListener('click', function(event){
-      currentDeck.push(event.target.getAttribute('dataCardId'));
-      document.getElementById('deckDisplay').appendChild(event.target.parentElement.cloneNode(true))
-    });
+    results.append(cardElementFromData(card))
   }
 
   // Dereference the objects so when they're removed they don't memleak the event handlers
   searchCardImgs = null;
   if (card) card = null;
 }
-
 // Search function ends here
 
+// Some event listeners for cards now
+
+// When hovering over any card preview, show it in the left column
+$('.cardList').on('mouseenter', '.card-preview', function () {
+  var $this = $(this);
+  $('#previewCard').attr('src', $this.attr('src'));
+  $('#cardsName').text($this.attr('dataName'));
+  $('#cardsType').text($this.attr('dataType'));
+  $('#cardsColor').text($this.attr('dataColor'));
+  $('#cardsLevel').text($this.attr('dataLevel'));
+  $('#cardsCost').text($this.attr('dataCost'));
+  $('#cardsAttack').text($this.attr('dataAttack'));
+  $('#cardsClass').text($this.attr('dataClass'));
+  $('#cardsLrigType').text($this.attr('dataLrigType'));
+  $('#cardsLimit').text($this.attr('dataLimit'));
+  $('#cardsText').innerHTML = $this.attr('dataText');
+})
+
+// When clicking on a card, add it to the deck
+$('.cardList').on('click', '.card-preview', function () {
+  var $this = $(this);
+  currentDeck.push($this.attr('dataCardId'));
+  $('#deckDisplay').append($this.parent().clone())
+})
 
 
 // A listing of every card in its default state.
