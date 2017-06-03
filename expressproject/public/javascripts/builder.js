@@ -132,13 +132,17 @@ $('#results').on('click', '.card', function () {
   var $this = $(this);
   var cardsType = $this.attr('dataType')
   if(cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS'){
+  	if(currentDecks.lrig.length<10){
   	currentDecks.lrig.push($this.attr('dataCardId'));
    	$('#lrigDeckDisplay').append($this.clone())
    }
+  }
    else{
+   	if(currentDecks.main.length<40){
    	currentDecks.main.push($this.attr('dataCardId'));
    	$('#mainDeckDisplay').append($this.clone())
    }
+  }
  })
 
 // When clicking on a card in the deck area, remove it from the deck
