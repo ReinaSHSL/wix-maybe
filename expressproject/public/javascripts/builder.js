@@ -134,17 +134,17 @@ $('.cardList').on('mouseenter', '.card', function () {
 })
 
 // When clicking on a card in the right sidebar, add it to the deck
-$('#results').on('click', '.card-preview', function () {
+$('#results').on('click', '.card', function () {
   var $this = $(this);
   currentDeck.push($this.attr('dataCardId'));
-  $('#deckDisplay').append($this.parent().clone())
+  $('#deckDisplay').append($this.clone())
 })
 
 // When clicking on a card in the deck area, remove it from the deck
 // TODO: This should probably be triggered by another action
-$('#deckDisplay').on('click', '.card-preview', function () {
-  var $wrap = $(this).parent()
-  currentDeck.splice($wrap.eq(), 1)
+$('#deckDisplay').on('click', '.card', function () {
+  var $wrap = $(this)//.parent()
+  currentDeck.splice($wrap.index(), 1)
   $wrap.remove()
 })
 
