@@ -1,70 +1,84 @@
-body {
-	margin: 0;
-	padding: 0;
-}
-
-a {
-	color: #00B7FF;
-}
+/* Basic style */
+a { color: #00B7FF }
 
 /* Column and layout stuff */
 body {
-	display: flex;
 	margin: 0;
-	background: #EEE;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	display: flex;
+	align-items: stretch;
 }
 #left {
-	background: #AAA;
 	flex: 0 1 250px;
 	order: 0;
+	padding: 10px;
+	border-right: 1px solid #DDD;
+	background: #EEE;
 }
 #center {
-	background: #888;
 	flex: 1;
 	order: 1;
+	display: flex;
+	flex-direction: column;
 }
 #right {
-	background: #666;
 	flex: 0 1 250px;
 	order: 2;
+	padding: 10px;
+	border-left: 1px solid #DDD;
+	background: #EEE;
 }
 #top {
-	background: #DDD;
+	flex: 0 1 auto;
+	background: #F7F7F7;
+	padding: 5px 10px;
+	border-bottom: 1px solid #DDD;
+}
+#deckDisplayWrap {
+	flex: 1;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+#deckDisplay {
+	margin: 0;
+	padding: 5px;
+	display: flex;
+	flex-wrap: wrap;
 }
 
+/* More generic card stuff */
+.cardList {
+	display: flex;
+}
 .card {
-	display: inline-block;
-	width: 120px;
+	width: 80px;
 	list-style: none;
-	margin: 0 0 10px;
 }
-.card:nth-of-type(2n) {
-	margin-left: 10px;
-}
-.card-preview{
-	width:100%;
-	margin:0px;
+.card-preview {
+	display: block;
+	width: 100%;
+	margin: 0;
 }
 
-#search input{
+/* Search results don't need to be next to each other like that */
+#right .cardList {
+	justify-content: space-between;
+}
+#right .cardList .card {
+	margin-bottom: 5px;
+}
+
+#search input {
 	text-align: center;
 }
 
-ul {
-	padding: 0;
-}
-
-/* Here starts the left sidebar stuff */
-
-#col-left {
-	width: 250px;
-	margin: 10px;
-}
-
-#previewCard{
+/* Preview image and left panel stuff */
+#previewCard {
 	margin-bottom: 0px;
 	padding: 0px;
-	width:100%;
+	width: 100%;
 }
 
 #cardInfo p {
@@ -77,13 +91,13 @@ ul {
 }
 
 #cardsText {
-	height:250px;
-	width:100%;
-	overflow:scroll-y;
+	height: 250px;
+	width: 100%;
+	overflow: scroll-y;
 	margin: 0;
 	resize: none;
 }
 
-textarea#cardsText:empty{
-	display:none;
+textarea#cardsText:empty {
+	display: none;
 }

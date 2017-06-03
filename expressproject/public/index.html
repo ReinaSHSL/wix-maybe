@@ -31,7 +31,7 @@
       <!-- This will be the buttons and shit -->
       <div id="top">
         <label></label>
-            <select id = "deckList">
+            <select id="deckList">
             <!--Shit will be added dynamically-->
             <option value=''>Blank Deck</option>
             </select>
@@ -42,7 +42,9 @@
       </div>
 
       <!-- Cards live here -->
-      <ul id="deckDisplay"></ul>
+      <div id="deckDisplayWrap">
+        <ul id="deckDisplay" class="cardList"></ul>
+      </div>
     </div>
 
     <!-- Searching and all that good stuff -->
@@ -105,7 +107,7 @@
 
       <!-- List that will contain card placeholders - children are added dynamically -->
       <div>
-        <ul id="results"></ul>
+        <ul id="results" class="cardList"></ul>
       </div>
     </div>
 
