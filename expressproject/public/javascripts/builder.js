@@ -133,15 +133,15 @@ $('#results').on('click', '.card', function () {
   var cardsType = $this.attr('dataType')
   if(cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS'){
   	if(currentDecks.lrig.length<10){
-  	currentDecks.lrig.push($this.attr('dataCardId'));
-   	$('#lrigDeckDisplay').append($this.clone())
-   }
+  	  currentDecks.lrig.push(parseInt($this.attr('dataCardId'), 10));
+   	  $('#lrigDeckDisplay').append($this.clone())
+    }
   }
    else{
    	if(currentDecks.main.length<40){
-   	currentDecks.main.push($this.attr('dataCardId'));
-   	$('#mainDeckDisplay').append($this.clone())
-   }
+   	  currentDecks.main.push(parseInt($this.attr('dataCardId'), 10));
+   	  $('#mainDeckDisplay').append($this.clone())
+    }
   }
  })
 
