@@ -133,28 +133,24 @@ $('#results').on('click', '.card', function () {
   var cardsType = $this.attr('dataType')
   if(cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS'){
   	currentDecks.lrig.push($this.attr('dataCardId'));
-   	$('#deckDisplay').append($this.clone())
+   	$('#lrigDeckDisplay').append($this.clone())
    }
    else{
    	currentDecks.main.push($this.attr('dataCardId'));
-   	$('#deckDisplay').append($this.clone())
+   	$('#mainDeckDisplay').append($this.clone())
    }
  })
 
 // When clicking on a card in the deck area, remove it from the deck
-// TODO: This should probably be triggered by another action
-$('#deckDisplay').on('click', '.card', function () {
+$('#mainDeckDisplay').on('click', '.card', function () {
   var $wrap = $(this)//.parent()
-  var cardsType = $wrap.attr('dataType')
-   if(cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS'){
-     currentDecks.lrig.splice($wrap.index(), 1)
-     $wrap.remove()
-     console.log('test')
-    }
-   else{
-     currentDecks.main.splice($wrap.index(), 1)
-     $wrap.remove()
-    }
+  currentDecks.main.splice($wrap.index(), 1)
+  $wrap.remove()
+})
+$('#lrigDeckDisplay').on('click', '.card', function () {
+  var $wrap = $(this)
+  currentDecks.lrig.splice($wrap.index(), 1)
+  $wrap.remove()
 })
 
 
