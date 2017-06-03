@@ -1,4 +1,4 @@
-var currentDeck=[];
+var currentDecks = {lrig: [], main: []};
 
 // Function to take card data and make it into markup
 // function cardElementFromData (card) {
@@ -43,11 +43,6 @@ function cardElementFromData (card) {
 
 //Search Function
 function search(){
-  // Clear out the search results element
-  // var results = document.getElementById('results');
-  // while (results.firstChild) {
-  //   results.removeChild(results.firstChild);
-  // }
   var results = $('#results');
   results.empty();
 
@@ -118,7 +113,6 @@ function search(){
 
 // When hovering over any card preview, show it in the left column
 $('.cardList').on('mouseenter', '.card', function () {
-  console.log(this, $(this))
   var $this = $(this);
   $('#previewCard').attr('src', $this.find('.card-preview').attr('src'));
   $('#cardsName').text($this.attr('dataName'));
@@ -136,8 +130,15 @@ $('.cardList').on('mouseenter', '.card', function () {
 // When clicking on a card in the right sidebar, add it to the deck
 $('#results').on('click', '.card', function () {
   var $this = $(this);
-  currentDeck.push($this.attr('dataCardId'));
-  $('#deckDisplay').append($this.clone())
+  var cardsType = $this.attr('dataType')
+  if(cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS'){
+  	currentDecks.lrig.push($this.attr('dataCardId'));
+   	$('#deckDisplay').append($this.clone())
+   }
+   else{
+   	currentDecks.main.push($this.attr('dataCardId'));
+   	$('#deckDisplay').append($this.clone())
+   }
 })
 
 // When clicking on a card in the deck area, remove it from the deck
