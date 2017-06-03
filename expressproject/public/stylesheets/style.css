@@ -38,11 +38,11 @@ body {
 }
 #deckDisplayWrap {
 	flex: 1;
-	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow: auto;
 }
 #deckDisplay {
-	margin: 0;
+	max-width: 800px;
+	margin: 0 auto;
 	padding: 5px;
 	display: flex;
 	flex-wrap: wrap;
