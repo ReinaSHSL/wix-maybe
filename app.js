@@ -1,6 +1,7 @@
 var path = require('path');
 var express = require('express');
 var favicon = require('serve-favicon')
+
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
