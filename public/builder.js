@@ -189,3 +189,4 @@ var socket = io()
 socket.on('ping', function () {
   console.log("Recieved a ping, the connection's good!")
 })
+

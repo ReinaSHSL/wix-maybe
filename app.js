@@ -21,3 +21,18 @@ io.sockets.on('connection', function (socket) {
   console.log('New connection! Issuing ping to client.')
   socket.emit('ping')
 })
+
+//Save Deck
+($('#save').click(function(){
+  var fs = require('fs');
+  var path = decks
+  var data = "test"
+  fs.writeFile(path, data, function(error){
+    if (error){
+      console.error("heck" + error.message);
+    } else {
+      console.log("hype" + path);
+    }
+  })
+ })
+)
