@@ -51,6 +51,8 @@ body {
 /* More generic card stuff */
 .cardList {
 	display: flex;
+	margin: 0;
+	padding: 0;
 }
 .card {
 	width: 80px;
