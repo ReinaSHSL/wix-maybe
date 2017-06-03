@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./bin/www"
+    "start": "index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,6 @@
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
     "serve-favicon": "~2.4.2",
-    "socket.io": "^1.7.3"
+    "socket.io": "^1.7.4"
   }
 }

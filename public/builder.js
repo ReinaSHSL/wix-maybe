@@ -182,3 +182,10 @@ Other notes:
 - Signi and spells go in the main deck, while lrig, art, and resona go in the lrig deck
 
 */
+
+// The socket stuff is below here
+var socket = io()
+
+socket.on('ping', function () {
+  console.log("Recieved a ping, the connection's good!")
+})
