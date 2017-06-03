@@ -117,9 +117,10 @@ function search(){
 // Some event listeners for cards now
 
 // When hovering over any card preview, show it in the left column
-$('.cardList').on('mouseenter', '.card-preview', function () {
+$('.cardList').on('mouseenter', '.card', function () {
+  console.log(this, $(this))
   var $this = $(this);
-  $('#previewCard').attr('src', $this.attr('src'));
+  $('#previewCard').attr('src', $this.find('.card-preview').attr('src'));
   $('#cardsName').text($this.attr('dataName'));
   $('#cardsType').text($this.attr('dataType'));
   $('#cardsColor').text($this.attr('dataColor'));
@@ -132,11 +133,19 @@ $('.cardList').on('mouseenter', '.card-preview', function () {
   $('#cardsText').innerHTML = $this.attr('dataText');
 })
 
-// When clicking on a card, add it to the deck
-$('.cardList').on('click', '.card-preview', function () {
+// When clicking on a card in the right sidebar, add it to the deck
+$('#results').on('click', '.card-preview', function () {
   var $this = $(this);
   currentDeck.push($this.attr('dataCardId'));
   $('#deckDisplay').append($this.parent().clone())
+})
+
+// When clicking on a card in the deck area, remove it from the deck
+// TODO: This should probably be triggered by another action
+$('#deckDisplay').on('click', '.card-preview', function () {
+  var $wrap = $(this).parent()
+  currentDeck.splice($wrap.eq(), 1)
+  $wrap.remove()
 })
 
 
