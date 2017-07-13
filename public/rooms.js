@@ -62,6 +62,15 @@ $('#msgBox').keydown(function(e){
 socket.on('newLobbyMsg', function(newLobbyMsg){
     var lobbyMsgs = $('#lobbyChat').val()
     $('#lobbyChat').val(lobbyMsgs + newLobbyMsg)
+    console.log('new msg')
+})
+
+$('#leave').click(function(){
+	socket.emit('leaveRoom')
+	lobby.hide()
+	pregame.show()
+	$('#lobbyChat').val('')
+	$('#msgBox').val('')
 })
 
 //Test functions
