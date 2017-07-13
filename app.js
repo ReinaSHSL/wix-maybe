@@ -16,21 +16,33 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-//Creating Rooms
+
 var activeRooms = []
 io.on('connection', function(socket){
-    socket.emit('activeRooms', activeRooms)
-    socket.on('createRoom', function(roomId){
-	    console.log(roomId)
-	    socket.join(roomId)
-        activeRooms.push(roomId)
-        socket.broadcast.emit('newRoom', roomId)
+    socket.join('chat')
+    io.sockets.in('chat').emit('message', 'whatup')
+    
+    //Gives new clients all active rooms
+    socket.emit('activeRooms', activeRooms) 
 
-    socket.on('giveId', function(){
-        socket.emit('confirmJoin', roomId)
+    //Joining Rooms
+    socket.on('enteringRoom', function(enteringRoom){
+        console.log(enteringRoom)
+        socket.join(enteringRoom)
+        io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
+    })
+
+    //Creates rooms
+    socket.on('createRoom', function(createRoom){
+	    console.log(createRoom)
+	    socket.join(createRoom)
+        activeRooms.push(createRoom)
+        socket.broadcast.emit('newRoom', createRoom)
+
+    //Test functions
     socket.on('existingRooms', function(existingRooms){
         console.log(existingRooms)
     })
     })
   })
-})    
+
