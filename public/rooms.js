@@ -14,18 +14,10 @@ socket.on('newRoom', function(newRoom){
 })
 //On connection list all active rooms
 socket.on('activeRooms', function(activeRooms){
-	var roomList = []
-    for(li of $('#roomlist'){
-    	roomList.push
-    })
-	for(value of activeRooms){
-		if(roomList.indexOf(activeRooms) > -1){
-			roomList.splice($wrap,index(), 1)
-			$wrap.remove()
-		}
-		else{
-	    $('#roomList').append('<li>' + activeRooms + '</li>')
-	    }
+	var roomList = $('#roomList')
+    roomList.empty()
+    for(i of activeRooms){
+        roomList.append('<li>' + i + '</li>')
     }
 })
 
