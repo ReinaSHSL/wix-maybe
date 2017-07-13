@@ -17,13 +17,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 //Creating Rooms
+var activeRooms = []
 io.on('connection', function(socket){
+    socket.emit('activeRooms', activeRooms)
     socket.on('createRoom', function(roomId){
-	console.log(roomId)
-	socket.join(roomId)
-    socket.broadcast.emit('newRoom', roomId)
+	    console.log(roomId)
+	    socket.join(roomId)
+        activeRooms.push(roomId)
+        socket.broadcast.emit('newRoom', roomId)
+
     socket.on('giveId', function(){
         socket.emit('confirmJoin', roomId)
+    socket.on('existingRooms', function(existingRooms){
+        console.log(existingRooms)
+    })
     })
   })
 })    
