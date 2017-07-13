@@ -16,8 +16,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-// When we get a new connection, this is where we do things with it
-io.sockets.on('connection', function (socket) {
-  console.log('New connection! Issuing ping to client.')
-  socket.emit('ping')
-})
+//Creating Rooms
+io.on('connection', function(socket){
+    socket.on('createRoom', function(roomId){
+	console.log(roomId)
+	socket.join(roomId)
+	socket.in(roomId).emit('roomJoined', roomId)
+  })
+})    
