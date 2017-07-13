@@ -21,6 +21,7 @@ io.on('connection', function(socket){
     socket.on('createRoom', function(roomId){
 	console.log(roomId)
 	socket.join(roomId)
+    socket.broadcast.emit('newRoom', roomId)
     socket.on('giveId', function(){
         socket.emit('confirmJoin', roomId)
     })
