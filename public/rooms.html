@@ -7,12 +7,23 @@
     </head>
 
     <body>
-        <button type="button" button id='create'>Create Room</button>
-        <button type="button" button id='roomcheck'>Test Button</button>
-        <!--Rooms are dynamically created-->
-         <div>
-             <ul id="roomList"></ul>
+
+        <div id='pregame'>
+            <button type="button" button id='create'>Create Room</button>
+            <input type='text' id=username placeholder='Username'>
+            <button type="button" button id='setUser'>Set Username</button>
+            <button type="button" button id='testButton'>Test</button>
+            <!--Rooms are dynamically created-->
+             <div id=roomStuff>
+                 <ul id="roomList"></ul>
+             </div>
          </div>
+
+        <div id='lobby'>
+            <textarea id='lobbyChat' name='txt'></textarea>
+            <input type='text' id='msgBox' placeholder = 'Type text here'>
+        </div>
+
         <!--Scripts-->
         <script src="/socket.io/socket.io.js"></script>
         <script src="rooms.js"></script>

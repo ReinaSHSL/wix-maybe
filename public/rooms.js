@@ -1,5 +1,22 @@
+var pregame = $('#pregame')
+var lobby = $('#lobby')
+lobby.hide()
+
 // The socket stuff is below here
 var socket = io()
+
+//Username stuff
+
+$('#setUser').click(function(){
+	var username = $('#username').val()
+	socket.emit('setUser', username)
+})
+
+$("#testButton").click(function(){
+	socket.emit('userTest')
+})
+
+//Room stuff
 
 //Creates room
 $('#create').click(function(){
@@ -27,6 +44,24 @@ socket.on('activeRooms', function(activeRooms){
 $('#roomList').on('click', ".activeRoom", function(){
 	var enterRoom = (this.id)
 	socket.emit('enteringRoom', enterRoom)
+	pregame.hide()
+    lobby.show()
+})
+
+//Lobby stuff
+
+$('#msgBox').keydown(function(e){
+	var key = e.which
+	if(key === 13){
+		var msg = $('#msgBox').val()
+		socket.emit('lobbyMsg', msg)
+		$('#msgBox').val('')
+	}
+})
+
+socket.on('newLobbyMsg', function(newLobbyMsg){
+    var lobbyMsgs = $('#lobbyChat').val()
+    $('#lobbyChat').val(lobbyMsgs + newLobbyMsg)
 })
 
 //Test functions
