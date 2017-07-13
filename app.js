@@ -21,6 +21,8 @@ io.on('connection', function(socket){
     socket.on('createRoom', function(roomId){
 	console.log(roomId)
 	socket.join(roomId)
-	socket.in(roomId).emit('roomJoined', roomId)
+    socket.on('giveId', function(){
+        socket.emit('confirmJoin', roomId)
+    })
   })
 })    
