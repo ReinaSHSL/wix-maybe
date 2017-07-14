@@ -23,8 +23,7 @@ $('#create').click(function(){
 	var roomId = Math.random()
 	//console.log(roomId)
 	var roomName = $('#roomName').val()
-    socket.emit("createRoom", roomId)
-    socket.emit('roomName', roomName)
+    socket.emit("createRoom", {id: roomId, name: roomName})
     $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
 })
 
@@ -39,11 +38,10 @@ socket.on('newRoom', function(newRoom){
 //On connection list all active rooms
 socket.on('activeRooms', function(activeRooms){
 	var roomList = $('#roomList')
-    roomList.empty()
-    for(var i of activeRooms.ids){
-       for(var j of activeRooms.names){
-       	$('#roomList').append('<li id = ' + i + ' class = activeRoom>' + '<a href=#>' + j + '</a>' + '</li>')
-       }
+	roomList.empty()
+	console.log(activeRooms)
+    for(var i = 0; i<activeRooms.ids.length; i++){
+       	$('#roomList').append('<li id = ' + activeRooms.ids[i] + ' class = activeRoom>' + '<a href=#>' + activeRooms.names[i] + '</a>' + '</li>')
     }
 })
 

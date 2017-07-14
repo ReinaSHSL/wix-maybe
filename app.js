@@ -37,14 +37,12 @@ io.on('connection', function(socket){
     //Creates rooms
     socket.on('createRoom', function(createRoom){
 	    console.log(createRoom)
-	    socket.join(createRoom)
-        activeRooms.ids.push(createRoom)
+        socket.join(createRoom)
         socket.room = createRoom
-        socket.broadcast.emit('newRoom', createRoom)
-        socket.on('roomName', function(roomName){
-            activeRooms.names.push(roomName)
-            socket.broadcast.emit('roomName', roomName)
-        })
+        activeRooms.ids.push(createRoom.id)
+        activeRooms.names.push(createRoom.name)
+        console.log(createRoom.name)
+        io.sockets.emit('activeRooms', activeRooms)
     }) 
     //Username shit
     socket.on('setUser', function(setUser){
