@@ -27,14 +27,6 @@ $('#create').click(function(){
     $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
 })
 
-//Tells other clients to display room
-socket.on('newRoom', function(newRoom){
-	socket.on('roomName', function(roomName){
-		var roomName = roomName
-        $('#roomList').append('<li id = ' + newRoom + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
-    })
-})
-
 //On connection list all active rooms
 socket.on('activeRooms', function(activeRooms){
 	var roomList = $('#roomList')

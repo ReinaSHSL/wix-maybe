@@ -41,7 +41,6 @@ io.on('connection', function(socket){
         socket.room = createRoom
         activeRooms.ids.push(createRoom.id)
         activeRooms.names.push(createRoom.name)
-        console.log(createRoom.name)
         io.sockets.emit('activeRooms', activeRooms)
     }) 
     //Username shit
