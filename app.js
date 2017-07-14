@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 var activeRooms = {ids:[], names: []}
+var roomMembers = []
 
 io.on('connection', function(socket){
     socket.join('chat')
@@ -26,23 +27,33 @@ io.on('connection', function(socket){
     //Gives new clients all active rooms
     socket.emit('activeRooms', activeRooms)
 
+    //Creates rooms
+    socket.on('createRoom', function(createRoom){
+        console.log(createRoom)
+        socket.join(createRoom)
+        socket.room = createRoom
+        for(var member in io.sockets.adapter.rooms[createRoom]){
+            roomMembers.push(member)
+        }
+        console.log(roomMembers.length)
+        activeRooms.ids.push(createRoom.id)
+        activeRooms.names.push(createRoom.name)
+        io.sockets.emit('activeRooms', activeRooms)
+    }) 
+
+
     //Joining Rooms
     socket.on('enteringRoom', function(enteringRoom){
         console.log(enteringRoom)
         socket.join(enteringRoom)
         socket.room = enteringRoom
+        for(var member in io.sockets.adapter.rooms[enteringRoom]){
+            roomMembers.push(member)
+        }
+        console.log(roomMembers.length)
         io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
     })
 
-    //Creates rooms
-    socket.on('createRoom', function(createRoom){
-	    console.log(createRoom)
-        socket.join(createRoom)
-        socket.room = createRoom
-        activeRooms.ids.push(createRoom.id)
-        activeRooms.names.push(createRoom.name)
-        io.sockets.emit('activeRooms', activeRooms)
-    }) 
     //Username shit
     socket.on('setUser', function(setUser){
         socket.username = setUser

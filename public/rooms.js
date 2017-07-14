@@ -20,11 +20,17 @@ $("#testButton").click(function(){
 
 //Creates room
 $('#create').click(function(){
-	var roomId = Math.random()
-	//console.log(roomId)
 	var roomName = $('#roomName').val()
+	if(roomName === ''){
+		alert('Please set a room name')
+	}
+	else{
+	var roomId = Math.random()
     socket.emit("createRoom", {id: roomId, name: roomName})
+    pregame.hide()
+    lobby.show()
     $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
+    }
 })
 
 //On connection list all active rooms
@@ -47,6 +53,7 @@ $('#roomList').on('click', ".activeRoom", function(){
 
 //Lobby stuff
 
+//Chatbox sends msg
 $('#msgBox').keydown(function(e){
 	var key = e.which
 	if(key === 13){
@@ -56,17 +63,19 @@ $('#msgBox').keydown(function(e){
 	}
 })
 
+//Display new msg
 socket.on('newLobbyMsg', function(newLobbyMsg){
     var lobbyMsgs = $('#lobbyChat').val()
     $('#lobbyChat').val(lobbyMsgs + newLobbyMsg)
 })
 
+//Leaving the lobby
 $('#leave').click(function(){
 	socket.emit('leaveRoom')
 	lobby.hide()
-	pregame.show()
 	$('#lobbyChat').val('')
 	$('#msgBox').val('')
+	pregame.show()
 })
 
 //Test functions
