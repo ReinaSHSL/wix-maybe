@@ -22,21 +22,28 @@ $("#testButton").click(function(){
 $('#create').click(function(){
 	var roomId = Math.random()
 	//console.log(roomId)
+	var roomName = $('#roomName').val()
     socket.emit("createRoom", roomId)
-    $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomId + '</a>' + '</li>')
+    socket.emit('roomName', roomName)
+    $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
 })
 
 //Tells other clients to display room
 socket.on('newRoom', function(newRoom){
-    $('#roomList').append('<li id = ' + newRoom + ' class = activeRoom>' + '<a href=#>' + newRoom + '</a>' + '</li>')
+	socket.on('roomName', function(roomName){
+		var roomName = roomName
+        $('#roomList').append('<li id = ' + newRoom + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
+    })
 })
 
 //On connection list all active rooms
 socket.on('activeRooms', function(activeRooms){
 	var roomList = $('#roomList')
     roomList.empty()
-    for(var i of activeRooms){
-        roomList.append('<li id = ' + i + ' class = activeRoom>' + '<a href=#>' + i + '</a>' + '</li>')
+    for(var i of activeRooms.ids){
+       for(var j of activeRooms.names){
+       	$('#roomList').append('<li id = ' + i + ' class = activeRoom>' + '<a href=#>' + j + '</a>' + '</li>')
+       }
     }
 })
 
@@ -62,7 +69,6 @@ $('#msgBox').keydown(function(e){
 socket.on('newLobbyMsg', function(newLobbyMsg){
     var lobbyMsgs = $('#lobbyChat').val()
     $('#lobbyChat').val(lobbyMsgs + newLobbyMsg)
-    console.log('new msg')
 })
 
 $('#leave').click(function(){
@@ -86,3 +92,4 @@ socket.on('newClient', function(newClient){
 socket.on('message', function(message){
 	console.log(message)
 })
+

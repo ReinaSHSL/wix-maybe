@@ -16,15 +16,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-var activeRooms = []
+var activeRooms = {ids:[], names: []}
+
 io.on('connection', function(socket){
     socket.join('chat')
     socket.room = 'heck'
     socket.user = 'nothing'
-    io.sockets.in('chat').emit('message', 'whatup')
 
     //Gives new clients all active rooms
-    socket.emit('activeRooms', activeRooms) 
+    socket.emit('activeRooms', activeRooms)
 
     //Joining Rooms
     socket.on('enteringRoom', function(enteringRoom){
@@ -38,15 +38,20 @@ io.on('connection', function(socket){
     socket.on('createRoom', function(createRoom){
 	    console.log(createRoom)
 	    socket.join(createRoom)
-        activeRooms.push(createRoom)
+        activeRooms.ids.push(createRoom)
         socket.room = createRoom
         socket.broadcast.emit('newRoom', createRoom)
-    })
-
+        socket.on('roomName', function(roomName){
+            activeRooms.names.push(roomName)
+            socket.broadcast.emit('roomName', roomName)
+        })
+    }) 
+    //Username shit
     socket.on('setUser', function(setUser){
         socket.username = setUser
     })
 
+    //test function
     socket.on('userTest', function(){
         console.log(socket.username + ' has sent a message')
     })
