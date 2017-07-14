@@ -17,7 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 var activeRooms = {ids:[], names: []}
-var roomMembers = []
 
 io.on('connection', function(socket){
     socket.join('chat')
@@ -29,28 +28,22 @@ io.on('connection', function(socket){
 
     //Creates rooms
     socket.on('createRoom', function(createRoom){
-        console.log(createRoom)
-        socket.join(createRoom)
-        socket.room = createRoom
-        for(var member in io.sockets.adapter.rooms[createRoom]){
-            roomMembers.push(member)
-        }
-        console.log(roomMembers.length)
         activeRooms.ids.push(createRoom.id)
         activeRooms.names.push(createRoom.name)
+        for(var i=0; i<activeRooms.ids.length; i++){
+            activeRooms[i].push('user')
+            console.log(activeRooms[i])
+        }
+        socket.join(createRoom)
+        socket.room = createRoom
         io.sockets.emit('activeRooms', activeRooms)
     }) 
 
 
     //Joining Rooms
     socket.on('enteringRoom', function(enteringRoom){
-        console.log(enteringRoom)
         socket.join(enteringRoom)
         socket.room = enteringRoom
-        for(var member in io.sockets.adapter.rooms[enteringRoom]){
-            roomMembers.push(member)
-        }
-        console.log(roomMembers.length)
         io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
     })
 
