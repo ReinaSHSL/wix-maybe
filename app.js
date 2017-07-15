@@ -31,10 +31,9 @@ io.on('connection', function(socket){
         var roomId = parseInt(createRoom.id)
         activeRooms.ids.push(roomId)
         activeRooms.names.push(createRoom.name)
-        activeRooms.users.push(createRoom.id)
-        console.log(activeRooms)
-        socket.join(createRoom)
-        socket.room = createRoom
+        activeRooms.users.push(roomId)
+        socket.join(roomId)
+        socket.room = roomId
         io.sockets.emit('activeRooms', activeRooms)
     }) 
 
@@ -57,7 +56,7 @@ io.on('connection', function(socket){
             io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
         }
         else{
-            console.log('Room is full')
+            socket.emit('roomFull')
         }
     })
 
@@ -79,6 +78,8 @@ io.on('connection', function(socket){
 
     //Leaving Lobby
     socket.on('leaveRoom', function(){
+        var index = activeRooms.users.indexOf(socket.room)
+        activeRooms.users.splice(index, 1)
         socket.leave(socket.room)
     })
   })

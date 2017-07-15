@@ -53,6 +53,10 @@ $('#roomList').on('click', ".activeRoom", function(){
     })
 })
 
+//
+socket.on('roomFull', function(){
+	alert('Room is full')
+})
 //Lobby stuff
 
 //Chatbox sends msg
