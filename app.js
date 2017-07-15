@@ -48,6 +48,7 @@ io.on('connection', function(socket){
             socket.room = enteringRoom
             activeRooms[enteringRoom].users.push(socket.user)
             socket.emit('roomSuccess', activeRooms[enteringRoom])
+            console.log(activeRooms)
         }
         else{
             socket.emit('roomFull')
@@ -56,7 +57,7 @@ io.on('connection', function(socket){
 
     //Leaving Lobby
     socket.on('leaveRoom', function(){
-        var index = activeRooms[socket.room].users.indexOf(socket.room)
+        var index = activeRooms[socket.room].users.indexOf(socket.user)
         activeRooms[socket.room].users.splice(index, 1)    
         console.log(activeRooms)
         if(activeRooms[socket.room].users.length === 0){
@@ -69,10 +70,10 @@ io.on('connection', function(socket){
 
     //Username shit
     socket.on('setUser', function(setUser){
-        socket.username = setUser
+        socket.user = setUser
     })
 
-    //test function
+    //test function, change as necessary
     socket.on('userTest', function(){
         console.log(socket.username + ' has sent a message')
     })
