@@ -52,11 +52,10 @@ io.on('connection', function(socket){
             socket.room = enteringRoom
             var user = parseInt(enteringRoom)
             activeRooms.users.push(user)
-            socket.emit('roomSuccess')
-            io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
+            socket.emit('roomSuccess', {id: enteringRoom, userCheck: userCheck})
         }
         else{
-            socket.emit('roomFull')
+            socket.emit('roomFull', userCheck)
         }
     })
 
