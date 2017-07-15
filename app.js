@@ -42,10 +42,9 @@ io.on('connection', function(socket){
     //Joining Rooms
     socket.on('enteringRoom', function(enteringRoom){
         var userCheck = 0
-        var userArray = activeRooms.users
         var roomUsers = parseInt(enteringRoom)
-        for(var i=0; i<userArray.length; i++){
-            if(userArray[i] === roomUsers){
+        for(var i=0; i<activeRooms.users.length; i++){
+            if(activeRooms.users[i] === roomUsers){
                 userCheck++
             }
         }
