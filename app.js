@@ -57,9 +57,14 @@ io.on('connection', function(socket){
     //Leaving Lobby
     socket.on('leaveRoom', function(){
         var index = activeRooms[socket.room].users.indexOf(socket.room)
-        activeRooms[socket.room].users.splice(index, 1)  
-        socket.leave(socket.room)    
+        activeRooms[socket.room].users.splice(index, 1)    
         console.log(activeRooms)
+        if(activeRooms[socket.room].users.length === 0){
+            delete activeRooms[socket.room]
+            io.sockets.emit('emptyRoom', socket.room)
+        }
+        socket.leave(socket.room) 
+        socket.room = '' 
     })
 
     //Username shit

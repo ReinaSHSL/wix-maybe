@@ -58,8 +58,8 @@ socket.on('roomFull', function(){
 })
 
 //Delete empty rooms
-socket.on('emptyRooms', function(emptyRooms){
-	console.log(emptyRooms)
+socket.on('emptyRoom', function(emptyRoom){
+$('#' + emptyRoom).remove()
 })
 
 //Lobby stuff
@@ -84,9 +84,9 @@ socket.on('newLobbyMsg', function(newLobbyMsg){
 $('#leave').click(function(){
 	socket.emit('leaveRoom')
 	lobby.hide()
+	pregame.show()
 	$('#lobbyChat').val('')
 	$('#msgBox').val('')
-	pregame.show()
 })
 
 //Test functions
