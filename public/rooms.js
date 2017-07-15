@@ -37,8 +37,8 @@ $('#create').click(function(){
 socket.on('activeRooms', function(activeRooms){
 	var roomList = $('#roomList')
 	roomList.empty()
-    for(var i = 0; i<activeRooms.ids.length; i++){
-       	$('#roomList').append('<li id = ' + activeRooms.ids[i] + ' class = activeRoom>' + '<a href=#>' + activeRooms.names[i] + '</a>' + '</li>')
+    for(var i = 0; i < (Object.keys(activeRooms)).length; i++){
+       	$('#roomList').append('<li id = ' + Object.keys(activeRooms)[i] + ' class = activeRoom>' + '<a href=#>' + activeRooms[Object.keys(activeRooms)[i]].name + '</a>' + '</li>')
     }
 })
 
@@ -102,4 +102,3 @@ socket.on('newClient', function(newClient){
 socket.on('message', function(message){
 	console.log(message)
 })
-

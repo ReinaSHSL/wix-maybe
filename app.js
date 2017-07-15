@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-var activeRooms = {ids:[], names: [], users: []}
+var activeRooms = {}
 
 
 io.on('connection', function(socket){
@@ -30,51 +30,36 @@ io.on('connection', function(socket){
     //Creates rooms
     socket.on('createRoom', function(createRoom){
         var roomId = parseInt(createRoom.id)
-        activeRooms.ids.push(roomId)
-        activeRooms.names.push(createRoom.name)
-        activeRooms.users.push(roomId)
-        socket.join(roomId)
         socket.room = roomId
+        activeRooms[roomId] =  {
+            name: createRoom.name,
+            users: []
+        }
+        activeRooms[roomId].users.push(socket.user)
+        console.log(activeRooms)
+        socket.join(roomId)
         io.sockets.emit('activeRooms', activeRooms)
     }) 
 
-
     //Joining Rooms
     socket.on('enteringRoom', function(enteringRoom){
-        var userCheck = 0
-        var roomUsers = parseInt(enteringRoom)
-        for(var i=0; i<activeRooms.users.length; i++){
-            if(activeRooms.users[i] === roomUsers){
-                userCheck++
-            }
-        }
-        if(userCheck < 2){
+        if(activeRooms[enteringRoom].users.length < 2){
             socket.join(enteringRoom)
             socket.room = enteringRoom
-            var user = parseInt(enteringRoom)
-            activeRooms.users.push(user)
-            socket.emit('roomSuccess', {id: enteringRoom, userCheck: userCheck})
+            activeRooms[enteringRoom].users.push(socket.user)
+            socket.emit('roomSuccess', activeRooms[enteringRoom])
         }
         else{
-            socket.emit('roomFull', userCheck)
+            socket.emit('roomFull')
         }
     })
 
     //Leaving Lobby
     socket.on('leaveRoom', function(){
-        var emptyRooms = []
-        var roomCheck = 1
-        var index = activeRooms.users.indexOf(socket.room)
-        activeRooms.users.splice(index, 1)
-         for(var i = 0; i<activeRooms.ids.length; i++){
-            roomCheck = activeRooms.ids[i]
-            if(activeRooms.users.indexOf(roomCheck) === -1){
-                roomCheck.push(emptyRooms)
-                console.log(emptyRooms)
-            }
-        }
-        socket.leave(socket.room)        
-        socket.emit('emptyRooms', emptyRooms)
+        var index = activeRooms[socket.room].users.indexOf(socket.room)
+        activeRooms[socket.room].users.splice(index, 1)  
+        socket.leave(socket.room)    
+        console.log(activeRooms)
     })
 
     //Username shit
@@ -92,6 +77,5 @@ io.on('connection', function(socket){
         console.log(socket.username + lobbyMsg + socket.room)
         io.sockets.in(socket.room).emit('newLobbyMsg', socket.username + ': ' + lobbyMsg)
     })
-
   })
 
