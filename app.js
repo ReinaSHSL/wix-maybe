@@ -18,6 +18,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 var activeRooms = {ids:[], names: [], users: []}
 
+
 io.on('connection', function(socket){
     socket.join('chat')
     socket.room = 'heck'
@@ -59,6 +60,23 @@ io.on('connection', function(socket){
         }
     })
 
+    //Leaving Lobby
+    socket.on('leaveRoom', function(){
+        var emptyRooms = []
+        var roomCheck = 1
+        var index = activeRooms.users.indexOf(socket.room)
+        activeRooms.users.splice(index, 1)
+         for(var i = 0; i<activeRooms.ids.length; i++){
+            roomCheck = activeRooms.ids[i]
+            if(activeRooms.users.indexOf(roomCheck) === -1){
+                roomCheck.push(emptyRooms)
+                console.log(emptyRooms)
+            }
+        }
+        socket.leave(socket.room)        
+        socket.emit('emptyRooms', emptyRooms)
+    })
+
     //Username shit
     socket.on('setUser', function(setUser){
         socket.username = setUser
@@ -75,11 +93,5 @@ io.on('connection', function(socket){
         io.sockets.in(socket.room).emit('newLobbyMsg', socket.username + ': ' + lobbyMsg)
     })
 
-    //Leaving Lobby
-    socket.on('leaveRoom', function(){
-        var index = activeRooms.users.indexOf(socket.room)
-        activeRooms.users.splice(index, 1)
-        socket.leave(socket.room)
-    })
   })
 

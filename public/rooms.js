@@ -37,7 +37,6 @@ $('#create').click(function(){
 socket.on('activeRooms', function(activeRooms){
 	var roomList = $('#roomList')
 	roomList.empty()
-	console.log(activeRooms)
     for(var i = 0; i<activeRooms.ids.length; i++){
        	$('#roomList').append('<li id = ' + activeRooms.ids[i] + ' class = activeRoom>' + '<a href=#>' + activeRooms.names[i] + '</a>' + '</li>')
     }
@@ -53,10 +52,16 @@ $('#roomList').on('click', ".activeRoom", function(){
     })
 })
 
-//
+//What happens if you try to join a full room
 socket.on('roomFull', function(){
 	alert('Room is full')
 })
+
+//Delete empty rooms
+socket.on('emptyRooms', function(emptyRooms){
+	console.log(emptyRooms)
+})
+
 //Lobby stuff
 
 //Chatbox sends msg
