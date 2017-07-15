@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-var activeRooms = {ids:[], names: []}
+var activeRooms = {ids:[], names: [], users: []}
 
 io.on('connection', function(socket){
     socket.join('chat')
@@ -28,12 +28,11 @@ io.on('connection', function(socket){
 
     //Creates rooms
     socket.on('createRoom', function(createRoom){
-        activeRooms.ids.push(createRoom.id)
+        var roomId = parseInt(createRoom.id)
+        activeRooms.ids.push(roomId)
         activeRooms.names.push(createRoom.name)
-        for(var i=0; i<activeRooms.ids.length; i++){
-            activeRooms[i].push('user')
-            console.log(activeRooms[i])
-        }
+        activeRooms.users.push(createRoom.id)
+        console.log(activeRooms)
         socket.join(createRoom)
         socket.room = createRoom
         io.sockets.emit('activeRooms', activeRooms)
@@ -42,9 +41,25 @@ io.on('connection', function(socket){
 
     //Joining Rooms
     socket.on('enteringRoom', function(enteringRoom){
-        socket.join(enteringRoom)
-        socket.room = enteringRoom
-        io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
+        var userCheck = 0
+        var userArray = activeRooms.users
+        var roomUsers = parseInt(enteringRoom)
+        for(var i=0; i<userArray.length; i++){
+            if(userArray[i] === roomUsers){
+                userCheck++
+            }
+        }
+        if(userCheck < 2){
+            socket.join(enteringRoom)
+            socket.room = enteringRoom
+            var user = parseInt(enteringRoom)
+            activeRooms.users.push(user)
+            socket.emit('roomSuccess')
+            io.sockets.in(enteringRoom).emit('newClient', enteringRoom)
+        }
+        else{
+            console.log('Room is full')
+        }
     })
 
     //Username shit

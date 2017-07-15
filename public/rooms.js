@@ -25,7 +25,7 @@ $('#create').click(function(){
 		alert('Please set a room name')
 	}
 	else{
-	var roomId = Math.random()
+	var roomId = Math.random()*1000000000000000000
     socket.emit("createRoom", {id: roomId, name: roomName})
     pregame.hide()
     lobby.show()
@@ -47,8 +47,10 @@ socket.on('activeRooms', function(activeRooms){
 $('#roomList').on('click', ".activeRoom", function(){
 	var enterRoom = (this.id)
 	socket.emit('enteringRoom', enterRoom)
-	pregame.hide()
-    lobby.show()
+	socket.on('roomSuccess', function(){
+	    pregame.hide()
+        lobby.show()
+    })
 })
 
 //Lobby stuff
