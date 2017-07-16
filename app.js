@@ -84,7 +84,7 @@ io.on('connection', function(socket){
     //Lobby chatting
     socket.on('lobbyMsg', function(lobbyMsg){
         console.log(socket.username + lobbyMsg + socket.room)
-        io.sockets.in(socket.room).emit('newLobbyMsg', socket.username + ': ' + lobbyMsg)
+        io.sockets.in(socket.room).emit('newLobbyMsg', socket.user + ': ' + lobbyMsg)
     })
   })
 
