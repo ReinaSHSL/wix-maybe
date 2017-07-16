@@ -33,13 +33,17 @@ io.on('connection', function (socket) {
         socket.room = roomId
         activeRooms[roomId] =  {
             name: createRoom.name,
-            users: []
+            users: [],
+            roomLeader: socket.id,
+            ids: [socket.id]
         }
         activeRooms[roomId].users.push(socket.user)
         console.log(activeRooms)
         socket.join(roomId)
         io.sockets.emit('activeRooms', activeRooms)
         io.sockets.in(roomId).emit('roomUserUpdate', socket.user)
+        console.log('Room leader in ' + socket.room + ' is ' + activeRooms[roomId].roomLeader)
+        console.log('Ids in room ' + socket.room + ' are ' + activeRooms[roomId].ids)
     }) 
 
     //Joining Rooms
@@ -48,9 +52,11 @@ io.on('connection', function (socket) {
             socket.join(enteringRoom)
             socket.room = enteringRoom
             activeRooms[enteringRoom].users.push(socket.user)
+            activeRooms[enteringRoom].ids.push(socket.id)
             socket.emit('roomSuccess', activeRooms[enteringRoom])
             io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.user, room: socket.room})
             console.log(activeRooms)
+            console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteringRoom].ids)
         }
         else {
             socket.emit('roomFull')
