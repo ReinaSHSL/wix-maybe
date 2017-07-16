@@ -35,7 +35,8 @@ io.on('connection', function (socket) {
             name: roomData.name,
             users: [],
             roomLeader: socket.id,
-            ids: [socket.id]
+            ids: [socket.id],
+            pass: roomData.pass || undefined
         }
         activeRooms[roomId].users.push(socket.username)
         // console.log(activeRooms)
@@ -49,17 +50,33 @@ io.on('connection', function (socket) {
     //Joining Rooms
     socket.on('enteringRoom', function (enteringRoom) {
         if (activeRooms[enteringRoom].users.length < 2) {
-            socket.join(enteringRoom)
-            socket.room = enteringRoom
-            activeRooms[enteringRoom].users.push(socket.username)
-            activeRooms[enteringRoom].ids.push(socket.id)
-            socket.emit('roomSuccess', activeRooms[enteringRoom])
-            io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
-            // console.log(activeRooms)
-            // console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteringRoom].ids)
-        }
-        else {
+            if (!activeRooms[enteringRoom].pass) {
+                socket.join(enteringRoom)
+                socket.room = enteringRoom
+                activeRooms[enteringRoom].users.push(socket.user)
+                activeRooms[enteringRoom].ids.push(socket.id)
+                socket.emit('roomSuccess', activeRooms[enteringRoom])
+                io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.user, room: socket.room})
+                // console.log(activeRooms)
+                // console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteringRoom].ids)
+            }
+            if (activeRooms[enteringRoom].pass) {
+                socket.emit('passwordPrompt', enteringRoom)
+            }
+        } else {
             socket.emit('roomFull')
+        }
+    })
+    socket.on('enteredPassword', function (enteredPassword) {
+        if (activeRooms[enteredPassword.roomId].pass === enteredPassword.passEntered) {
+            socket.join(enteredPassword.roomId)
+            socket.room = enteredPassword.roomId
+            activeRooms[enteredPassword.roomId].users.push(socket.user)
+            activeRooms[enteredPassword.roomId].ids.push(socket.id)
+            socket.emit('roomSuccess', activeRooms[enteredPassword.roomId])
+            io.sockets.in(enteredPassword.roomId).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.user, room: socket.room})
+            console.log(activeRooms)
+            console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteredPassword.roomId].ids)
         }
     })
 

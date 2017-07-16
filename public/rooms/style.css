@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+.header {
+    background: #F7F7F7;
+    border-bottom: 1px solid #BBB;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.header .title {
+    display: inline;
+    margin: 0;
+    font-size: inherit;
+}
+.header .title a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.header .username-form {
+    margin: 0;
+}
+
+/*#create {
+    position: absolute;
+    top: 5px;
+    left: 73px;
+}*/
+
+
+.main {
+    padding: 10px;
+}
+
+#roomList:empty::after {
+    content: "There are no rooms!?"
+}
+
+h2 {
+    margin-top: 0;
+}
+.username-label {
+    cursor: pointer;
+}

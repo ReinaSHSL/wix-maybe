@@ -15,7 +15,7 @@ $('.username-form').submit(function () {
     if (username) {
         $input.replaceWith(`<span class="username-label" title="Click to change your username">${username}</span>`)
     } else {
-        $input.replaceWith(`<button class="username-label">Choose a username...</button>`)
+        $input.replaceWith('<button class="username-label">Choose a username...</button>')
     }
     $setButton.hide()
     socket.emit('setUsername', username)
@@ -40,12 +40,13 @@ $('#testButton').click(function () {
 //Creates room
 $('#create').click(function () {
     var roomName = $('#roomName').val()
+    var roomPass = $('#roomPass').val()
     if (!roomName) {
         return alert('Please set a room name')
     }
     else {
         var roomId = Math.random()*1000000000000000000
-        socket.emit('createRoom', {id: roomId, name: roomName})
+        socket.emit('createRoom', {id: roomId, name: roomName, pass: roomPass})
         pregame.hide()
         lobby.show()
         $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
@@ -71,6 +72,11 @@ $('#roomList').on('click', '.activeRoom', function () {
         $('.header .extra').text(' > Chat: ' + room.name)
     })
 })
+socket.on('passwordPrompt', function (passwordPrompt) {
+    var pass = prompt('Room password?')
+    socket.emit('enteredPassword', {roomId: passwordPrompt, passEntered: pass})
+})
+
 
 //What happens if you try to join a full room
 socket.on('roomFull', function () {
@@ -96,7 +102,6 @@ $('#msgBox').keydown(function (e) {
 
 //Display new msg
 socket.on('newLobbyMessage', function (msg) {
-    var lobbyMsgs = $('#lobbyChat').val()
     $('.messages').append(`
         <div class="message">
             <span class="author">${msg.author}</span>
