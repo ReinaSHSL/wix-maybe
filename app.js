@@ -67,8 +67,19 @@ io.on('connection', function (socket) {
     socket.on('leaveRoom', function () {
         var index = activeRooms[socket.room].users.indexOf(socket.user)
         activeRooms[socket.room].users.splice(index, 1)    
+        var idIndex = activeRooms[socket.room].ids.indexOf(socket.id)
+        activeRooms[socket.room].ids.splice(idIndex, 1)
         console.log(activeRooms)
-        if (activeRooms[socket.room].users.length === 0) {
+        if(activeRooms[socket.room].ids.length){
+            if (socket.id === activeRooms[socket.room].roomLeader){
+                if (activeRooms[socket.room].ids.length) {
+                    activeRooms[socket.room].roomLeader = ''
+                    activeRooms[socket.room].roomLeader = activeRooms[socket.room].ids[0]
+                    console.log('Room Leader is ' + activeRooms[socket.room].roomLeader)
+                }            
+            }
+        }
+        else{
             delete activeRooms[socket.room]
             io.sockets.emit('emptyRoom', socket.room)
         }
@@ -80,11 +91,6 @@ io.on('connection', function (socket) {
     //Username shit
     socket.on('setUser', function (setUser) {
         socket.user = setUser
-    })
-
-    //test function, change as necessary
-    socket.on('userTest', function () {
-        console.log(socket.username + ' has sent a message')
     })
 
     //Lobby chatting
