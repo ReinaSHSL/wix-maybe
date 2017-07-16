@@ -105,7 +105,7 @@ $('#msgBox').keydown(function (e) {
 socket.on('newLobbyMessage', function (msg) {
     $('.messages').append(`
         <div class="message">
-            <span class="author">${msg.author}</span>
+            <span class="author">${msg.author}:</span>
             <span class="content">${msg.content}</span>
         </div>
     `)
@@ -116,7 +116,7 @@ $('#leave').click(function () {
     socket.emit('leaveRoom')
     lobby.hide()
     pregame.show()
-    $('#lobbyChat').val('')
+    $('.messages').empty()
     $('#msgBox').val('')
     $('.header .extra').text('')
 })
@@ -134,7 +134,6 @@ socket.on('roomUserUpdateOnJoin', function (roomUserUpdateOnJoin) {
 })
 
 //Remove user names when they leave
-
 socket.on('userLeft', function (userLeft) {
     if ($('#roomLeader').val() === userLeft) {
         $('#roomLeader').val('')
@@ -143,19 +142,8 @@ socket.on('userLeft', function (userLeft) {
         $('#roomUser').val('')
     }
 })
-
-//Test functions
-
-socket.on('confirmJoin', function (confirmJoin) {
-    console.log('You have joined room ' + confirmJoin)
-})
-
-socket.on('newClient', function (newClient) {
-    console.log('new client in room ' + newClient)
-})
-
-socket.on('message', function (message) {
-    console.log(message)
-})
-
-// todo: record user leaving room on page exit
+ 
+//kick user from room if refresh
+window.onbeforeunload = function() {
+    socket.emit('leaveRoom')
+}

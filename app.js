@@ -53,12 +53,10 @@ io.on('connection', function (socket) {
             if (!activeRooms[enteringRoom].pass) {
                 socket.join(enteringRoom)
                 socket.room = enteringRoom
-                activeRooms[enteringRoom].users.push(socket.user)
+                activeRooms[enteringRoom].users.push(socket.username)
                 activeRooms[enteringRoom].ids.push(socket.id)
                 socket.emit('roomSuccess', activeRooms[enteringRoom])
-                io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.user, room: socket.room})
-                // console.log(activeRooms)
-                // console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteringRoom].ids)
+                io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
             }
             if (activeRooms[enteringRoom].pass) {
                 socket.emit('passwordPrompt', enteringRoom)
@@ -71,10 +69,10 @@ io.on('connection', function (socket) {
         if (activeRooms[enteredPassword.roomId].pass === enteredPassword.passEntered) {
             socket.join(enteredPassword.roomId)
             socket.room = enteredPassword.roomId
-            activeRooms[enteredPassword.roomId].users.push(socket.user)
+            activeRooms[enteredPassword.roomId].users.push(socket.username)
             activeRooms[enteredPassword.roomId].ids.push(socket.id)
             socket.emit('roomSuccess', activeRooms[enteredPassword.roomId])
-            io.sockets.in(enteredPassword.roomId).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.user, room: socket.room})
+            io.sockets.in(enteredPassword.roomId).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
             console.log(activeRooms)
             console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteredPassword.roomId].ids)
         }
