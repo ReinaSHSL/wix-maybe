@@ -7,31 +7,50 @@
     </head>
 
     <body>
+        <header class="header">
+            <div class="title-area">
+                <h1 class="title"><a href="../" title="Back to Home">Batoru</a></h1>
+                <span class="extra"></span>
+            </div>
+            <form class="username-form">
+                <button class="username-label">Choose a username...</button>
+                <input type="submit" class="set-username" value="Set" style="display:none;">
+            </form>
+        </header>
 
-        <div id='pregame'>
-            <button type="button" button id='create'>Create Room</button>
-            <input type='text' id=username placeholder='Username'>
-            <button type="button" button id='setUser'>Set Username</button>
-            <button type="button" button id='testButton'>Test</button>
-            <input type='text' id='roomName' placeholder = 'Room Name'>
-            <input type='text' id='roomPass' placeholder = 'Room Password'>
+        <section class="main" id="pregame"><!-- The room list and username selection thing -->
+            <h2>Create a room</h2>
+            <!-- <span class="user-shit">
+                <input type="text" id="username" placeholder="Username">
+                <button id="setUser">Set Username</button>
+            </span> -->
+            <!-- <button id="testButton">Test</button> -->
+            <input type="text" id="roomName" placeholder="Room Name">
+            <input type="text" id="roomPass" placeholder="Password (optional)">
+            <button id="create">Create Room</button>
             <!--Rooms are dynamically created-->
-             <div id=roomStuff>
-                 <ul id="roomList"></ul>
-             </div>
-         </div>
+            <div id=roomStuff>
+                <h2>Rooms</h2>
+                <ul id="roomList"></ul>
+            </div>
+        </section>
 
-        <div id='lobby'>
-            <button type='button' button id = 'leave'>Leave Room</button>
-            <textarea id='lobbyChat' name='txt'></textarea>
-            <input type='text' id='msgBox' placeholder = 'Type text here'>
-            <textarea id='roomLeader'></textarea>
-            <textarea id='roomUser'></textarea>
-        </div>
+        <section class="main" id="lobby"><!-- The chat interface itself -->
+            <div class="chat-display">
+                <div class="messages"></div>
+                <ul class="users"></ul>
+            </div>
+            <div class="chat-bar">
+                <button type="button" button id="leave">Leave Room</button>
+                <textarea id="lobbyChat" name="txt" disabled="disabled"></textarea>
+                <input type="text" id="msgBox" placeholde="Type text here">
+                <textarea id="roomLeader" disabled="disabled"></textarea>
+                <textarea id="roomUser"></textarea>
+            </div>
+        </section>
 
         <!--Scripts-->
         <script src="/socket.io/socket.io.js"></script>
         <script src="rooms.js"></script>
     </body>
-
-    </html>
+</html>

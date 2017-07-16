@@ -8,10 +8,27 @@ lobby.hide()
 var socket = io()
 
 //Username stuff
-
-$('#setUser').click(function () {
-    var username = $('#username').val()
-    socket.emit('setUser', username)
+$('.username-form').submit(function () {
+    var $input = $('.username-input')
+    var $setButton = $('.set-username')
+    var username = $input.val()
+    if (username) {
+        $input.replaceWith(`<span class="username-label" title="Click to change your username">${username}</span>`)
+    } else {
+        $input.replaceWith(`<button class="username-label">Choose a username...</button>`)
+    }
+    $setButton.hide()
+    socket.emit('setUsername', username)
+})
+// $('.username-label').click(function () {
+$(document).on('click', '.username-label', function () {
+    console.log('test')
+    var $this = $(this)
+    var $setButton = $('.set-username')
+    var username = $this.is('button') ? '' : $this.text()
+    $this.replaceWith(`<input type="text" class="username-input" placeholder="New username" value="${username}">`)
+    $setButton.show()
+    $('.username-input').focus()
 })
 
 $('#testButton').click(function () {
@@ -48,9 +65,10 @@ socket.on('activeRooms', function (activeRooms) {
 $('#roomList').on('click', '.activeRoom', function () {
     var enterRoom = (this.id)
     socket.emit('enteringRoom', enterRoom)
-    socket.on('roomSuccess', function () {
+    socket.on('roomSuccess', function (room) {
         pregame.hide()
         lobby.show()
+        $('.header .extra').text(' > Chat: ' + room.name)
     })
 })
 
@@ -71,15 +89,20 @@ $('#msgBox').keydown(function (e) {
     var key = e.which
     if (key === 13) {
         var msg = $('#msgBox').val()
-        socket.emit('lobbyMsg', msg)
+        socket.emit('sendLobbyMessage', msg)
         $('#msgBox').val('')
     }
 })
 
 //Display new msg
-socket.on('newLobbyMsg', function (newLobbyMsg) {
+socket.on('newLobbyMessage', function (msg) {
     var lobbyMsgs = $('#lobbyChat').val()
-    $('#lobbyChat').val(lobbyMsgs + newLobbyMsg + '\n')
+    $('.messages').append(`
+        <div class="message">
+            <span class="author">${msg.author}</span>
+            <span class="content">${msg.content}</span>
+        </div>
+    `)
 })
 
 //Leaving the lobby
@@ -89,6 +112,7 @@ $('#leave').click(function () {
     pregame.show()
     $('#lobbyChat').val('')
     $('#msgBox').val('')
+    $('.header .extra').text('')
 })
 
 //Display usernames on room creation
@@ -127,3 +151,5 @@ socket.on('newClient', function (newClient) {
 socket.on('message', function (message) {
     console.log(message)
 })
+
+// todo: record user leaving room on page exit
