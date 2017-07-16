@@ -1,0 +1,36 @@
+<html>
+    <head>
+    <title>Batoru</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+
+        <div id='pregame'>
+            <button type="button" button id='create'>Create Room</button>
+            <input type='text' id=username placeholder='Username'>
+            <button type="button" button id='setUser'>Set Username</button>
+            <button type="button" button id='testButton'>Test</button>
+            <input type='text' id='roomName' placeholder = 'Room Name'>
+            <!--Rooms are dynamically created-->
+             <div id=roomStuff>
+                 <ul id="roomList"></ul>
+             </div>
+         </div>
+
+        <div id='lobby'>
+            <button type='button' button id = 'leave'>Leave Room</button>
+            <textarea id='lobbyChat' name='txt'></textarea>
+            <input type='text' id='msgBox' placeholder = 'Type text here'>
+            <textarea id='roomLeader'></textarea>
+            <textarea id='roomUser'></textarea>
+        </div>
+
+        <!--Scripts-->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="rooms.js"></script>
+    </body>
+
+    </html>
