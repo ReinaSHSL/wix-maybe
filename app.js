@@ -79,7 +79,7 @@ io.on('connection', function (socket) {
                 }            
             }
         }
-        else{
+        else {
             delete activeRooms[socket.room]
             io.sockets.emit('emptyRoom', socket.room)
         }
