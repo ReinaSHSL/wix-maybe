@@ -8,7 +8,8 @@ lobby.hide()
 var socket = io()
 
 //Username stuff
-$('.username-form').submit(function () {
+$('.username-form').submit(function (e) {
+    e.preventDefault()
     var $input = $('.username-input')
     var $setButton = $('.set-username')
     var username = $input.val()
