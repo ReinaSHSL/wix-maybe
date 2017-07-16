@@ -23,12 +23,13 @@ $('#testButton').click(function () {
 //Creates room
 $('#create').click(function () {
     var roomName = $('#roomName').val()
+    var roomPass = $('#roomPass').val()
     if (!roomName) {
         return alert('Please set a room name')
     }
     else {
         var roomId = Math.random()*1000000000000000000
-        socket.emit('createRoom', {id: roomId, name: roomName})
+        socket.emit('createRoom', {id: roomId, name: roomName, pass: roomPass})
         pregame.hide()
         lobby.show()
         $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
@@ -53,6 +54,11 @@ $('#roomList').on('click', '.activeRoom', function () {
         lobby.show()
     })
 })
+socket.on('passwordPrompt', function (passwordPrompt){
+    var pass = prompt('Room password?')
+    socket.emit('enteredPassword', {roomId: passwordPrompt, passEntered: pass})
+})
+
 
 //What happens if you try to join a full room
 socket.on('roomFull', function () {
