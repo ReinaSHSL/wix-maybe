@@ -70,8 +70,8 @@ io.on('connection', function (socket) {
         var idIndex = activeRooms[socket.room].ids.indexOf(socket.id)
         activeRooms[socket.room].ids.splice(idIndex, 1)
         console.log(activeRooms)
-        if (activeRooms[socket.room].ids.length){
-            if (socket.id === activeRooms[socket.room].roomLeader){
+        if (activeRooms[socket.room].ids.length) {
+            if (socket.id === activeRooms[socket.room].roomLeader) {
                 if (activeRooms[socket.room].ids.length) {
                     activeRooms[socket.room].roomLeader = ''
                     activeRooms[socket.room].roomLeader = activeRooms[socket.room].ids[0]
