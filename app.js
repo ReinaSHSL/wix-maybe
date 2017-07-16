@@ -39,6 +39,7 @@ io.on('connection', function(socket){
         console.log(activeRooms)
         socket.join(roomId)
         io.sockets.emit('activeRooms', activeRooms)
+        io.sockets.in(roomId).emit('roomUserUpdate', socket.user)
     }) 
 
     //Joining Rooms
@@ -48,6 +49,7 @@ io.on('connection', function(socket){
             socket.room = enteringRoom
             activeRooms[enteringRoom].users.push(socket.user)
             socket.emit('roomSuccess', activeRooms[enteringRoom])
+            io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.user, room: socket.room})
             console.log(activeRooms)
         }
         else{
@@ -64,6 +66,7 @@ io.on('connection', function(socket){
             delete activeRooms[socket.room]
             io.sockets.emit('emptyRoom', socket.room)
         }
+        io.sockets.in(socket.room).emit('userLeft', socket.user)
         socket.leave(socket.room) 
         socket.room = '' 
     })

@@ -89,6 +89,29 @@ $('#leave').click(function(){
 	$('#msgBox').val('')
 })
 
+//Display usernames on room creation
+socket.on('roomUserUpdate', function(roomUserUpdate){
+    $('#roomLeader').val(roomUserUpdate)
+})
+
+//Display username on join
+socket.on('roomUserUpdateOnJoin', function(roomUserUpdateOnJoin){
+    $('#roomUser').val(roomUserUpdateOnJoin.user)
+    var room = roomUserUpdateOnJoin.room
+    $('#roomLeader').val(roomUserUpdateOnJoin.roomInfo[room].users[0])
+})
+
+//Remove user names when they leave
+
+socket.on('userLeft', function(userLeft){
+	if($('#roomLeader').val() === userLeft){
+		$('#roomLeader').val('')
+	}
+	else{
+		$('#roomUser').val('')
+	}
+})
+
 //Test functions
 
 socket.on('confirmJoin', function(confirmJoin){
