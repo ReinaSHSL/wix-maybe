@@ -42,7 +42,7 @@ socket.on('activeRooms', function(activeRooms){
     }
 })
 
-//Clicking on a room will make you join 
+//Clicking on a room will make you join
 $('#roomList').on('click', ".activeRoom", function(){
 	var enterRoom = (this.id)
 	socket.emit('enteringRoom', enterRoom)
@@ -77,7 +77,7 @@ $('#msgBox').keydown(function(e){
 //Display new msg
 socket.on('newLobbyMsg', function(newLobbyMsg){
     var lobbyMsgs = $('#lobbyChat').val()
-    $('#lobbyChat').val(lobbyMsgs + newLobbyMsg)
+    $('#lobbyChat').val(lobbyMsgs + newLobbyMsg + '\n')
 })
 
 //Leaving the lobby
