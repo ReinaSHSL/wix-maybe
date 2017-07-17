@@ -55,11 +55,11 @@ $('#create').click(function () {
 })
 
 //On connection list all active rooms
-socket.on('activeRooms', function (activeRooms) {
+socket.on('activeRooms', function (rooms) {
     var roomList = $('#roomList')
     roomList.empty()
-    for (var i = 0; i < (Object.keys(activeRooms)).length; i++) {
-        $('#roomList').append('<li id = ' + Object.keys(activeRooms)[i] + ' class = activeRoom>' + '<a href=#>' + activeRooms[Object.keys(activeRooms)[i]].name + '</a>' + '</li>')
+    for (let id in rooms) {
+        $('#roomList').append('<li id = ' + id + ' class = activeRoom>' + '<a href=#>' + rooms[id].name + '</a>' + '</li>')
     }
 })
 
@@ -142,7 +142,7 @@ socket.on('userLeft', function (userLeft) {
         $('#roomUser').val('')
     }
 })
- 
+
 //kick user from room if refresh
 window.onbeforeunload = function() {
     socket.emit('leaveRoom')
