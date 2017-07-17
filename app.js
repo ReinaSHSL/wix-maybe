@@ -35,18 +35,20 @@ io.on('connection', function (socket) {
         activeRooms[roomId] =  {
             id: roomId,
             name: roomData.name,
-            users: [],
+            members: [],
             roomLeader: socket.id,
-            ids: [socket.id],
             pass: roomData.pass || undefined
         }
-        activeRooms[roomId].users.push(socket.username)
+        activeRooms[roomId].members.push({
+            id: socket.id,
+            username: socket.username
+        })
         // console.log(activeRooms)
         socket.join(roomId)
         io.sockets.emit('activeRooms', activeRooms)
         io.sockets.in(roomId).emit('roomUserUpdate', socket.username)
-        // console.log('Room leader in ' + socket.room + ' is ' + activeRooms[roomId].roomLeader)
-        // console.log('Ids in room ' + socket.room + ' are ' + activeRooms[roomId].ids)
+        console.log('Room leader in', socket.room, 'is', activeRooms[roomId].roomLeader)
+        console.log('Members in room', socket.room, 'are', activeRooms[roomId].members)
     })
 
     //Joining Rooms
@@ -57,7 +59,7 @@ io.on('connection', function (socket) {
         const room = activeRooms[id]
         console.log(id)
         console.log(activeRooms)
-        if (room.users.length > 1) {
+        if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
         if (room.pass && pass !== room.pass) {
@@ -65,50 +67,36 @@ io.on('connection', function (socket) {
         }
         socket.join(id)
         socket.room = id
-        activeRooms[id].users.push(socket.username)
-        activeRooms[id].ids.push(socket.id)
+        activeRooms[id].members.push({
+            username: socket.username,
+            id: socket.id
+        })
         socket.emit('joinRoomSuccess', activeRooms[id])
         io.sockets.in(id).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
-        // if (activeRooms[enteringRoom].pass) {
-        //     socket.emit('passwordPrompt', enteringRoom)
-        // }
     })
-    // socket.on('enteredPassword', function (enteredPassword) {
-    //     if (activeRooms[enteredPassword.roomId].pass === enteredPassword.passEntered) {
-    //         socket.join(enteredPassword.roomId)
-    //         socket.room = enteredPassword.roomId
-    //         activeRooms[enteredPassword.roomId].users.push(socket.username)
-    //         activeRooms[enteredPassword.roomId].ids.push(socket.id)
-    //         socket.emit('roomSuccess', activeRooms[enteredPassword.roomId])
-    //         io.sockets.in(enteredPassword.roomId).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
-    //         console.log(activeRooms)
-    //         console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteredPassword.roomId].ids)
-    //     }
-    // })
 
     //Leaving Lobby
     socket.on('leaveRoom', function () {
+        const roomId = socket.room
         if (!activeRooms[socket.room]) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
         }
-        var index = activeRooms[socket.room].users.indexOf(socket.username)
-        activeRooms[socket.room].users.splice(index, 1)
-        var idIndex = activeRooms[socket.room].ids.indexOf(socket.id)
-        activeRooms[socket.room].ids.splice(idIndex, 1)
+
+        // Remove the user from the room's members
+        var index = activeRooms[socket.room].members.find(user => user.id === socket.id)
+        activeRooms[socket.room].members.splice(index, 1)
         console.log(activeRooms)
-        if (activeRooms[socket.room].ids.length) {
-            if (socket.id === activeRooms[socket.room].roomLeader) {
-                if (activeRooms[socket.room].ids.length) {
-                    activeRooms[socket.room].roomLeader = ''
-                    activeRooms[socket.room].roomLeader = activeRooms[socket.room].ids[0]
-                    console.log('Room Leader is ' + activeRooms[socket.room].roomLeader)
-                }
-            }
-        }
-        else {
+
+        // If the room is empty, remove it
+        if (!activeRooms[socket.room].members.length) {
             delete activeRooms[socket.room]
-            io.sockets.emit('emptyRoom', socket.room)
+            return io.sockets.emit('emptyRoom', socket.room)
+        }
+        // If the user was the room leader, make the next user the leader
+        if (socket.id === activeRooms[socket.room].roomLeader) {
+            activeRooms[socket.room].roomLeader = activeRooms[socket.room].members[0].id
+            console.log('Room Leader is ' + activeRooms[socket.room].roomLeader)
         }
         io.sockets.in(socket.room).emit('userLeft', socket.username)
         socket.leave(socket.room)
@@ -124,7 +112,6 @@ io.on('connection', function (socket) {
     //Lobby chatting
     socket.on('sendLobbyMessage', function (msg) {
         console.log('[sendLobbyMessage]', msg)
-        console.log(socket.username)
         io.sockets.in(socket.room).emit('newLobbyMessage', {author: socket.username, content: msg})
     })
 
@@ -224,5 +211,9 @@ io.on('connection', function (socket) {
             text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'
         }
     ])
+    // Console utility - leave this here
 
+    socket.on('eval', function (text) {
+        socket.emit('console', eval(text))
+    })
 })

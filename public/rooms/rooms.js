@@ -157,3 +157,10 @@ socket.on('userLeft', function (userLeft) {
 window.onbeforeunload = function () {
     socket.emit('leaveRoom')
 }
+
+
+// Console utility - leave this here
+function doEval (text) {
+    socket.emit('eval', text)
+}
+socket.on('console', console.log)
