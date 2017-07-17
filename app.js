@@ -16,41 +16,46 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-let activeRooms = {}
-
-
-// Y'know what fuck it.
 
 let rooms = []
 class Room {
     constructor (name, pass, id) {
         this.name = name
         this.pass = pass
-        this.id = id || 0
+        this.id = id
         while (this.id == null || rooms.map(r => r.id).indexOf(this.id) > -1) {
             this.id++
         }
+        this.id += ''
         console.log(this.id)
         this.members = []
         rooms.push(this)
-        this._owner = undefined
+        this.ownerId = undefined
     }
 
     addMember (member) {
         this.members.push(member)
+        if (this.members.length === 1) {
+            this.owner = member
+        }
     }
 
     removeMember (id) {
         const index = this.members.findIndex(u => u.id === id)
         this.members.splice(index, 1)
+
+        if (id === this.ownerId && this.members.length) {
+            this.owner = this.members[0]
+            console.log(this.ownerId,this.owner)
+        }
     }
 
-    setOwner (id) {
-        this._owner = id
+    set owner (user) {
+        this.ownerId = user.id
     }
 
     get owner () {
-        return this.members.find(u => u.id === this._owner)
+        return this.members.find(u => u.id === this.ownerId)
     }
 
     get hasPassword () {
@@ -71,14 +76,16 @@ class Room {
         return this.toJSON()
     }
 }
-
-let myroom = new Room('mine')
-myroom.addMember({
-    username: 'me',
-    id: 42
-})
-myroom.setOwner(42)
-console.log(myroom)
+function getRoom (id) {
+    return rooms.find(r => r.id === id)
+}
+// let myroom = new Room('mine')
+// myroom.addMember({
+//     username: 'me',
+//     id: 42
+// })
+// myroom.setOwner(42)
+// console.log(myroom)
 
 io.on('connection', function (socket) {
     socket.join('chat')
@@ -86,30 +93,19 @@ io.on('connection', function (socket) {
     socket.username = ''
 
     // Send the list of active rooms to the client
-    socket.emit('activeRooms', activeRooms)
+    socket.emit('activeRooms', rooms)
 
     // Creates rooms
     socket.on('createRoom', function (roomData) {
         console.log('[createRoom]', roomData)
-        var roomId = parseInt(roomData.id)
+        var roomId = '' + roomData.id
         socket.room = roomId
-        activeRooms[roomId] =  {
-            id: roomId,
-            name: roomData.name,
-            members: [],
-            roomLeader: socket.id,
-            pass: roomData.pass || undefined
-        }
-        activeRooms[roomId].members.push({
-            id: socket.id,
-            username: socket.username
-        })
+        const room = new Room(roomData.name, roomData.pass, roomId)
+        room.addMember({id: socket.id, username: socket.username})
         // console.log(activeRooms)
         socket.join(roomId)
-        io.sockets.emit('activeRooms', activeRooms)
+        io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUserUpdate', socket.username)
-        console.log('Room leader in', socket.room, 'is', activeRooms[roomId].roomLeader)
-        console.log('Members in room', socket.room, 'are', activeRooms[roomId].members)
     })
 
     //Joining Rooms
@@ -117,9 +113,9 @@ io.on('connection', function (socket) {
         console.log('[joinRoom]', data)
         const id = data.id
         const pass = data.pass
-        const room = activeRooms[id]
+        const room = getRoom(id)
         console.log(id)
-        console.log(activeRooms)
+        console.log(rooms)
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
@@ -128,35 +124,30 @@ io.on('connection', function (socket) {
         }
         socket.join(id)
         socket.room = id
-        activeRooms[id].members.push({
-            username: socket.username,
-            id: socket.id
+        room.addMember({
+            id: socket.id,
+            username: socket.username
         })
-        socket.emit('joinRoomSuccess', activeRooms[id])
-        io.sockets.in(id).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
+        socket.emit('joinRoomSuccess', room)
+        io.sockets.in(id).emit('roomUserUpdateOnJoin', {roomInfo: rooms, user: socket.username, room: socket.room})
     })
 
     //Leaving Lobby
     socket.on('leaveRoom', function () {
-        if (!activeRooms[socket.room]) {
+        const room = getRoom(socket.room)
+        if (!room) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
         }
 
         // Remove the user from the room's members
-        var index = activeRooms[socket.room].members.find(user => user.id === socket.id)
-        activeRooms[socket.room].members.splice(index, 1)
-        console.log(activeRooms)
+        room.removeMember(socket.id)
+        console.log(rooms)
 
         // If the room is empty, remove it
-        if (!activeRooms[socket.room].members.length) {
-            delete activeRooms[socket.room]
+        if (!room.members.length) {
+            delete rooms.findIndex(r => r.id === socket.room)
             return io.sockets.emit('emptyRoom', socket.room)
-        }
-        // If the user was the room leader, make the next user the leader
-        if (socket.id === activeRooms[socket.room].roomLeader) {
-            activeRooms[socket.room].roomLeader = activeRooms[socket.room].members[0].id
-            console.log('Room Leader is ' + activeRooms[socket.room].roomLeader)
         }
         io.sockets.in(socket.room).emit('userLeft', socket.username)
         socket.leave(socket.room)

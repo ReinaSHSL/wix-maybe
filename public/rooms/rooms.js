@@ -38,14 +38,21 @@ $('#testButton').click(function () {
 
 //Room stuff
 
+function htmlFromRoom (room) {
+    console.log('[htmlFromRoom]', room)
+    return `
+        <li id="${room.id}" class="activeRoom ${room.hasPassword ? 'has-password' : ''}">
+            <a href="#">${room.name}</a>
+        </li>
+    `
+}
 //Creates room
 $('#create').click(function () {
     var roomName = $('#roomName').val()
     var roomPass = $('#roomPass').val()
     if (!roomName) {
         return alert('Please set a room name')
-    }
-    else {
+    } else {
         var roomId = Math.random()*1000000000000000000
         socket.emit('createRoom', {id: roomId, name: roomName, pass: roomPass})
         pregame.hide()
@@ -55,14 +62,6 @@ $('#create').click(function () {
 })
 
 //On connection list all active rooms
-function htmlFromRoom (room) {
-    console.log('[htmlFromRoom]', room)
-    return `
-        <li id="${room.id}" class="activeRoom ${room.pass ? 'has-password' : ''}">
-            <a href="#">${room.name}</a>
-        </li>
-    `
-}
 socket.on('activeRooms', function (rooms) {
     console.log('[activeRooms]', rooms)
     var roomList = $('#roomList')
