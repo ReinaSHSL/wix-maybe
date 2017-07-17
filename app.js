@@ -222,11 +222,29 @@ io.on('connection', function (socket) {
     r.connect( {host: 'localhost', port: 28015}, function (err, conn) {
         if (err) return
         connection = conn
-
-        socket.on('newdb', function(){
-            r.dbCreate('superheroes').run(conn, callback);
-            r.dbList().run(conn, callback)
+        
+        //Create new databases ((crashes server if you put in a db that already exists))
+        socket.on('newdb', function (dbName) {
+            r.dbCreate(dbName).run(conn)
+            r.dbList().run(conn)
         })    
+
+        //Please don't duplicate table names 
+        socket.on('newTable', function (data) {
+            r.db(data.dbName).tableCreate(data.tableName).run(connection, function (err, result) {
+                if (err) console.log('fucked up')
+                console.log(JSON.stringify(result, null, 2))
+            })
+        })
+
+        //Inserting user into database
+        socket.on('newUser', function (data) {
+            r.db('rethinkdb').table('users').insert({id: data.newUser, password: data.newPass}).run(connection, function (err, result) {
+                if (err) console.log('fucked up again')
+                console.log(JSON.stringify(result, null, 2))
+            })
+        })
+
     })
     // A listing of every card in its default state.
     const ALLCARDS = Object.freeze([
