@@ -7,6 +7,8 @@ var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 var port = 3000
 
+r = require('rethinkdb')
+
 server.listen(port, function () {
     console.log('Server listening on %d', port)
 })
@@ -215,6 +217,17 @@ io.on('connection', function (socket) {
         }
     })
 
+    //Database
+    var connection = null
+    r.connect( {host: 'localhost', port: 28015}, function (err, conn) {
+        if (err) return
+        connection = conn
+
+        socket.on('newdb', function(){
+            r.dbCreate('superheroes').run(conn, callback);
+            r.dbList().run(conn, callback)
+        })    
+    })
     // A listing of every card in its default state.
     const ALLCARDS = Object.freeze([
         {
