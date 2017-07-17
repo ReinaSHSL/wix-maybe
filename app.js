@@ -245,6 +245,17 @@ io.on('connection', function (socket) {
             })
         })
 
+        //Shitty test function for database that doesn't work fuck this piece of shit
+        //IM SORRY TEST FUNCTION IT WAS MY FAULT, I FORGET A # IN THE ADMIN.JS
+        socket.on('check', function(){
+            r.db('rethinkdb').table('users').run(connection, function(err, cursor){
+                if (err) console.log('fuck up')
+                cursor.toArray(function(err, result){
+                    if (err) console.log('2nd fuck up')
+                    console.log(JSON.stringify(result, null, 2));
+                })
+            })
+        })
     })
     // A listing of every card in its default state.
     const ALLCARDS = Object.freeze([
