@@ -1,5 +1,5 @@
 /* globals $ */
-
+var socket = io()
 var currentDecks = {lrig: [], main: []}
 
 function cardElementFromData (card) {
@@ -36,56 +36,18 @@ function search () {
     var checkNoBurst = $('#noBurst').is(':checked')
     // If everything is empty, just return - no point in listing every card
     if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) return
+    socket.emit('cardSearch', {inputName: inputName,
+        inputLevel: inputLevel,
+        inputColor: inputColor,
+        inputType: inputType,
+        inputClass: inputClass,
+        checkBurst: checkBurst,
+        checkNoBurst: checkNoBurst})
 
-    // Execute the search and store matches
-    var matchingCards = ALLCARDS.filter(card => {
-        if (inputName) {
-            if (!(card.name.toLowerCase().includes(inputName.toLowerCase()))) {
-                return false
-            }
-        }
-        if (inputLevel) {
-            if (!card.level || card.level !== inputLevel) {
-                return false
-            }
-        }
-        if (inputColor) {
-            if (!card.color || card.color !== inputColor) {
-                return false
-            }
-        }
-        if (inputType) {
-            if (!card.type || card.type !== inputType) {
-                return false
-            }
-        }
-        if (inputClass) {
-            if (!card.class || card.class !== inputClass) {
-                return false
-            }
-        }
-        if (checkBurst) {
-            if (!card.burst || card.burst !== checkBurst) {
-                return false
-            }
-        }
-        if (checkNoBurst) {
-            if (card.burst || card.burst == checkBurst) {
-                return false
-            }
-        }
-        // Looks like all the checks passed, we'll use this card
-        return true
+    socket.on('cardMatches', function(cardMatches){
+        results.append(cardElementFromData(cardMatches))
+        cardElementFromData(cardMatches) = null
     })
-
-    // All right, we got all the matches, let's add them back to the page now
-    for (var card of matchingCards) {
-        results.append(cardElementFromData(card))
-    }
-
-    // Dereference the objects so when they're removed they don't memleak the event handlers
-    // searchCardImgs = null
-    if (card) card = null
 }
 // Search function ends here
 
@@ -138,45 +100,6 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
 })
 
 
-// A listing of every card in its default state.
-const ALLCARDS = Object.freeze([
-    {
-        id: 0,
-        name: 'Diabride, Natural Pyroxene ※',
-        image: 'http://i.imgur.com/zvqh8zV.jpg',
-        type: 'SIGNI',
-        color: 'Red',
-        class: 'Gem',
-        attack: 'Attack: 15000',
-        burst: true,
-        level: '5',
-        text: "Hanayo Limited\n[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.\n[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)\nLife Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
-    },
-    {
-        id: 1,
-        name: 'Nanashi, That Four Another',
-        image: 'http://i.imgur.com/YcMdHLJ.jpg',
-        type: 'LRIG',
-        color: 'Black',
-        limit: 'Limit: 11',
-        cost: 'Grow: Black 3',
-        level: '4',
-        lrigType: 'Nanashi',
-        text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
-    },
-    {
-        id: 2,
-        name: 'Beigoma, Fourth Play Princess ※',
-        image: 'http://i.imgur.com/QemHU7N.jpg',
-        type: 'SIGNI',
-        color: 'Green',
-        class: 'Playground Equipment',
-        attack: 'Attack: 12000', // idk what type this is
-        burst: true,
-        level: '4',
-        text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'
-    }
-])
 
 /*
 
