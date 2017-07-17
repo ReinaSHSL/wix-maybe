@@ -16,8 +16,69 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
-var activeRooms = {}
+let activeRooms = {}
 
+
+// Y'know what fuck it.
+
+let rooms = []
+class Room {
+    constructor (name, pass, id) {
+        this.name = name
+        this.pass = pass
+        this.id = id || 0
+        while (this.id == null || rooms.map(r => r.id).indexOf(this.id) > -1) {
+            this.id++
+        }
+        console.log(this.id)
+        this.members = []
+        rooms.push(this)
+        this._owner = undefined
+    }
+
+    addMember (member) {
+        this.members.push(member)
+    }
+
+    removeMember (id) {
+        const index = this.members.findIndex(u => u.id === id)
+        this.members.splice(index, 1)
+    }
+
+    setOwner (id) {
+        this._owner = id
+    }
+
+    get owner () {
+        return this.members.find(u => u.id === this._owner)
+    }
+
+    get hasPassword () {
+        return this.pass ? true : false
+    }
+
+    toJSON () {
+        return {
+            name: this.name,
+            id: this.id,
+            members: this.members,
+            owner: this.owner,
+            hasPassword: this.hasPassword
+        }
+    }
+
+    inspect () {
+        return this.toJSON()
+    }
+}
+
+let myroom = new Room('mine')
+myroom.addMember({
+    username: 'me',
+    id: 42
+})
+myroom.setOwner(42)
+console.log(myroom)
 
 io.on('connection', function (socket) {
     socket.join('chat')
@@ -77,7 +138,6 @@ io.on('connection', function (socket) {
 
     //Leaving Lobby
     socket.on('leaveRoom', function () {
-        const roomId = socket.room
         if (!activeRooms[socket.room]) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
