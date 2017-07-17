@@ -2,22 +2,22 @@
 var socket = io()
 var currentDecks = {lrig: [], main: []}
 
-function cardElementFromData (cardMatches) {
+function cardElementFromData (card) {
     var img = $('<img class="card-preview">')
-        .attr('src', cardMatches.image)
+    .attr('src', card.image)
     var listItem = $('<li class="card">')
-        .attr('dataName', cardMatches.name || '')
-        .attr('dataType', cardMatches.type || '')
-        .attr('dataColor', cardMatches.color || '')
-        .attr('dataLevel', cardMatches.level || '')
-        .attr('dataCost', cardMatches.cost || '')
-        .attr('dataAttack', cardMatches.attack || '')
-        .attr('dataClass', cardMatches.class || '')
-        .attr('dataLrigType', cardMatches.lrigType || '')
-        .attr('dataLimit', cardMatches.limit || '')
-        .attr('dataText', cardMatches.text || '')
-        .attr('dataCardId', cardMatches.id)
-        .append(img)
+    .attr('dataName', card.name || '')
+    .attr('dataType', card.type || '')
+    .attr('dataColor', card.color || '')
+    .attr('dataLevel', card.level || '')
+    .attr('dataCost', card.cost || '')
+    .attr('dataAttack', card.attack || '')
+    .attr('dataClass', card.class || '')
+    .attr('dataLrigType', card.lrigType || '')
+    .attr('dataLimit', card.limit || '')
+    .attr('dataText', card.text || '')
+    .attr('dataCardId', card.id)
+    .append(img)
     return listItem.eq(0) // TODO: Convert calls of this to use jQuery
 }
 
@@ -44,10 +44,12 @@ function search () {
         checkBurst: checkBurst,
         checkNoBurst: checkNoBurst})
 
-    socket.on('cardMatches', function (cardMatches) {
-        for (var card of cardMatches) {
-            results.append(cardElementFromData(cardMatches))
-        }
+    socket.on('cardMatches', function(cardMatches){
+        results.append(cardElementFromData(cardMatches))
+        //This next line causes an error in console for every single card that shows up
+        //however if you remove it the entire thing breaks
+        //I don't even think this is proper syntax
+        cardElementFromData(cardMatches) = null
     })
 }
 // Search function ends here
