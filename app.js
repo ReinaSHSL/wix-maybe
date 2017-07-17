@@ -29,9 +29,11 @@ io.on('connection', function (socket) {
 
     // Creates rooms
     socket.on('createRoom', function (roomData) {
+        console.log('[createRoom]', roomData)
         var roomId = parseInt(roomData.id)
         socket.room = roomId
         activeRooms[roomId] =  {
+            id: roomId,
             name: roomData.name,
             users: [],
             roomLeader: socket.id,
@@ -48,38 +50,48 @@ io.on('connection', function (socket) {
     })
 
     //Joining Rooms
-    socket.on('enteringRoom', function (enteringRoom) {
-        if (activeRooms[enteringRoom].users.length < 2) {
-            if (!activeRooms[enteringRoom].pass) {
-                socket.join(enteringRoom)
-                socket.room = enteringRoom
-                activeRooms[enteringRoom].users.push(socket.username)
-                activeRooms[enteringRoom].ids.push(socket.id)
-                socket.emit('roomSuccess', activeRooms[enteringRoom])
-                io.sockets.in(enteringRoom).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
-            }
-            if (activeRooms[enteringRoom].pass) {
-                socket.emit('passwordPrompt', enteringRoom)
-            }
-        } else {
-            socket.emit('roomFull')
+    socket.on('joinRoom', function (data) {
+        console.log('[joinRoom]', data)
+        const id = data.id
+        const pass = data.pass
+        const room = activeRooms[id]
+        console.log(id)
+        console.log(activeRooms)
+        if (room.users.length > 1) {
+            return socket.emit('joinRoomFail', 'Room full')
         }
-    })
-    socket.on('enteredPassword', function (enteredPassword) {
-        if (activeRooms[enteredPassword.roomId].pass === enteredPassword.passEntered) {
-            socket.join(enteredPassword.roomId)
-            socket.room = enteredPassword.roomId
-            activeRooms[enteredPassword.roomId].users.push(socket.username)
-            activeRooms[enteredPassword.roomId].ids.push(socket.id)
-            socket.emit('roomSuccess', activeRooms[enteredPassword.roomId])
-            io.sockets.in(enteredPassword.roomId).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
-            console.log(activeRooms)
-            console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteredPassword.roomId].ids)
+        if (room.pass && pass !== room.pass) {
+            return socket.emit('joinRoomFail', 'Missing or incorrect password')
         }
+        socket.join(id)
+        socket.room = id
+        activeRooms[id].users.push(socket.username)
+        activeRooms[id].ids.push(socket.id)
+        socket.emit('joinRoomSuccess', activeRooms[id])
+        io.sockets.in(id).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
+        // if (activeRooms[enteringRoom].pass) {
+        //     socket.emit('passwordPrompt', enteringRoom)
+        // }
     })
+    // socket.on('enteredPassword', function (enteredPassword) {
+    //     if (activeRooms[enteredPassword.roomId].pass === enteredPassword.passEntered) {
+    //         socket.join(enteredPassword.roomId)
+    //         socket.room = enteredPassword.roomId
+    //         activeRooms[enteredPassword.roomId].users.push(socket.username)
+    //         activeRooms[enteredPassword.roomId].ids.push(socket.id)
+    //         socket.emit('roomSuccess', activeRooms[enteredPassword.roomId])
+    //         io.sockets.in(enteredPassword.roomId).emit('roomUserUpdateOnJoin', {roomInfo: activeRooms, user: socket.username, room: socket.room})
+    //         console.log(activeRooms)
+    //         console.log('Ids in room ' + socket.room + ' are ' + activeRooms[enteredPassword.roomId].ids)
+    //     }
+    // })
 
     //Leaving Lobby
     socket.on('leaveRoom', function () {
+        if (!activeRooms[socket.room]) {
+            console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
+            return
+        }
         var index = activeRooms[socket.room].users.indexOf(socket.username)
         activeRooms[socket.room].users.splice(index, 1)
         var idIndex = activeRooms[socket.room].ids.indexOf(socket.id)
@@ -211,6 +223,6 @@ io.on('connection', function (socket) {
             level: '4',
             text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'
         }
-    ])    
+    ])
 
 })

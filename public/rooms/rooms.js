@@ -50,38 +50,48 @@ $('#create').click(function () {
         socket.emit('createRoom', {id: roomId, name: roomName, pass: roomPass})
         pregame.hide()
         lobby.show()
-        $('#roomList').append('<li id = ' + roomId + ' class = activeRoom>' + '<a href=#>' + roomName + '</a>' + '</li>')
+        $('#roomList').append(htmlFromRoom({id: roomId, name: roomName, pass: roomPass}))
     }
 })
 
 //On connection list all active rooms
+function htmlFromRoom (room) {
+    console.log('[htmlFromRoom]', room)
+    return `
+        <li id="${room.id}" class="activeRoom ${room.pass ? 'has-password' : ''}">
+            <a href="#">${room.name}</a>
+        </li>
+    `
+}
 socket.on('activeRooms', function (rooms) {
+    console.log('[activeRooms]', rooms)
     var roomList = $('#roomList')
     roomList.empty()
     for (let id in rooms) {
-        $('#roomList').append('<li id = ' + id + ' class = activeRoom>' + '<a href=#>' + rooms[id].name + '</a>' + '</li>')
+        // console.log('[activeRooms]', id)
+        $('#roomList').append(htmlFromRoom(rooms[id]))
     }
 })
 
 //Clicking on a room will make you join
 $('#roomList').on('click', '.activeRoom', function () {
-    var enterRoom = (this.id)
-    socket.emit('enteringRoom', enterRoom)
-    socket.on('roomSuccess', function (room) {
-        pregame.hide()
-        lobby.show()
-        $('.header .extra').text(' > Chat: ' + room.name)
-    })
+    var $this = $(this)
+    var id = $this.attr('id')
+    var hasPassword = $this.is('.has-password')
+    if (hasPassword) {
+        var pass = prompt('Room password?')
+        socket.emit('joinRoom', {id: id, pass: pass})
+    } else {
+        socket.emit('joinRoom', {id: id})
+    }
 })
-socket.on('passwordPrompt', function (passwordPrompt) {
-    var pass = prompt('Room password?')
-    socket.emit('enteredPassword', {roomId: passwordPrompt, passEntered: pass})
+socket.on('joinRoomSuccess', function (room) {
+    pregame.hide()
+    lobby.show()
+    $('.header .extra').text(' > Chat: ' + room.name)
 })
-
-
-//What happens if you try to join a full room
-socket.on('roomFull', function () {
-    alert('Room is full')
+socket.on('joinRoomFail', function (reason) {
+    alert(`Failed to join room: ${reason}`)
 })
 
 //Delete empty rooms
@@ -144,6 +154,6 @@ socket.on('userLeft', function (userLeft) {
 })
 
 //kick user from room if refresh
-window.onbeforeunload = function() {
+window.onbeforeunload = function () {
     socket.emit('leaveRoom')
 }
