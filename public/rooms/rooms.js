@@ -66,9 +66,9 @@ socket.on('activeRooms', function (rooms) {
     console.log('[activeRooms]', rooms)
     var roomList = $('#roomList')
     roomList.empty()
-    for (let id in rooms) {
+    for (let room of rooms) {
         // console.log('[activeRooms]', id)
-        $('#roomList').append(htmlFromRoom(rooms[id]))
+        $('#roomList').append(htmlFromRoom(room))
     }
 })
 
@@ -159,7 +159,7 @@ window.onbeforeunload = function () {
 
 
 // Console utility - leave this here
-function doEval (text) {
+function doEval (text) { // eslint-disable-line no-unused-vars
     socket.emit('eval', text)
 }
 socket.on('console', console.log)

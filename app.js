@@ -23,11 +23,11 @@ class Room {
         this.name = name
         this.pass = pass
         this.id = id
-        while (this.id == null || rooms.map(r => r.id).indexOf(this.id) > -1) {
-            this.id++
-        }
-        this.id += ''
-        console.log(this.id)
+        // Future code
+        // while (this.id == null || rooms.map(r => r.id).indexOf(this.id) > -1) {
+        //     this.id++
+        // }
+        this.id += '' // this shouldn't be necessary but we add it for safety
         this.members = []
         rooms.push(this)
         this.ownerId = undefined
@@ -46,7 +46,6 @@ class Room {
 
         if (id === this.ownerId && this.members.length) {
             this.owner = this.members[0]
-            console.log(this.ownerId,this.owner)
         }
     }
 
@@ -79,13 +78,6 @@ class Room {
 function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
-// let myroom = new Room('mine')
-// myroom.addMember({
-//     username: 'me',
-//     id: 42
-// })
-// myroom.setOwner(42)
-// console.log(myroom)
 
 io.on('connection', function (socket) {
     socket.join('chat')
