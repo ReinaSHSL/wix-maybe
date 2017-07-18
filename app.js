@@ -81,6 +81,14 @@ function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
 
+// Initialize the database connection and store it for use later
+var conn = null;
+r.connect({host: 'localhost', port: 28015, db: 'people'}, function (err, connection) {
+    console.log('[db] Database connection ready!')
+    if (err) return console.log(err)
+    conn = connection
+})
+
 io.on('connection', function (socket) {
     socket.join('chat')
     socket.room = ''
@@ -216,18 +224,26 @@ io.on('connection', function (socket) {
             card = null
         }    
     })    
+
     //Database
 
     //Login
     var connection = null
     socket.on('login', function (data) {
-        r.connect( {host: 'localhost', port: 28015, user: data.username, password: data.pass}, function (err, connection) {
-            if (err) socket.emit('incorrect')
-            if (connection) socket.username = data.username
-        }) 
-    })   
-
-})
+         r.table('selectors').filter(r.row('id').eq(data.username)).run(conn, function (err, idMatch) {
+                    if (err) return console.log(err)
+                    if (!idMatch) return console.log('wrong id')
+                    console.log(idMatch)
+                    r.table('selectors').filter(r.row('password').eq(data.pass)).run(conn, function (err, passMatch) {
+                        if (err) return console.log(err)
+                        if (!passMatch) return console.log('wrong pass')
+                        console.log('logged in')
+                    })
+                    console.log('Sent the second query')
+                })    
+                console.log('Sent the first query') 
+    })
+}) 
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
     {
