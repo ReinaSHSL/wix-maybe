@@ -246,16 +246,26 @@ io.on('connection', function (socket) {
                         console.log('yay')
                     }
                     if (password !== result.password) {
-                        console.log('nope')
+                        socket.emit('incorrect')
                     }
                 }
                 if (data.username !== result.id) {
-                    console.log('buu buu')
+                    socket.emit('incorrect')
                 }
             })
         })
     })
-})    
+
+    //Register
+    socket.on('register', function(data){
+        r.table('selectors').insert([{id: data.username, password: data.pass}]).run(conn, function(err, result) {
+            if (err) console.log('welp')
+            console.log('registered')
+        })
+    })
+
+})  
+
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
     {
