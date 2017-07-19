@@ -256,14 +256,24 @@ io.on('connection', function (socket) {
         })
     })
 
-    //Register
+
+    //Registering
     socket.on('register', function (data) {
-        r.table('selectors').insert([{id: data.username, password: data.pass}]).run(conn, function (err, result) {
-            if (err) console.log('welp')
-            console.log('registered')
+        r.table('selectors').max('id').run(conn, function (err, _user) {
+            if (err) console.log(err)
+            id = _user.id
+            console.log('User with the highest id is', _user)
+            const newUser = {
+                id: ++id,
+                username: data.username,
+                password: data.pass
+            }
+            r.db('people').table('selectors').insert(newUser).run(conn, function (err, res) {
+                if (err) return console.log('welp')
+                console.log(res)
+            })
         })
     })
-
 })  
 
 // A listing of every card in its default state.
