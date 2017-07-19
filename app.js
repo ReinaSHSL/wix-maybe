@@ -234,15 +234,15 @@ io.on('connection', function (socket) {
             cursor.toArray(function (err, result) {
                 if (err) console.log(err)
                 result = result[0]
-                if (!result) return console.log('Invalid username')
+                if (!result) return socket.emit('loginFail', 'Unknown username')
                 console.log(result)
                 console.log(data.username)
                 console.log(data.password)
                 if (data.username === result.username && data.password === result.password) {
                     socket.user = result.id
-                    return socket.emit('loggedIn')
+                    return socket.emit('loginSuccess')
                 }
-                return socket.emit('incorrect')
+                return socket.emit('loginFail', 'Incorrect username or password')
             })
         })
     })
