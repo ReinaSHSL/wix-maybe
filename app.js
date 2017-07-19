@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const favicon = require('serve-favicon')
 const r = require('rethinkdb')
-const dbConfig = require('./dbConfig')
+//const dbConfig = require('./dbConfig')
 
 const app = express()
 const server = require('http').createServer(app)
@@ -10,14 +10,11 @@ const io = require('socket.io')(server)
 const httpPort = 3000
 
 // Initialize the database connection and store it for use later
-let conn = null
-r.connect(dbConfig, function (err, connection) {
-    if (err) {
-        console.log('[db] Error connecting to database\n' + err)
-        process.exit(1) // if the database fails, end the process
-    }
+var conn = null
+r.connect({host: 'localhost', port: 28015, db: 'people'}, function (err, connection) {
+    console.log('[db] Database connection ready!')
+    if (err) return console.log(err)
     conn = connection
-    console.log('[db] Database listening on', dbConfig.port)
 })
 
 // Initialize the HTTP web server
@@ -230,7 +227,7 @@ io.on('connection', function (socket) {
     //Login
     var connection = null
     socket.on('login', function (data) {
-        r.table('selectors').filter(r.row('id').eq(data.username)).run(conn, function (err, cursor) {
+        r.table('selectors').filter(r.row('username').eq(data.username)).run(conn, function (err, cursor) {
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
                 if (err) console.log(err)
@@ -238,18 +235,16 @@ io.on('connection', function (socket) {
                 if (!result) return console.log('Invalid username')
                 console.log(result)
                 console.log(data.username)
-                console.log(data.pass)
-                if (data.username === result.id) {
-                    var password = JSON.stringify(data.pass)
-                    if (password ===  result.password) {
-                        socket.user = data.username
-                        console.log('yay')
+                console.log(data.password)
+                if (data.username === result.username) 
+                    if (data.password ===  result.password) {
+                        socket.user = result.id
+                        socket.emit('loggedIn')
                     }
-                    if (password !== result.password) {
+                    if (data.password !== result.password) {
                         socket.emit('incorrect')
                     }
-                }
-                if (data.username !== result.id) {
+                if (data.username !== result.username) {
                     socket.emit('incorrect')
                 }
             })
@@ -266,7 +261,7 @@ io.on('connection', function (socket) {
             const newUser = {
                 id: ++id,
                 username: data.username,
-                password: data.pass
+                password: data.password
             }
             r.db('people').table('selectors').insert(newUser).run(conn, function (err, res) {
                 if (err) return console.log('welp')
