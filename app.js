@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const favicon = require('serve-favicon')
 const r = require('rethinkdb')
-//const dbConfig = require('./dbConfig')
+const dbConfig = require('./dbConfig')
 
 const app = express()
 const server = require('http').createServer(app)
@@ -11,8 +11,8 @@ const httpPort = 3000
 
 // Initialize the database connection and store it for use later
 var conn = null
-r.connect({host: 'localhost', port: 28015, db: 'people'}, function (err, connection) {
-    console.log('[db] Database connection ready!')
+r.connect(dbConfig, function (err, connection) {
+    console.log('[db] Database listening on', dbConfig.port)
     if (err) return console.log(err)
     conn = connection
 })
@@ -236,7 +236,7 @@ io.on('connection', function (socket) {
                 console.log(result)
                 console.log(data.username)
                 console.log(data.password)
-                if (data.username === result.username) 
+                if (data.username === result.username)
                     if (data.password ===  result.password) {
                         socket.user = result.id
                         socket.emit('loggedIn')
