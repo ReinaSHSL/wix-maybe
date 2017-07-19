@@ -225,9 +225,11 @@ io.on('connection', function (socket) {
     //Database
 
     //Login
-    var connection = null
     socket.on('login', function (data) {
         r.table('selectors').filter(r.row('username').eq(data.username)).run(conn, function (err, cursor) {
+            // TODO: This means there are no users in the database yet.
+            if (err.name === 'ReqlNonExistenceError') return console.log('shit')
+
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
                 if (err) console.log(err)
@@ -236,17 +238,11 @@ io.on('connection', function (socket) {
                 console.log(result)
                 console.log(data.username)
                 console.log(data.password)
-                if (data.username === result.username)
-                    if (data.password ===  result.password) {
-                        socket.user = result.id
-                        socket.emit('loggedIn')
-                    }
-                    if (data.password !== result.password) {
-                        socket.emit('incorrect')
-                    }
-                if (data.username !== result.username) {
-                    socket.emit('incorrect')
+                if (data.username === result.username && data.password === result.password) {
+                    socket.user = result.id
+                    return socket.emit('loggedIn')
                 }
+                return socket.emit('incorrect')
             })
         })
     })
@@ -256,7 +252,7 @@ io.on('connection', function (socket) {
     socket.on('register', function (data) {
         r.table('selectors').max('id').run(conn, function (err, _user) {
             if (err) console.log(err)
-            id = _user.id
+            let id = _user.id
             console.log('User with the highest id is', _user)
             const newUser = {
                 id: ++id,
