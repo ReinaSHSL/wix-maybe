@@ -1,16 +1,28 @@
-var path = require('path')
-var express = require('express')
-var favicon = require('serve-favicon')
+const path = require('path')
+const express = require('express')
+const favicon = require('serve-favicon')
+const r = require('rethinkdb')
+const dbConfig = require('./dbConfig')
 
-var app = express()
-var server = require('http').createServer(app)
-var io = require('socket.io')(server)
-var port = 3000
+const app = express()
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+const httpPort = 3000
 
-r = require('rethinkdb')
+// Initialize the database connection and store it for use later
+let conn = null
+r.connect(dbConfig, function (err, connection) {
+    if (err) {
+        console.log('[db] Error connecting to database\n' + err)
+        process.exit(1) // if the database fails, end the process
+    }
+    conn = connection
+    console.log('[db] Database listening on', dbConfig.port)
+})
 
-server.listen(port, function () {
-    console.log('Server listening on %d', port)
+// Initialize the HTTP web server
+server.listen(httpPort, function () {
+    console.log('[http] Server listening on', httpPort)
 })
 
 // This folder contains the client stuff
@@ -81,30 +93,20 @@ function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
 
-// Initialize the database connection and store it for use later
-var conn = null
-r.connect({host: 'localhost', port: 28015, db: 'people'}, function (err, connection) {
-    console.log('[db] Database connection ready!')
-    if (err) return console.log(err)
-    conn = connection
-})
-
+// Accept incoming socket connections
 io.on('connection', function (socket) {
-    socket.join('chat')
-    socket.room = ''
-    socket.username = ''
+    socket.join('chat') // TODO: is this necessary?
 
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
 
     // Creates rooms
-    socket.on('createRoom', function (roomData) {
-        console.log('[createRoom]', roomData)
-        var roomId = '' + roomData.id
+    socket.on('createRoom', function (data) {
+        console.log('[createRoom]', data)
+        var roomId = '' + data.id
         socket.room = roomId
-        const room = new Room(roomData.name, roomData.pass, roomId)
+        const room = new Room(data.name, data.pass, roomId)
         room.addMember({id: socket.id, username: socket.username})
-        // console.log(activeRooms)
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUserUpdate', socket.username)
@@ -116,8 +118,6 @@ io.on('connection', function (socket) {
         const id = data.id
         const pass = data.pass
         const room = getRoom(id)
-        console.log(id)
-        console.log(rooms)
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
@@ -222,8 +222,8 @@ io.on('connection', function (socket) {
         // Dereference the objects so when they're removed they don't memleak the event handlers
         if (card) {
             card = null
-        }    
-    })    
+        }
+    })
 
     //Database
 
@@ -274,7 +274,7 @@ io.on('connection', function (socket) {
             })
         })
     })
-})  
+})
 
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
