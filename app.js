@@ -228,22 +228,34 @@ io.on('connection', function (socket) {
     //Database
 
     //Login
-    var connection = null
+ var connection = null
     socket.on('login', function (data) {
-         r.table('selectors').filter(r.row('id').eq(data.username)).run(conn, function (err, idMatch) {
+         r.table('selectors').filter(r.row('id').eq(data.username)).run(conn, function (err, cursor) {
                     if (err) return console.log(err)
-                    if (!idMatch) return console.log('wrong id')
-                    console.log(idMatch)
-                    r.table('selectors').filter(r.row('password').eq(data.pass)).run(conn, function (err, passMatch) {
-                        if (err) return console.log(err)
-                        if (!passMatch) return console.log('wrong pass')
-                        console.log('logged in')
+                    cursor.toArray(function(err, result) {
+                        if (err) console.log(err)
+                        result = result[0]
+                        if (!result) return console.log('Invalid username')
+                        console.log(result)
+                        console.log(data.username)
+                        console.log(data.pass)
+                        if (data.username === result.id) {
+                            var password = JSON.stringify(data.pass)
+                            if (password ===  result.password) {
+                                socket.user = data.username
+                                console.log('yay')
+                            }
+                            if (password !== result.password) {
+                                console.log('nope')
+                            }
+                        }
+                        if (data.username !== result.id) {
+                            console.log('buu buu')
+                        }
                     })
-                    console.log('Sent the second query')
-                })    
-                console.log('Sent the first query') 
-    })
-}) 
+                })
+            })
+})    
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([
     {
