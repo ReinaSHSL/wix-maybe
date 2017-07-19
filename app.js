@@ -228,7 +228,7 @@ io.on('connection', function (socket) {
     socket.on('login', function (data) {
         r.table('selectors').filter(r.row('username').eq(data.username)).run(conn, function (err, cursor) {
             // TODO: This means there are no users in the database yet.
-            if (err.name === 'ReqlNonExistenceError') return console.log('shit')
+            if (err && err.name === 'ReqlNonExistenceError') return console.log('shit')
 
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
