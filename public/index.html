@@ -8,28 +8,16 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   </head>
   <body>
-  <style>
-@import url('https://fonts.googleapis.com/css?family=Bubbler+One');
-body {
-  background: linear-gradient(135deg, #0094FF, #0FF);
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-a { display:block }
-html {
-  font-family: "Bubbler One";
-  color: #FFF;
-  font-size: 64px;
-}
-</style>
   <a href="builder">Builder</a>
   <a href="rooms">Rooms</a>
-  <a href="admin">Admin Panel</a>
+  <input type="text" id="username" placeholder="Username">
+  <input type="text" id="pass" placeholder="Password">
+  <button type="button" button id='login'>Login</button>
+  <input type="text" id="rUsername" placeholder="Username">
+  <input type="text" id="rPass" placeholder="Password">
+  <button type="button" button id='register'>Register</button>
       <!-- Scripts here at the end -->
     <script src="/socket.io/socket.io.js"></script>
+    <script src='home.js'></script>
   </body>
 </html>

@@ -81,6 +81,14 @@ function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
 
+// Initialize the database connection and store it for use later
+var conn = null
+r.connect({host: 'localhost', port: 28015, db: 'people'}, function (err, connection) {
+    console.log('[db] Database connection ready!')
+    if (err) return console.log(err)
+    conn = connection
+})
+
 io.on('connection', function (socket) {
     socket.join('chat')
     socket.room = ''
@@ -214,80 +222,86 @@ io.on('connection', function (socket) {
         // Dereference the objects so when they're removed they don't memleak the event handlers
         if (card) {
             card = null
-        }
-    })
+        }    
+    })    
 
     //Database
+
+    //Login
     var connection = null
-    r.connect( {host: 'localhost', port: 28015}, function (err, conn) {
-        if (err) return
-        connection = conn
-        
-        //Create new databases ((crashes server if you put in a db that already exists))
-        socket.on('newdb', function (dbName) {
-            r.dbCreate(dbName).run(conn)
-            r.dbList().run(conn)
-        })    
-
-        //Please don't duplicate table names 
-        socket.on('newTable', function (data) {
-            r.db(data.dbName).tableCreate(data.tableName).run(connection, function (err, result) {
-                if (err) console.log('fucked up')
-                console.log(JSON.stringify(result, null, 2))
+    socket.on('login', function (data) {
+        r.table('selectors').filter(r.row('id').eq(data.username)).run(conn, function (err, cursor) {
+            if (err) return console.log(err)
+            cursor.toArray(function (err, result) {
+                if (err) console.log(err)
+                result = result[0]
+                if (!result) return console.log('Invalid username')
+                console.log(result)
+                console.log(data.username)
+                console.log(data.pass)
+                if (data.username === result.id) {
+                    var password = JSON.stringify(data.pass)
+                    if (password ===  result.password) {
+                        socket.user = data.username
+                        console.log('yay')
+                    }
+                    if (password !== result.password) {
+                        socket.emit('incorrect')
+                    }
+                }
+                if (data.username !== result.id) {
+                    socket.emit('incorrect')
+                }
             })
         })
+    })
 
-        //Inserting user into database
-        socket.on('newUser', function (data) {
-            r.db('rethinkdb').table('users').insert({id: data.newUser, password: data.newPass}).run(connection, function (err, result) {
-                if (err) console.log('fucked up again')
-                console.log(JSON.stringify(result, null, 2))
-            })
+    //Register
+    socket.on('register', function (data) {
+        r.table('selectors').insert([{id: data.username, password: data.pass}]).run(conn, function (err, result) {
+            if (err) console.log('welp')
+            console.log('registered')
         })
-
     })
-    // A listing of every card in its default state.
-    const ALLCARDS = Object.freeze([
-        {
-            id: 0,
-            name: 'Diabride, Natural Pyroxene ※',
-            image: 'http://i.imgur.com/zvqh8zV.jpg',
-            type: 'SIGNI',
-            color: 'Red',
-            class: 'Gem',
-            attack: 'Attack: 15000',
-            burst: true,
-            level: '5',
-            text: "Hanayo Limited\n[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.\n[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)\nLife Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
-        },
-        {
-            id: 1,
-            name: 'Nanashi, That Four Another',
-            image: 'http://i.imgur.com/YcMdHLJ.jpg',
-            type: 'LRIG',
-            color: 'Black',
-            limit: 'Limit: 11',
-            cost: 'Grow: Black 3',
-            level: '4',
-            lrigType: 'Nanashi',
-            text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
-        },
-        {
-            id: 2,
-            name: 'Beigoma, Fourth Play Princess ※',
-            image: 'http://i.imgur.com/QemHU7N.jpg',
-            type: 'SIGNI',
-            color: 'Green',
-            class: 'Playground Equipment',
-            attack: 'Attack: 12000', // idk what type this is
-            burst: true,
-            level: '4',
-            text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'
-        }
-    ])
-    // Console utility - leave this here
 
-    socket.on('eval', function (text) {
-        socket.emit('console', eval(text))
-    })
-})
+})  
+
+// A listing of every card in its default state.
+const ALLCARDS = Object.freeze([
+    {
+        id: 0,
+        name: 'Diabride, Natural Pyroxene ※',
+        image: 'http://i.imgur.com/zvqh8zV.jpg',
+        type: 'SIGNI',
+        color: 'Red',
+        class: 'Gem',
+        attack: 'Attack: 15000',
+        burst: true,
+        level: '5',
+        text: "Hanayo Limited\n[Constant]: When this SIGNI has crushed 2 or more Life Cloth in 1 turn, up this SIGNI. This effect can only be triggered once per turn.\n[Constant]: When 1 of your <Ore> or <Gem> SIGNI is affected by the effects of your opponent's ARTS, damage your opponent. This effect can only be triggered once per turn. (If your opponent has no Life Cloth, you win the game.)\nLife Burst: Banish 1 of your opponent's SIGNI with power 10000 or less. If you have 2 or less Life Cloth, additionally, crush one of your opponent's Life Cloth."
+    },
+    {
+        id: 1,
+        name: 'Nanashi, That Four Another',
+        image: 'http://i.imgur.com/YcMdHLJ.jpg',
+        type: 'LRIG',
+        color: 'Black',
+        limit: 'Limit: 11',
+        cost: 'Grow: Black 3',
+        level: '4',
+        lrigType: 'Nanashi',
+        text: "[Constant]: All of your opponent's infected SIGNI get −1000 power.\n[Auto]: When your main phase starts, put 1 [Virus] on 1 of your opponent's SIGNI Zones.\n[Action] Blind Coin Coin: During your opponent's next turn, all of your SIGNI get \n[Shadow]. (Your SIGNI with [Shadow] cannot be chosen by your opponent's effects.)",
+    },
+    {
+        id: 2,
+        name: 'Beigoma, Fourth Play Princess ※',
+        image: 'http://i.imgur.com/QemHU7N.jpg',
+        type: 'SIGNI',
+        color: 'Green',
+        class: 'Playground Equipment',
+        attack: 'Attack: 12000', // idk what type this is
+        burst: true,
+        level: '4',
+        text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'
+    }
+])
