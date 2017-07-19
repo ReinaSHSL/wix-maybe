@@ -257,8 +257,8 @@ io.on('connection', function (socket) {
     })
 
     //Register
-    socket.on('register', function(data){
-        r.table('selectors').insert([{id: data.username, password: data.pass}]).run(conn, function(err, result) {
+    socket.on('register', function (data) {
+        r.table('selectors').insert([{id: data.username, password: data.pass}]).run(conn, function (err, result) {
             if (err) console.log('welp')
             console.log('registered')
         })
