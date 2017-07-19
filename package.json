@@ -1,22 +1,30 @@
 {
-  "name": "batoru.me",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "~1.17.1",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.3",
-    "express": "^4.15.2",
-    "jade": "~1.11.0",
-    "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2",
-    "socket.io": "^1.7.4"
-  }
+    "name": "batoru.me",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "~1.17.1",
+        "cookie-parser": "~1.4.3",
+        "debug": "~2.6.3",
+        "express": "^4.15.2",
+        "jade": "~1.11.0",
+        "morgan": "~1.8.1",
+        "rethinkdb": "^2.3.3",
+        "serve-favicon": "~2.4.2",
+        "socket.io": "^1.7.4"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Geo1088/wix-maybe.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Geo1088/wix-maybe/issues"
+    },
+    "homepage": "https://github.com/Geo1088/wix-maybe#readme"
 }
