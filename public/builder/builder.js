@@ -44,12 +44,8 @@ function search () {
         checkBurst: checkBurst,
         checkNoBurst: checkNoBurst})
 
-    socket.on('cardMatches', function(cardMatches){
+    socket.on('cardMatches', function (cardMatches) {
         results.append(cardElementFromData(cardMatches))
-        //This next line causes an error in console for every single card that shows up
-        //however if you remove it the entire thing breaks
-        //I don't even think this is proper syntax
-        cardElementFromData(cardMatches) = null
     })
 }
 // Search function ends here
