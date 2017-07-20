@@ -1,30 +1,30 @@
-/* globals $ */
+/* globals $, io */
 var socket = io()
 var currentDecks = {lrig: [], main: []}
 
 function cardElementFromData (card) {
-    var img = $('<img class="card-preview">')
-    .attr('src', card.image)
-    var listItem = $('<li class="card">')
-    .attr('dataName', card.name || '')
-    .attr('dataType', card.type || '')
-    .attr('dataColor', card.color || '')
-    .attr('dataLevel', card.level || '')
-    .attr('dataCost', card.cost || '')
-    .attr('dataAttack', card.attack || '')
-    .attr('dataClass', card.class || '')
-    .attr('dataLrigType', card.lrigType || '')
-    .attr('dataLimit', card.limit || '')
-    .attr('dataText', card.text || '')
-    .attr('dataCardId', card.id)
-    .append(img)
-    return listItem.eq(0) // TODO: Convert calls of this to use jQuery
+    var $img = $('<img class="card-preview">')
+        .attr('src', card.image)
+    var $listItem = $('<li class="card">')
+        .attr('dataName', card.name || '')
+        .attr('dataType', card.type || '')
+        .attr('dataColor', card.color || '')
+        .attr('dataLevel', card.level || '')
+        .attr('dataCost', card.cost || '')
+        .attr('dataAttack', card.attack || '')
+        .attr('dataClass', card.class || '')
+        .attr('dataLrigType', card.lrigType || '')
+        .attr('dataLimit', card.limit || '')
+        .attr('dataText', card.text || '')
+        .attr('dataCardId', card.id)
+        .append($img)
+    return $listItem
 }
 
 //Search Function
 function search () {
-    var results = $('#results')
-    results.empty()
+    var $results = $('#results')
+    $results.empty()
 
     // Get the search parameters from the interface
     var inputName = $('#cardName').val()
@@ -36,16 +36,18 @@ function search () {
     var checkNoBurst = $('#noBurst').is(':checked')
     // If everything is empty, just return - no point in listing every card
     if (!inputName && !inputLevel && !inputColor && !inputType && !inputClass) return
-    socket.emit('cardSearch', {inputName: inputName,
+    socket.emit('cardSearch', {
+        inputName: inputName,
         inputLevel: inputLevel,
         inputColor: inputColor,
         inputType: inputType,
         inputClass: inputClass,
         checkBurst: checkBurst,
-        checkNoBurst: checkNoBurst})
+        checkNoBurst: checkNoBurst
+    })
 
     socket.on('cardMatches', function (cardMatches) {
-        results.append(cardElementFromData(cardMatches))
+        $results.append(cardElementFromData(cardMatches))
     })
 }
 // Search function ends here
@@ -73,13 +75,12 @@ $('#results').on('click', '.card', function () {
     var $this = $(this)
     var cardsType = $this.attr('dataType')
     if (cardsType==='LRIG' || cardsType==='RESONA' || cardsType==='ARTS') {
-        if (currentDecks.lrig.length<10) {
+        if (currentDecks.lrig.length < 10) {
             currentDecks.lrig.push(parseInt($this.attr('dataCardId'), 10))
             $('#lrigDeckDisplay').append($this.clone())
         }
-    }
-    else {
-        if (currentDecks.main.length<40) {
+    } else {
+        if (currentDecks.main.length < 40) {
             currentDecks.main.push(parseInt($this.attr('dataCardId'), 10))
             $('#mainDeckDisplay').append($this.clone())
         }
@@ -88,7 +89,7 @@ $('#results').on('click', '.card', function () {
 
 // When clicking on a card in the deck area, remove it from the deck
 $('#mainDeckDisplay').on('click', '.card', function () {
-    var $wrap = $(this)//.parent()
+    var $wrap = $(this)
     currentDecks.main.splice($wrap.index(), 1)
     $wrap.remove()
 })
