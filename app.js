@@ -136,6 +136,10 @@ io.on('connection', function (socket) {
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
+        io.sockets.in(roomId).emit('newJoinMessage', {
+            username: socket.username,
+            timestamp: Date.now()
+        })
     })
 
     //Joining Rooms

@@ -120,33 +120,31 @@ function systemMessageHTML (msg) {
         <tr class="message system ${msg.classes && msg.classes.join(' ')}">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
             <td class="author">${msg.author}</td>
-            <td class="content">${msg.contentHTML || msg.content}</td>
+            <td class="content">${msg.content}</td>
         </tr>
     `
 }
 function joinMessageHTML (msg) {
-    return `
-        <tr class="message system join">
-            <td class="timestamp">${timeString(msg.timestamp)}</td>
-            <td class="author">--&gt;</td>
-            <td class="content">${usernameHTML(msg.username)} has joined.</td>
-        </tr>
-    `
+    return systemMessageHTML({
+        classes: ['join', 'muted'],
+        author: '-->',
+        content: `${usernameHTML(msg.username)} has joined.`,
+        timestamp: msg.timestamp
+    })
 }
 function leaveMessageHTML (msg) {
-    return `
-        <tr class="message system leave">
-            <td class="timestamp">${timeString(msg.timestamp)}</td>
-            <td class="author">&lt;--</td>
-            <td class="content">${usernameHTML(msg.username)} has left.</td>
-        </tr>
-    `
+    return systemMessageHTML({
+        classes: ['leave', 'muted'],
+        author: '<--',
+        content: `${usernameHTML(msg.username)} has left.`,
+        timestamp: msg.timestamp
+    })
 }
 // HTML for a user in the user list
 function userHTML (user) {
     console.log(user)
     return `
-        <li class="user ${user.owner ? 'owner' : ''}">${user.username}</li>
+        <li class="user ${user.owner ? 'owner' : ''}">${usernameHTML(user.username)}</li>
     `
 }
 
