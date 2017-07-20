@@ -90,6 +90,11 @@ $('#testButton').click(function () {
 function timeString (timestamp) {
     return new Date(timestamp).toTimeString().substr(0, 5)
 }
+function usernameHTML (username) {
+    return `
+        <span class="username" style="color:${hashColor(username)}">${username}</span>"
+    `
+}
 // HTML for a room in the room listing
 function roomHTML (room) {
     return `
@@ -104,9 +109,18 @@ function messageHTML (msg) {
         <tr class="message">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
             <td class="author">
-                <span class="hidden">&lt;</span>${msg.author.username}<span class="hidden">&gt;</span>
+                <span class="hidden">&lt;</span>${usernameHTML(msg.author.username)}<span class="hidden">&gt;</span>
             </td>
             <td class="content">${msg.content}</td>
+        </tr>
+    `
+}
+function systemMessageHTML (msg) {
+    return `
+        <tr class="message system ${msg.classes && msg.classes.join(' ')}">
+            <td class="timestamp">${timeString(msg.timestamp)}</td>
+            <td class="author">${msg.author}</td>
+            <td class="content">${msg.contentHTML || msg.content}</td>
         </tr>
     `
 }
@@ -115,7 +129,7 @@ function joinMessageHTML (msg) {
         <tr class="message system join">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
             <td class="author">--&gt;</td>
-            <td class="content">${msg.username} has joined.</td>
+            <td class="content">${usernameHTML(msg.username)} has joined.</td>
         </tr>
     `
 }
@@ -124,7 +138,7 @@ function leaveMessageHTML (msg) {
         <tr class="message system leave">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
             <td class="author">&lt;--</td>
-            <td class="content">${msg.username} has left.</td>
+            <td class="content">${usernameHTML(msg.username)} has left.</td>
         </tr>
     `
 }
