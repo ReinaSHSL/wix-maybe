@@ -30,9 +30,9 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 let rooms = []
 class Room {
-    constructor (name, pass, id) {
+    constructor (name, password, id) {
         this.name = name
-        this.pass = pass
+        this.password = password
         this.id = id
         // Future code
         // while (this.id == null || rooms.map(r => r.id).indexOf(this.id) > -1) {
@@ -69,7 +69,7 @@ class Room {
     }
 
     get hasPassword () {
-        return this.pass ? true : false
+        return this.password ? true : false
     }
 
     toJSON () {
@@ -103,7 +103,7 @@ io.on('connection', function (socket) {
         console.log('[createRoom]', data)
         var roomId = '' + data.id
         socket.room = roomId
-        const room = new Room(data.name, data.pass, roomId)
+        const room = new Room(data.name, data.password, roomId)
         room.addMember({id: socket.id, username: socket.username})
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
@@ -114,12 +114,12 @@ io.on('connection', function (socket) {
     socket.on('joinRoom', function (data) {
         console.log('[joinRoom]', data)
         const id = data.id
-        const pass = data.pass
+        const password = data.password
         const room = getRoom(id)
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
-        if (room.pass && pass !== room.pass) {
+        if (room.password && password !== room.password) {
             return socket.emit('joinRoomFail', 'Missing or incorrect password')
         }
         socket.join(id)

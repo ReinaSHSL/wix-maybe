@@ -54,10 +54,10 @@ $('#create').click(function () {
         return alert('Please set a room name')
     } else {
         var roomId = Math.random()*1000000000000000000
-        socket.emit('createRoom', {id: roomId, name: roomName, pass: roomPass})
+        socket.emit('createRoom', {id: roomId, name: roomName, password: roomPassword})
         pregame.hide()
         lobby.show()
-        $('#roomList').append(htmlFromRoom({id: roomId, name: roomName, pass: roomPass}))
+        $('#roomList').append(htmlFromRoom({id: roomId, name: roomName, password: roomPass}))
     }
 })
 
@@ -78,8 +78,8 @@ $('#roomList').on('click', '.activeRoom', function () {
     var id = $this.attr('id')
     var hasPassword = $this.is('.has-password')
     if (hasPassword) {
-        var pass = prompt('Room password?')
-        socket.emit('joinRoom', {id: id, pass: pass})
+        var password = prompt('Room password?')
+        socket.emit('joinRoom', {id: id, password: password})
     } else {
         socket.emit('joinRoom', {id: id})
     }

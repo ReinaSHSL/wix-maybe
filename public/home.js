@@ -5,6 +5,15 @@ $('.loggedIn').hide()
 // The socket stuff is below here
 var socket = io()
 
+// Hash function
+function hash (pass) {
+    var hash = 5381
+    for (var i = 0; i < pass.length; i++) {
+        var char = pass.charCodeAt(i)
+        hash = ((hash << 5) + hash) + char /* hash * 33 + c */
+    }
+}
+
 $('#login').click(function () {
     var username = $('#username').val()
     var pass = $('#pass').val()
@@ -18,13 +27,9 @@ $('#login').click(function () {
 
 $('#register').click(function () {
     var username = $('#rUsername').val()
-    var pass = $('#rPass').val()
-    var hash = 5381
-    for (var i = 0; i < pass.length; i++) {
-        var char = pass.charCodeAt(i)
-        hash = ((hash << 5) + hash) + char /* hash * 33 + c */
-    }
-    socket.emit('register', {username: username, password: hash})
+    var password = $('#rPass').val()
+    var hashed = hash(password)
+    socket.emit('register', {username: username, password: hashed})
 })
 
 socket.on('loginFail', function (reason) {
@@ -44,5 +49,5 @@ socket.on('registerFail', function (reason) {
 
 socket.on('registerSuccess', function (user) {
     console.log('[registerSuccess]', user)
-    alert('Registered! Please log in to the left.')
+    alert('Registered! Please log in.')
 })
