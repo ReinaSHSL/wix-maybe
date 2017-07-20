@@ -72,6 +72,13 @@ class Room {
         return this.password ? true : false
     }
 
+    get membersSorted () {
+        return this.members.map(u => {
+            if (u.id === this.ownerId) u.owner = true
+            return u
+        })
+    }
+
     toJSON () {
         return {
             name: this.name,
@@ -94,6 +101,7 @@ function getRoom (id) {
 io.on('connection', function (socket) {
     console.log('[connection]')
     socket.join('chat') // TODO: is this necessary?
+    socket.username = `user${(Math.random()+'').substr(2,5)}`
 
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
@@ -107,7 +115,7 @@ io.on('connection', function (socket) {
         room.addMember({id: socket.id, username: socket.username})
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
-        io.sockets.in(roomId).emit('roomUserUpdate', socket.username)
+        io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
     })
 
     //Joining Rooms
@@ -116,12 +124,14 @@ io.on('connection', function (socket) {
         const id = data.id
         const password = data.password
         const room = getRoom(id)
+
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
         if (room.password && password !== room.password) {
             return socket.emit('joinRoomFail', 'Missing or incorrect password')
         }
+
         socket.join(id)
         socket.room = id
         room.addMember({
@@ -129,7 +139,7 @@ io.on('connection', function (socket) {
             username: socket.username
         })
         socket.emit('joinRoomSuccess', room)
-        io.sockets.in(id).emit('roomUserUpdateOnJoin', {roomInfo: rooms, user: socket.username, room: socket.room})
+        io.sockets.in(id).emit('roomUsers', room.membersSorted)
     })
 
     //Leaving Lobby
@@ -140,16 +150,15 @@ io.on('connection', function (socket) {
             return
         }
 
-        // Remove the user from the room's members
+        // Remove the user from the room
         room.removeMember(socket.id)
-        console.log(rooms)
 
         // If the room is empty, remove it
         if (!room.members.length) {
             rooms.splice(rooms.findIndex(r => r.id === socket.room), 1)
             return io.sockets.emit('emptyRoom', socket.room)
         }
-        io.sockets.in(socket.room).emit('userLeft', socket.username)
+        io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
         socket.leave(socket.room)
         socket.room = ''
     })

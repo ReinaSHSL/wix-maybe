@@ -38,12 +38,31 @@ $('#testButton').click(function () {
 
 //Room stuff
 
-function htmlFromRoom (room) {
-    console.log('[htmlFromRoom]', room)
+// HTML for a room in the room listing
+function roomHTML (room) {
     return `
         <li id="${room.id}" class="activeRoom ${room.hasPassword ? 'has-password' : ''}">
             <a href="#">${room.name}</a>
         </li>
+    `
+}
+// HTML for a message
+function messageHTML (msg) {
+    return `
+        <tr class="message ${msg.author.username === 'test' ? 'mine' : ''}">
+            <td class="timestamp">${new Date(msg.timestamp).toTimeString().substr(0, 5)}</td>
+            <td class="author">
+                <span class="hidden">&lt;</span>${msg.author.username}<span class="hidden">&gt;</span>
+            </td>
+            <td class="content">${msg.content}</td>
+        </tr>
+    `
+}
+// HTML for a user in the user list
+function userHTML (user) {
+    console.log(user)
+    return `
+        <li class="user ${user.owner ? 'owner' : ''}">${user.username}</li>
     `
 }
 
@@ -58,7 +77,7 @@ $('#create').click(function () {
         socket.emit('createRoom', {id: roomId, name: roomName, password: roomPass})
         pregame.hide()
         lobby.show()
-        $('#roomList').append(htmlFromRoom({id: roomId, name: roomName, password: roomPass}))
+        $('#roomList').append(roomHTML({id: roomId, name: roomName, password: roomPass}))
         $('.header .extra').text(' > Chat: ' + roomName)
     }
 })
@@ -70,7 +89,7 @@ socket.on('activeRooms', function (rooms) {
     roomList.empty()
     for (let room of rooms) {
         // console.log('[activeRooms]', id)
-        $('#roomList').append(htmlFromRoom(room))
+        $('#roomList').append(roomHTML(room))
     }
 })
 
@@ -115,15 +134,7 @@ $('#msgBox').keydown(function (e) {
 //Display new msg
 socket.on('newLobbyMessage', function (msg) {
     console.log('[newLobbyMessage]', msg)
-    $('.messages').append(`
-        <tr class="message ${msg.author.username === 'test' ? 'mine' : ''}">
-            <td class="timestamp">${new Date(msg.timestamp).toTimeString().substr(0, 5)}</td>
-            <td class="author">
-                <span class="hidden">&lt;</span>${msg.author.username}<span class="hidden">&gt;</span>
-            </td>
-            <td class="content">${msg.content}</td>
-        </tr>
-    `)
+    $('.messages').append(messageHTML(msg))
 })
 
 //Leaving the lobby
@@ -137,32 +148,21 @@ $('#leave').click(function () {
 })
 
 //Display usernames on room creation
-socket.on('roomUserUpdate', function (roomUserUpdate) {
-    $('.users').append(`
-        <li class="user leader">${roomUserUpdate} <span color="red">*</span></li>
-    `)
-})
-
-//Display username on join
-socket.on('roomUserUpdateOnJoin', function (roomUserUpdateOnJoin) {
-    $('.users').append(`
-        <li class="user">${roomUserUpdateOnJoin.user}</li>
-    `)
-    var room = roomUserUpdateOnJoin.room
-    $('#roomLeader').val(roomUserUpdateOnJoin.roomInfo[room].users[0])
-})
-
-//Remove user names when they leave
-socket.on('userLeft', function (userLeft) {
-    if ($('#roomLeader').val() === userLeft) {
-        $('#roomLeader').val('')
-    }
-    else {
-        $('#roomUser').val('')
+socket.on('roomUsers', function (users) {
+    console.log('[roomUsers]', users)
+    users.sort((u1, u2) => {
+        if (u1.owner && !u2.owner) return -1
+        if (u2.owner && !u1.owner) return 1
+        return u1.username.localeCompare(u2.username)
+    })
+    var $userList = $('.users')
+    $userList.empty()
+    for (let user of users) {
+        $userList.append(userHTML(user))
     }
 })
 
-//kick user from room if refresh
+// Remove the user from the room when they reload or exit the page
 window.onbeforeunload = function () {
     socket.emit('leaveRoom')
 }
