@@ -1,8 +1,13 @@
 body {
     margin: 0;
     font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 .header {
+    flex: 0 0 auto;
     background: #F7F7F7;
     border-bottom: 1px solid #BBB;
     padding: 5px 10px;
@@ -23,24 +28,71 @@ body {
     margin: 0;
 }
 
-/*#create {
-    position: absolute;
-    top: 5px;
-    left: 73px;
-}*/
-
-
 .main {
-    padding: 10px;
+    flex: 1 0 auto;
 }
 
 #roomList:empty::after {
     content: "There are no rooms!?"
 }
-
-h2 {
-    margin-top: 0;
-}
 .username-label {
     cursor: pointer;
+}
+
+
+#lobby {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.chat-display {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: row;
+}
+.messages {
+    flex: 1 1 100%;
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+}
+.users {
+    flex: 0 0 150px;
+    border-left: 1px solid #BBB;
+    background: #F7F7F7;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.message {
+    display: table-row;
+    font-family: monospace;
+}
+.message:hover {
+    background: #F7F7F7;
+}
+.message .timestamp, .message .author, .message .content {
+    padding: 1px 5px;
+    display: table-cell;
+    vertical-align: top;
+}
+.message .timestamp {
+    opacity: .7;
+    padding-right: 0;
+}
+.message .author {
+    border-right: 1px solid #BBB;
+    text-align: right;
+}
+.message .content {
+    width: 100%;
+}
+
+.hidden {
+    font-size: 0;
+}
+.chat-bar {
+    flex: 0 0 32px;
+    border-top: 1px solid #BBB;
 }

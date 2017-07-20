@@ -163,7 +163,15 @@ io.on('connection', function (socket) {
     //Lobby chatting
     socket.on('sendLobbyMessage', function (msg) {
         console.log('[sendLobbyMessage]', msg)
-        io.sockets.in(socket.room).emit('newLobbyMessage', {author: socket.username, content: msg})
+        const timestamp = Date.now()
+        io.sockets.in(socket.room).emit('newLobbyMessage', {
+            author: {
+                id: socket.id,
+                username: socket.username
+            },
+            content: msg,
+            timestamp: timestamp
+        })
     })
 
     //Fucking murder me builder shit

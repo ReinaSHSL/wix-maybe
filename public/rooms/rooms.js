@@ -46,6 +46,7 @@ function htmlFromRoom (room) {
         </li>
     `
 }
+
 //Creates room
 $('#create').click(function () {
     var roomName = $('#roomName').val()
@@ -54,10 +55,11 @@ $('#create').click(function () {
         return alert('Please set a room name')
     } else {
         var roomId = Math.random()*1000000000000000000
-        socket.emit('createRoom', {id: roomId, name: roomName, password: roomPassword})
+        socket.emit('createRoom', {id: roomId, name: roomName, password: roomPass})
         pregame.hide()
         lobby.show()
         $('#roomList').append(htmlFromRoom({id: roomId, name: roomName, password: roomPass}))
+        $('.header .extra').text(' > Chat: ' + roomName)
     }
 })
 
@@ -112,11 +114,15 @@ $('#msgBox').keydown(function (e) {
 
 //Display new msg
 socket.on('newLobbyMessage', function (msg) {
+    console.log('[newLobbyMessage]', msg)
     $('.messages').append(`
-        <div class="message">
-            <span class="author">${msg.author}:</span>
-            <span class="content">${msg.content}</span>
-        </div>
+        <tr class="message ${msg.author.username === 'test' ? 'mine' : ''}">
+            <td class="timestamp">${new Date(msg.timestamp).toTimeString().substr(0, 5)}</td>
+            <td class="author">
+                <span class="hidden">&lt;</span>${msg.author.username}<span class="hidden">&gt;</span>
+            </td>
+            <td class="content">${msg.content}</td>
+        </tr>
     `)
 })
 
@@ -132,12 +138,16 @@ $('#leave').click(function () {
 
 //Display usernames on room creation
 socket.on('roomUserUpdate', function (roomUserUpdate) {
-    $('#roomLeader').val(roomUserUpdate)
+    $('.users').append(`
+        <li class="user leader">${roomUserUpdate} <span color="red">*</span></li>
+    `)
 })
 
 //Display username on join
 socket.on('roomUserUpdateOnJoin', function (roomUserUpdateOnJoin) {
-    $('#roomUser').val(roomUserUpdateOnJoin.user)
+    $('.users').append(`
+        <li class="user">${roomUserUpdateOnJoin.user}</li>
+    `)
     var room = roomUserUpdateOnJoin.room
     $('#roomLeader').val(roomUserUpdateOnJoin.roomInfo[room].users[0])
 })
