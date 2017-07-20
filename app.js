@@ -54,6 +54,7 @@ class Room {
         this.name = name
         this.password = password
         this.id = id
+        this.messages = []
         // Future code
         // while (this.id == null || rooms.map(r => r.id).indexOf(this.id) > -1) {
         //     this.id++
@@ -105,7 +106,8 @@ class Room {
             id: this.id,
             members: this.members,
             owner: this.owner,
-            hasPassword: this.hasPassword
+            hasPassword: this.hasPassword,
+            messages: this.messages
         }
     }
 
@@ -136,10 +138,13 @@ io.on('connection', function (socket) {
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
-        io.sockets.in(roomId).emit('newJoinMessage', {
+        const msg = {
+            type: 'join',
             username: socket.username,
             timestamp: Date.now()
-        })
+        }
+        room.messages.push(msg)
+        io.sockets.in(roomId).emit('newMessage', msg)
     })
 
     //Joining Rooms
@@ -164,10 +169,13 @@ io.on('connection', function (socket) {
         })
         socket.emit('joinRoomSuccess', room)
         io.sockets.in(id).emit('roomUsers', room.membersSorted)
-        io.sockets.in(socket.room).emit('newJoinMessage', {
+        const msg = {
+            type: 'join',
             username: socket.username,
             timestamp: Date.now()
-        })
+        }
+        room.messages.push(msg)
+        io.sockets.in(socket.room).emit('newMessage', msg)
     })
 
     //Leaving Lobby
@@ -187,10 +195,13 @@ io.on('connection', function (socket) {
             return io.sockets.emit('emptyRoom', socket.room)
         }
         io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
-        io.sockets.in(socket.room).emit('newLeaveMessage', {
+        const msg = {
+            type: 'leave',
             username: socket.username,
             timestamp: Date.now()
-        })
+        }
+        room.messages.push(msg)
+        io.sockets.in(socket.room).emit('newMessage', msg)
         socket.leave(socket.room)
         socket.room = ''
     })
@@ -204,15 +215,18 @@ io.on('connection', function (socket) {
     //Lobby chatting
     socket.on('sendLobbyMessage', function (msg) {
         console.log('[sendLobbyMessage]', msg)
-        const timestamp = Date.now()
-        io.sockets.in(socket.room).emit('newLobbyMessage', {
+        const room = getRoom(socket.id)
+        const _msg = {
+            type: 'normal',
             author: {
                 id: socket.id,
                 username: socket.username
             },
             content: escapeHTML(msg),
-            timestamp: timestamp
-        })
+            timestamp: Date.now()
+        }
+        room.messages.push(_msg)
+        io.sockets.in(socket.room).emit('newMessage', _msg)
     })
 
     //Fucking murder me builder shit

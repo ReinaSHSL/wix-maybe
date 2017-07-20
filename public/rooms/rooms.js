@@ -191,6 +191,9 @@ socket.on('joinRoomSuccess', function (room) {
     pregame.hide()
     lobby.show()
     $('.header .extra').text(' > Chat: ' + room.name)
+    for (let msg of room.messages) {
+        shit(msg)
+    }
 })
 socket.on('joinRoomFail', function (reason) {
     alert(`Failed to join room: ${reason}`)
@@ -212,11 +215,27 @@ $('#msgBox').keydown(function (e) {
         $('#msgBox').val('')
     }
 })
-
+function shit (msg) {
+    let html
+    switch (msg.type) {
+        case 'normal':
+            html = messageHTML(msg)
+            break
+        case 'join':
+            html = joinMessageHTML(msg)
+            break
+        case 'leave':
+            html = leaveMessageHTML(msg)
+            break
+        default:
+            return console.log('Invalid message type')
+    }
+    $('.messages').append(html)
+}
 //Display new msg
-socket.on('newLobbyMessage', function (msg) {
-    console.log('[newLobbyMessage]', msg)
-    $('.messages').append(messageHTML(msg))
+socket.on('newMessage', function (msg) {
+    console.log('[newMessage]', msg)
+    shit(msg)
 })
 
 socket.on('newJoinMessage', function (msg) {

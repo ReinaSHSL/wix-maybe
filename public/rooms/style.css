@@ -100,6 +100,9 @@ body {
 .hidden {
     font-size: 0;
 }
+.message.system .content { color: #666 }
+.message.join .author { color: green }
+.message.leave .author { color: red }
 
 .chat-bar {
     flex: 0 0 32px;
