@@ -142,6 +142,10 @@ io.on('connection', function (socket) {
         })
         socket.emit('joinRoomSuccess', room)
         io.sockets.in(id).emit('roomUsers', room.membersSorted)
+        io.sockets.in(socket.room).emit('newJoinMessage', {
+            username: socket.username,
+            timestamp: Date.now()
+        })
     })
 
     //Leaving Lobby
@@ -161,6 +165,10 @@ io.on('connection', function (socket) {
             return io.sockets.emit('emptyRoom', socket.room)
         }
         io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
+        io.sockets.in(socket.room).emit('newLeaveMessage', {
+            username: socket.username,
+            timestamp: Date.now()
+        })
         socket.leave(socket.room)
         socket.room = ''
     })

@@ -38,6 +38,9 @@ $('#testButton').click(function () {
 
 //Room stuff
 
+function timeString (timestamp) {
+    return new Date(timestamp).toTimeString().substr(0, 5)
+}
 // HTML for a room in the room listing
 function roomHTML (room) {
     return `
@@ -49,12 +52,30 @@ function roomHTML (room) {
 // HTML for a message
 function messageHTML (msg) {
     return `
-        <tr class="message ${msg.author.username === 'test' ? 'mine' : ''}">
-            <td class="timestamp">${new Date(msg.timestamp).toTimeString().substr(0, 5)}</td>
+        <tr class="message">
+            <td class="timestamp">${timeString(msg.timestamp)}</td>
             <td class="author">
                 <span class="hidden">&lt;</span>${msg.author.username}<span class="hidden">&gt;</span>
             </td>
             <td class="content">${msg.content}</td>
+        </tr>
+    `
+}
+function joinMessageHTML (msg) {
+    return `
+        <tr class="message system join">
+            <td class="timestamp">${timeString(msg.timestamp)}</td>
+            <td class="author">--&gt;</td>
+            <td class="content">${msg.username} has joined.</td>
+        </tr>
+    `
+}
+function leaveMessageHTML (msg) {
+    return `
+        <tr class="message system leave">
+            <td class="timestamp">${timeString(msg.timestamp)}</td>
+            <td class="author">&lt;--</td>
+            <td class="content">${msg.username} has left.</td>
         </tr>
     `
 }
@@ -135,6 +156,15 @@ $('#msgBox').keydown(function (e) {
 socket.on('newLobbyMessage', function (msg) {
     console.log('[newLobbyMessage]', msg)
     $('.messages').append(messageHTML(msg))
+})
+
+socket.on('newJoinMessage', function (msg) {
+    console.log('[newJoinMessage]', msg)
+    $('.messages').append(joinMessageHTML(msg))
+})
+socket.on('newLeaveMessage', function (msg) {
+    console.log('[newLeaveMessage]', msg)
+    $('.messages').append(leaveMessageHTML(msg))
 })
 
 //Leaving the lobby
