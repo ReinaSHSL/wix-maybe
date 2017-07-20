@@ -241,7 +241,8 @@ io.on('connection', function (socket) {
                 // We have a match, check the credentials
                 if (data.username === user.username && data.password === user.password) {
                     socket.user = user.id
-                    return socket.emit('loginSuccess')
+                    delete user.password
+                    return socket.emit('loginSuccess', user)
                 }
                 return socket.emit('loginFail', 'Incorrect username or password')
             })
@@ -262,15 +263,15 @@ io.on('connection', function (socket) {
             } else {
                 id = _user.id + 1 // This id is just one more than the last
             }
-            console.log('== Using id', id)
-            const newUser = {
+            let user = {
                 id: id,
                 username: data.username,
                 password: data.password
             }
-            r.db('people').table('selectors').insert(newUser).run(conn, function (err, res) {
+            r.db('people').table('selectors').insert(user).run(conn, function (err) {
                 if (err) return console.log(err)
-                console.log(res)
+                delete user.password
+                socket.emit('registerSuccess', user)
             })
         })
     })

@@ -28,9 +28,21 @@ $('#register').click(function () {
 })
 
 socket.on('loginFail', function (reason) {
+    console.log('[loginFail]', reason)
     alert('Failed to log in: ' + reason)
 })
 
-socket.on('loginSuccess', function () {
+socket.on('loginSuccess', function (user) {
+    console.log('[loginSuccess]', user)
     $('.loggedIn').show()
+})
+
+socket.on('registerFail', function (reason) {
+    console.log('[registerFail]', reason)
+    alert('Failed to register: ' + reason)
+})
+
+socket.on('registerSuccess', function (user) {
+    console.log('[registerSuccess]', user)
+    alert('Registered! Please log in to the left.')
 })
