@@ -92,6 +92,7 @@ function getRoom (id) {
 
 // Accept incoming socket connections
 io.on('connection', function (socket) {
+    console.log('[connection]')
     socket.join('chat') // TODO: is this necessary?
 
     // Send the list of active rooms to the client
@@ -226,20 +227,20 @@ io.on('connection', function (socket) {
 
     //Login
     socket.on('login', function (data) {
+        console.log('[login]', data)
         r.table('selectors').filter(r.row('username').eq(data.username)).run(conn, function (err, cursor) {
-            // TODO: This means there are no users in the database yet.
-            if (err && err.name === 'ReqlNonExistenceError') return console.log('shit')
-
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
                 if (err) console.log(err)
-                result = result[0]
-                if (!result) return socket.emit('loginFail', 'Unknown username')
-                console.log(result)
-                console.log(data.username)
-                console.log(data.password)
-                if (data.username === result.username && data.password === result.password) {
-                    socket.user = result.id
+                // Safety: If there are multiple matches we have a problem; log it, but don't fail
+                if (result[1]) console.log('Uh, there are two people that have the same username?', result)
+                // Get the user returned
+                const user = result[0]
+                // No matches?
+                if (!user) return socket.emit('loginFail', 'Unknown username')
+                // We have a match, check the credentials
+                if (data.username === user.username && data.password === user.password) {
+                    socket.user = user.id
                     return socket.emit('loginSuccess')
                 }
                 return socket.emit('loginFail', 'Incorrect username or password')
@@ -250,17 +251,25 @@ io.on('connection', function (socket) {
 
     //Registering
     socket.on('register', function (data) {
+        console.log('[register]', data)
+        // TODO: check for duplicate usernames here
         r.table('selectors').max('id').run(conn, function (err, _user) {
-            if (err) console.log(err)
-            let id = _user.id
-            console.log('User with the highest id is', _user)
+            let id
+            if (err && err.name === 'ReqlNonExistenceError') {
+                id = 0 // No users exist yet, so start at 0
+            } else if (err) {
+                return console.log(err)
+            } else {
+                id = _user.id + 1 // This id is just one more than the last
+            }
+            console.log('== Using id', id)
             const newUser = {
-                id: ++id,
+                id: id,
                 username: data.username,
                 password: data.password
             }
             r.db('people').table('selectors').insert(newUser).run(conn, function (err, res) {
-                if (err) return console.log('welp')
+                if (err) return console.log(err)
                 console.log(res)
             })
         })
