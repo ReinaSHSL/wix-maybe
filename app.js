@@ -9,6 +9,24 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 const httpPort = 3000
 
+// Escapes special characters for HTML.
+// https://stackoverflow.com/a/12034334/1070107
+const entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+}
+function escapeHTML (string) {
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return entityMap[s]
+    })
+}
+
 // Initialize the database connection and store it for use later
 var conn = null
 r.connect(dbConfig, function (err, connection) {
@@ -176,7 +194,7 @@ io.on('connection', function (socket) {
     //Username shit
     socket.on('setUsername', function (username) {
         console.log('[setUsername]', username)
-        socket.username = username
+        socket.username = escapeHTML(username)
     })
 
     //Lobby chatting
@@ -188,7 +206,7 @@ io.on('connection', function (socket) {
                 id: socket.id,
                 username: socket.username
             },
-            content: msg,
+            content: escapeHTML(msg),
             timestamp: timestamp
         })
     })
