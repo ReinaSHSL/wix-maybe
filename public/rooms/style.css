@@ -63,8 +63,16 @@ body {
     margin: 0;
     padding: 0;
     list-style: none;
+    font-family: monospace;
 }
-.owner { background: red }
+.user {
+    padding: 1px 5px;
+    border-bottom: 1px dotted #DDD;
+}
+.user.owner:after {
+    content: " *";
+    color: red;
+}
 
 .message {
     display: table-row;
