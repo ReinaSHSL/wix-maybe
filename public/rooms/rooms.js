@@ -92,7 +92,7 @@ function timeString (timestamp) {
 }
 function usernameHTML (username) {
     return `
-        <span class="username" style="color:${hashColor(username)}">${username}</span>"
+        <span class="username" style="color:${hashColor(username)}">${username}</span>
     `
 }
 // HTML for a room in the room listing
