@@ -1,8 +1,5 @@
-/* Basic style */
-a { color: #00B7FF }
-
 /* Column and layout stuff */
-body {
+.panel.builder {
 	margin: 0;
 	width: 100vw;
 	height: 100vh;

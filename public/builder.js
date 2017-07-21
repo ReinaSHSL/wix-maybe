@@ -1,6 +1,18 @@
-/* globals $, io */
-var socket = io()
+/* globals $, socket */
 var currentDecks = {lrig: [], main: []}
+
+$('.builder-button').click(function () {
+    if ($('.panel.builder').is(':visible')) {
+        $('.panel.builder').hide()
+        $('.panel:not(.builder)').show()
+        $('.builder-button').text('Open Deck Builder')
+    } else {
+        $('.panel').hide()
+        $('.panel.builder').show()
+        $('.builder-button').text('Close Deck Builder')
+    }
+})
+$('.panel.builder').hide()
 
 function cardElementFromData (card) {
     var $img = $('<img class="card-preview">')
