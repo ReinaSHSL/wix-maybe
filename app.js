@@ -122,7 +122,7 @@ function getRoom (id) {
 // Accept incoming socket connections
 io.on('connection', function (socket) {
     console.log('[connection]')
-    socket.join('chat') // TODO: is this necessary?
+    socket.join('lobby') // TODO: is this necessary?
     socket.username = `user${(Math.random()+'').substr(2,5)}`
 
     // Send the list of active rooms to the client
@@ -341,19 +341,13 @@ io.on('connection', function (socket) {
                 username: data.username,
                 password: data.password
             }
-            r.table('selectors').insert(user).run(conn, function (err) {
+            r.db('people').table('selectors').insert(user).run(conn, function (err) {
                 if (err) return console.log(err)
                 delete user.password
                 socket.emit('registerSuccess', user)
             })
         })
     })
-
-    socket.on('saveDeck', function(data){
-        let deck = {userid: socket.userId, cards: []}
-        r.table('decks').insert(deck)
-    })    
-    
 })
 
 // A listing of every card in its default state.

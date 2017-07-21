@@ -28,8 +28,29 @@ body {
     margin: 0;
 }
 
-.main {
+.panels {
     flex: 1 0 auto;
+    display: flex;
+}
+.panel {
+    flex: 1 1 100%;
+}
+.panel + .panel { border-left: 1px solid #BBB }
+.panel.tabbed {
+    display: flex;
+    flex-direction: column;
+}
+.panel.tabbed .panel-tabs {
+    flex: 0 0 32px;
+    height: 32px; background: red;
+}
+.panel.tabbed .panel-content {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+}
+.panel.tabbed .panel-content > * {
+    flex: 1 1 100%;
 }
 
 #roomList:empty::after {
@@ -40,7 +61,7 @@ body {
 }
 
 
-#lobby {
+.lobby .panel-content .chat {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

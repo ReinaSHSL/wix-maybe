@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Batoru</title>
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <a href="builder" class="loggedIn">Builder</a>
+        <a href="rooms" class="loggedIn">Rooms</a>
+
+        <h2>Log in</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="text" id="pass" placeholder="Password">
+        <button type="button" button id="login">Login</button>
+
+        <h2>Register</h2>
+        <input type="text" id="rUsername" placeholder="Username">
+        <input type="text" id="rPass" placeholder="Password">
+        <button type="button" button id='register'>Register</button>
+
+        <!-- Scripts here at the end -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src='home.js'></script>
+    </body>
+</html>

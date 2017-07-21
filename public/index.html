@@ -1,26 +1,65 @@
 <html>
     <head>
-        <title>Batoru</title>
-        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <title>Batoru</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     </head>
 
     <body>
-        <a href="builder" class="loggedIn">Builder</a>
-        <a href="rooms" class="loggedIn">Rooms</a>
+        <header class="header">
+            <div class="title-area">
+                <h1 class="title"><a href="../" title="Back to Home">Batoru</a></h1>
+                <span class="extra"></span>
+            </div>
+            <form class="username-form">
+                <button class="username-label">Choose a username...</button>
+                <input type="submit" class="set-username" value="Set" style="display:none;">
+            </form>
+        </header>
 
-        <h2>Log in</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="text" id="pass" placeholder="Password">
-        <button type="button" button id="login">Login</button>
+        <main class="panels">
+            <section class="panel">
+                <h1>This will eventually be a thing</h1>
+            </section>
 
-        <h2>Register</h2>
-        <input type="text" id="rUsername" placeholder="Username">
-        <input type="text" id="rPass" placeholder="Password">
-        <button type="button" button id='register'>Register</button>
+            <section class="panel tabbed lobby"><!-- The chat interface itself -->
+                <div class="panel-tabs">
+                    <a href="#" class="tab rooms">Join a room</a>
+                </div>
+                <div class="panel-content">
+                    <div class="rooms">
+                        <h2>Create a room</h2>
+                        <input type="text" id="roomName" placeholder="Room Name">
+                        <input type="text" id="roomPass" placeholder="Password (optional)">
+                        <button class="create">Create Room</button>
+                        <h2>Rooms</h2>
+                        <ul class="roomList"></ul>
+                    </div>
+                    <div class="chat">
+                        <div class="chat-display">
+                            <table class="messages"></table>
+                            <ul class="users"></ul>
+                        </div>
+                        <div class="chat-bar">
+                            <input type="text" id="msgBox" placeholder="Type text here">
+                            <button id="leave">Leave Room</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-        <!-- Scripts here at the end -->
+        <!--Scripts-->
         <script src="/socket.io/socket.io.js"></script>
-        <script src='home.js'></script>
+        <script type="text/javascript">
+            const socket = io()
+        </script>
+
+        <!-- GLobal chats -->
+        <script src="lobby.js"></script>
+
+        <!-- Stuff that got gutted from somewhere and hasn't found a home -->
+        <script src="misc.js"></script>
     </body>
 </html>
