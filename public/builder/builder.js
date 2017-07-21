@@ -99,11 +99,6 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
     $wrap.remove()
 })
 
-
-
-/*
-
-Other notes:
-- Signi and spells go in the main deck, while lrig, art, and resona go in the lrig deck
-
-*/
+$('save').on('click', function(){
+    socket.emit('saveDeck', currentDeck)
+})

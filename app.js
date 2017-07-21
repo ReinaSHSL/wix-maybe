@@ -338,6 +338,12 @@ io.on('connection', function (socket) {
             })
         })
     })
+
+    socket.on('saveDeck', function(data){
+        let deck = {userid: socket.userId, cards: []}
+        r.table('decks').insert(deck)
+    })    
+    
 })
 
 // A listing of every card in its default state.
