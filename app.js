@@ -331,7 +331,7 @@ io.on('connection', function (socket) {
                 username: data.username,
                 password: data.password
             }
-            r.db('people').table('selectors').insert(user).run(conn, function (err) {
+            r.table('selectors').insert(user).run(conn, function (err) {
                 if (err) return console.log(err)
                 delete user.password
                 socket.emit('registerSuccess', user)
