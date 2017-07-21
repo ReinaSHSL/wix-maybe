@@ -140,6 +140,16 @@ function leaveMessageHTML (msg) {
         timestamp: msg.timestamp
     })
 }
+function ownerChangeMessageHTML (msg) {
+    return `
+        <tr class="message system">
+            <td class="timestamp">${timeString(msg.timestamp)}</td>
+            <td class="author">---</td>
+            <td class="content">${usernameHTML(msg.username)} is now the owner.</td>
+        </tr>
+    `
+}
+
 // HTML for a user in the user list
 function userHTML (user) {
     console.log(user)
@@ -226,6 +236,9 @@ function shit (msg) {
             break
         case 'leave':
             html = leaveMessageHTML(msg)
+            break
+        case 'ownerChange':
+            html = ownerChangeMessageHTML(msg)
             break
         default:
             return console.log('Invalid message type')

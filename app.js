@@ -185,6 +185,7 @@ io.on('connection', function (socket) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
         }
+        const ownerChanged = socket.id === room.ownerId
 
         // Remove the user from the room
         room.removeMember(socket.id)
@@ -202,6 +203,15 @@ io.on('connection', function (socket) {
         }
         room.messages.push(msg)
         io.sockets.in(socket.room).emit('newMessage', msg)
+        if (ownerChanged) {
+            const msg2 = {
+                type: 'ownerChange',
+                username: room.owner.username,
+                timestamp: Date.now()
+            }
+            room.messages.push(msg)
+            io.sockets.in(socket.room).emit('newMessage', msg2)
+        }
         socket.leave(socket.room)
         socket.room = ''
     })
@@ -215,7 +225,7 @@ io.on('connection', function (socket) {
     //Lobby chatting
     socket.on('sendLobbyMessage', function (msg) {
         console.log('[sendLobbyMessage]', msg)
-        const room = getRoom(socket.id)
+        const room = getRoom(socket.room)
         const _msg = {
             type: 'normal',
             author: {
