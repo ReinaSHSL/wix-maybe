@@ -141,3 +141,5 @@ body {
     flex: 0 0 151px;
     height: 100%;
 }
+
+.panel.tabbed .panel-content .rooms { padding: 10px }

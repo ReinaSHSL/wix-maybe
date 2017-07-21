@@ -34,8 +34,8 @@ function cardElementFromData (card) {
 }
 
 //Search Function
+var $results = $('#results')
 function search () {
-    var $results = $('#results')
     $results.empty()
 
     // Get the search parameters from the interface
@@ -58,10 +58,10 @@ function search () {
         checkNoBurst: checkNoBurst
     })
 
-    socket.on('cardMatches', function (cardMatches) {
-        $results.append(cardElementFromData(cardMatches))
-    })
 }
+socket.on('cardMatches', function (cardMatches) {
+    $results.append(cardElementFromData(cardMatches))
+})
 // Search function ends here
 
 // Some event listeners for cards now
