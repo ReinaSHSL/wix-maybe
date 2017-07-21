@@ -11,12 +11,14 @@ $tabBar.on('click', '.rooms', function () {
     $roomsView.show()
 })
 $tabBar.on('click', '.chat', function () {
+    const $tab = $(this)
     $roomsView.hide()
     $chatView.show()
     // TODO: load proper room based on data stored on button
 })
 
 $chatView.hide()
+$tabBar.hide()
 
 function timeString (timestamp) {
     return new Date(timestamp).toTimeString().substr(0, 5)
@@ -103,11 +105,11 @@ $('.rooms .create').click(function () {
 //On connection list all active rooms
 socket.on('activeRooms', function (rooms) {
     console.log('[activeRooms]', rooms)
-    var roomList = $('#roomList')
-    roomList.empty()
+    const $roomList = $('.lobby .roomList')
+    $roomList.empty()
     for (let room of rooms) {
         // console.log('[activeRooms]', id)
-        $('#roomList').append(roomHTML(room))
+        $roomList.append(roomHTML(room))
     }
 })
 
@@ -215,10 +217,3 @@ socket.on('roomUsers', function (users) {
 window.onbeforeunload = function () {
     socket.emit('leaveRoom')
 }
-
-
-// Console utility - leave this here
-function doEval (text) { // eslint-disable-line no-unused-vars
-    socket.emit('eval', text)
-}
-socket.on('console', console.log)
