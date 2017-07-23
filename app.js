@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const favicon = require('serve-favicon')
+const cookieParser = require('cookie-parser')
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
 
@@ -44,6 +45,8 @@ server.listen(httpPort, function () {
 app.use(express.static(path.join(__dirname, 'public')))
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+// Cookies!
+app.use(cookieParser())
 
 // TODO: User class, have the rooms only store the ID, this will let us do
 // actions in a room when a person changes usernames and stuff
