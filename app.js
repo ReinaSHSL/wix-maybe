@@ -2,6 +2,7 @@ const path = require('path')
 const express = require('express')
 const favicon = require('serve-favicon')
 const cookieParser = require('cookie-parser')
+const session = require('express-session')
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
 
@@ -47,6 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 // Cookies!
 app.use(cookieParser())
+app.use(session())
 
 // TODO: User class, have the rooms only store the ID, this will let us do
 // actions in a room when a person changes usernames and stuff
@@ -121,6 +123,8 @@ class Room {
 function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
+
+app.on('')
 
 // Accept incoming socket connections
 io.on('connection', function (socket) {
