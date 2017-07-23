@@ -57,11 +57,10 @@ function search () {
         checkBurst: checkBurst,
         checkNoBurst: checkNoBurst
     })
-
-    socket.on('cardMatches', function (cardMatches) {
-        $results.append(cardElementFromData(cardMatches))
-    })
 }
+socket.on('cardMatches', function (cardMatches) {
+    $('#results').append(cardElementFromData(cardMatches))
+})
 // Search function ends here
 
 // Some event listeners for cards now
