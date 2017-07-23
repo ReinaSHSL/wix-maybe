@@ -126,7 +126,9 @@ function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
 
-app.on('')
+app.post('/login', function (req, res) {
+    // reina do ur magic bb
+})
 
 // Accept incoming socket connections
 io.on('connection', function (socket) {

@@ -10,7 +10,7 @@
     <body>
         <header class="header">
             <div class="title-area">
-                <h1 class="title"><a href="../" title="Back to Home">Batoru</a></h1>
+                <h1 class="title"><a href="#">Batoru</a></h1>
                 <span class="extra"></span>
                 <button class="builder-button">Open Deck Builder</button>
             </div>
@@ -22,7 +22,11 @@
 
         <main class="panels">
             <section class="panel" style="padding:10px">
-                <h1>This will eventually be a thing</h1>
+                <form action="/signup" method="POST">
+                    <input name="username" type="text" required>
+                    <input name="password" type="password" required>
+                    <input type="Submit" value="Create Account">
+                </form>
             </section>
 
             <section class="panel tabbed lobby"><!-- The chat interface itself -->
