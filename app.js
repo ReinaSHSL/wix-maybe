@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const favicon = require('serve-favicon')
+const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const r = require('rethinkdb')
@@ -46,7 +47,8 @@ server.listen(httpPort, function () {
 app.use(express.static(path.join(__dirname, 'public')))
 // Favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-// Cookies!
+// Cookies and shit
+app.use(bodyParser())
 app.use(cookieParser())
 app.use(session())
 
