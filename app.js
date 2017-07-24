@@ -167,6 +167,7 @@ app.post('/signup', function (req, res) {
     }
 })
 
+//Login
 app.post('/login', function (req, res) {
     if (!req.body.username || !req.body.password) {
         res.send('Insert username and password')
@@ -194,7 +195,6 @@ app.post('/login', function (req, res) {
     }
 })
 
-//Login
 
 // Accept incoming socket connections
 io.on('connection', function (socket) {
