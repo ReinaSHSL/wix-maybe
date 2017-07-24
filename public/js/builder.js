@@ -2,7 +2,7 @@
 var currentDecks = {lrig: [], main: []}
 
 const $builderButton = $('.builder-button')
-const $builderPanel = $('panel.builder')
+const $builderPanel = $('.panel.builder')
 
 $builderButton.click(function () {
     if ($builderPanel.is(':visible')) {
