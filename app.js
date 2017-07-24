@@ -6,13 +6,16 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')({secret: 'welcome to hell', cookie: {maxAge: 60000}})
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
+const sharedsession = require('express-socket.io-session')
 
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
-const ios = require('socket.io-express-session')
-io.use(ios(session))
 const httpPort = 3000
+app.use(session)
+io.use(sharedsession(session, {
+    autoSave:true
+}))
 
 // Escapes special characters for HTML.
 // https://stackoverflow.com/a/12034334/1070107
@@ -189,8 +192,12 @@ app.post('/login', function (req, res) {
                 if (!result[0]) res.send('Username or password is invalid')
                 if (username === result[0].username && hashedPassword === result[0].password) {
                     req.session.user = result
-                    res.send('logged in')
-                    console.log('logged in')
+                    io.set('authorization', function (data, callback) {
+                        data.user = result
+                        console.log(socket.request.user)
+                        callback(null, true)
+                    })
+                    res.send('Logged in')
                 }
             })
         })
@@ -209,11 +216,12 @@ io.on('connection', function (socket) {
 
     // Creates rooms
     socket.on('createRoom', function (data) {
+        console.log(socket.request.user)
         console.log('[createRoom]', data)
         var roomId = '' + data.id
         socket.room = roomId
         const room = new Room(data.name, data.password, roomId)
-        room.addMember({id: socket.id, username: socket.username})
+        room.addMember({id: socket.handshake.session.id, username: socket.username})
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
@@ -243,7 +251,7 @@ io.on('connection', function (socket) {
         socket.join(id)
         socket.room = id
         room.addMember({
-            id: socket.id,
+            id: socket.handshake.session.id,
             username: socket.username
         })
         socket.emit('joinRoomSuccess', room)
@@ -264,10 +272,10 @@ io.on('connection', function (socket) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
         }
-        const ownerChanged = socket.id === room.ownerId
+        const ownerChanged = socket.handshake.session.id === room.ownerId
 
         // Remove the user from the room
-        room.removeMember(socket.id)
+        room.removeMember(socket.handshake.session.id)
 
         // If the room is empty, remove it
         if (!room.members.length) {
@@ -308,7 +316,7 @@ io.on('connection', function (socket) {
         const _msg = {
             type: 'normal',
             author: {
-                id: socket.id,
+                id: socket.handshake.session.id,
                 username: socket.username
             },
             content: escapeHTML(msg),
