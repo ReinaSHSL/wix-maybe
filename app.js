@@ -126,8 +126,8 @@ function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
 
+//Register
 app.post('/signup', function (req, res) {
-    console.log('user ' + req.body.username + ' pass ' + req.body.password)
     if (!req.body.username || !req.body.password) {
         res.status('400')
         res.send('Invalid details!')
@@ -166,6 +166,35 @@ app.post('/signup', function (req, res) {
         })
     }
 })
+
+app.post('/login', function (req, res) {
+    if (!req.body.username || !req.body.password) {
+        res.send('Insert username and password')
+    }
+    else {
+        const username = req.body.username
+        const unhashedPassword = req.body.password
+        let hashedPassword = 5381
+        for (let i = 0; i < unhashedPassword.length; i++) {
+            let char = unhashedPassword.charCodeAt(i)
+            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
+        }
+        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
+            if (err) return console.log(err)
+            cursor.toArray(function (err, result) {
+                if (err) return console.log(err)
+                if (!result[0]) res.send('Username or password is invalid')
+                if (username === result[0].username && hashedPassword === result[0].password) {
+                    req.session.user = result
+                    res.send('logged in')
+                    console.log('logged in')
+                }
+            })
+        })
+    }
+})
+
+//Login
 
 // Accept incoming socket connections
 io.on('connection', function (socket) {
@@ -342,59 +371,6 @@ io.on('connection', function (socket) {
         if (card) {
             card = null
         }
-    })
-
-    //Database
-
-    //Login
-    socket.on('login', function (data) {
-        console.log('[login]', data)
-        r.table('selectors').filter(r.row('username').eq(data.username)).run(conn, function (err, cursor) {
-            if (err) return console.log(err)
-            cursor.toArray(function (err, result) {
-                if (err) console.log(err)
-                // Safety: If there are multiple matches we have a problem; log it, but don't fail
-                if (result[1]) console.log('Uh, there are two people that have the same username?', result)
-                // Get the user returned
-                const user = result[0]
-                // No matches?
-                if (!user) return socket.emit('loginFail', 'Unknown username')
-                // We have a match, check the credentials
-                if (data.username === user.username && data.password === user.password) {
-                    socket.user = user.id
-                    delete user.password
-                    return socket.emit('loginSuccess', user)
-                }
-                return socket.emit('loginFail', 'Incorrect username or password')
-            })
-        })
-    })
-
-
-    //Registering
-    socket.on('register', function (data) {
-        console.log('[register]', data)
-        // TODO: check for duplicate usernames here
-        r.table('selectors').max('id').run(conn, function (err, _user) {
-            let id
-            if (err && err.name === 'ReqlNonExistenceError') {
-                id = 0 // No users exist yet, so start at 0
-            } else if (err) {
-                return console.log(err)
-            } else {
-                id = _user.id + 1 // This id is just one more than the last
-            }
-            let user = {
-                id: id,
-                username: data.username,
-                password: data.password
-            }
-            r.db('people').table('selectors').insert(user).run(conn, function (err) {
-                if (err) return console.log(err)
-                delete user.password
-                socket.emit('registerSuccess', user)
-            })
-        })
     })
 })
 

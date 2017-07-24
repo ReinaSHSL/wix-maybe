@@ -23,9 +23,14 @@
         <main class="panels">
             <section class="panel" style="padding:10px">
                 <form action="/signup" method="POST">
-                    <input name="username" type="text" required>
-                    <input name="password" type="password" required>
+                    <input name="username" type="text" required placeholder = 'Username'>
+                    <input name="password" type="password" required placeholder = 'Password'>
                     <input type="Submit" value="Create Account">
+                </form>
+                <form action="/login" method="POST">
+                    <input name="username" type="text" required placeholder = 'Username'>
+                    <input name="password" type="password" required placeholder = 'Password'>
+                    <input type="Submit" value="Login">
                 </form>
             </section>
 
