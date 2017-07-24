@@ -20,6 +20,11 @@ $tabBar.on('click', '.chat', function () {
 $chatView.hide()
 $tabBar.hide()
 
+// Scroll the chat box to the bottom, the most recent messages.
+function scrollChat () {
+    $('.lobby .messages').scrollTop(function () { return this.scrollHeight })
+}
+
 function timeString (timestamp) {
     return new Date(timestamp).toTimeString().substr(0, 5)
 }
@@ -132,6 +137,7 @@ socket.on('joinRoomSuccess', function (room) {
     for (let msg of room.messages) {
         shit(msg)
     }
+    scrollChat()
 })
 socket.on('joinRoomFail', function (reason) {
     alert(`Failed to join room: ${reason}`)
@@ -177,6 +183,7 @@ function shit (msg) {
 socket.on('newMessage', function (msg) {
     console.log('[newMessage]', msg)
     shit(msg)
+    scrollChat()
 })
 
 socket.on('newJoinMessage', function (msg) {
