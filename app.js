@@ -146,7 +146,7 @@ app.post('/signup', function (req, res) {
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
                 console.log(result)
-                if (result[0]) res.send('Username in use')
+                if (result[0]) return res.send('Username in use')
                 r.table('selectors').max('id').run(conn, function (err, _user) {
                     if (err) return console.log(err)
                     if (_user) {
