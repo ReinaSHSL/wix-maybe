@@ -29,7 +29,7 @@ body {
 }
 
 .panels {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     display: flex;
 }
 .panel {
@@ -70,10 +70,11 @@ body {
     flex: 1 0 auto;
     display: flex;
     flex-direction: row;
+    font-family: monospace;
 }
 .messages {
     flex: 1 1 100%;
-    display: table;
+    display: block;
     width: 100%;
     border-spacing: 0;
 }
@@ -84,7 +85,6 @@ body {
     margin: 0;
     padding: 0;
     list-style: none;
-    font-family: monospace;
 }
 .user {
     padding: 1px 5px;
@@ -95,10 +95,6 @@ body {
     color: red;
 }
 
-.message {
-    display: table-row;
-    font-family: monospace;
-}
 .message:hover {
     background: #F7F7F7;
 }
@@ -129,6 +125,7 @@ body {
     flex: 0 0 32px;
     border-top: 1px solid #BBB;
     display: flex;
+    height: 32px;
 }
 .chat-bar input {
     flex: 1 1 100%;
@@ -140,6 +137,9 @@ body {
 .chat-bar button {
     flex: 0 0 151px;
     height: 100%;
+    background: none;
+    border: 0;
+    border-left: 1px solid #BBB;
 }
 
 .panel.tabbed .panel-content .rooms { padding: 10px }

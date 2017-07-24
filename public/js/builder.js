@@ -1,18 +1,20 @@
 /* globals $, socket */
 var currentDecks = {lrig: [], main: []}
 
-$('.builder-button').click(function () {
-    if ($('.panel.builder').is(':visible')) {
-        $('.panel.builder').hide()
+const $builderButton = $('.builder-button')
+const $builderPanel = $('panel.builder')
+
+$builderButton.click(function () {
+    if ($builderPanel.is(':visible')) {
+        $builderPanel.hide()
         $('.panel:not(.builder)').show()
-        $('.builder-button').text('Open Deck Builder')
+        $builderButton.text('Open Deck Builder')
     } else {
         $('.panel').hide()
-        $('.panel.builder').show()
-        $('.builder-button').text('Close Deck Builder')
+        $builderPanel.show()
+        $builderButton.text('Close Deck Builder')
     }
 })
-$('.panel.builder').hide()
 
 function cardElementFromData (card) {
     var $img = $('<img class="card-preview">')
