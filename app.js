@@ -3,13 +3,15 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-const session = require('express-session')
+const session = require('express-session')({secret: 'welcome to hell', cookie: {maxAge: 60000}})
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
 
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
+const ios = require('socket.io-express-session')
+io.use(ios(session))
 const httpPort = 3000
 
 // Escapes special characters for HTML.
@@ -50,7 +52,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 // Cookies and shit
 app.use(bodyParser())
 app.use(cookieParser())
-app.use(session({ secret: 'welcome to hell', cookie: { maxAge: 60000 }}))
+app.use(session)
 
 // TODO: User class, have the rooms only store the ID, this will let us do
 // actions in a room when a person changes usernames and stuff
