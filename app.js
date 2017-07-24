@@ -50,7 +50,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 // Cookies and shit
 app.use(bodyParser())
 app.use(cookieParser())
-app.use(session())
+app.use(session({ secret: 'welcome to hell', cookie: { maxAge: 60000 }}))
 
 // TODO: User class, have the rooms only store the ID, this will let us do
 // actions in a room when a person changes usernames and stuff
@@ -126,8 +126,45 @@ function getRoom (id) {
     return rooms.find(r => r.id === id)
 }
 
-app.post('/login', function (req, res) {
-    // reina do ur magic bb
+app.post('/signup', function (req, res) {
+    console.log('user ' + req.body.username + ' pass ' + req.body.password)
+    if(!req.body.username || !req.body.password){
+      res.status("400");
+      res.send("Invalid details!");
+    }
+    else {
+               let username = req.body.username
+        let unhashedPassword = req.body.password
+        // Hash the password
+        var hashedPassword = 5381
+        for (i = 0; i < unhashedPassword.length; i++) {
+            char = unhashedPassword.charCodeAt(i);
+            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char; /* hash * 33 + c */
+        }
+        // now reference `hashedPassword`
+        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function(err, cursor){
+            cursor.toArray(function(err, result) {
+                console.log(result)
+                if (err) return console.log(err)
+                if (result[0]) res.send('Username in use')
+                if (!result[0]) r.table('selectors').max('id').run(conn, function(err, _user){
+                    if (err) return console.log(err)
+                    if (_user) {
+                        let id = _user.id + 1
+                        let user = {
+                            id: id,
+                            username: username,
+                            password: hashedPassword
+                        }
+                        r.table('selectors').insert(user).run(conn, function(err){
+                            if (err) return console.log(err)
+                            res.send('Registered')
+                        })
+                    }
+                })
+            })
+        })
+    }
 })
 
 // Accept incoming socket connections
