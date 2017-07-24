@@ -128,26 +128,26 @@ function getRoom (id) {
 
 app.post('/signup', function (req, res) {
     console.log('user ' + req.body.username + ' pass ' + req.body.password)
-    if(!req.body.username || !req.body.password){
-      res.status("400");
-      res.send("Invalid details!");
-    }
-    else {
-               let username = req.body.username
-        let unhashedPassword = req.body.password
+    if (!req.body.username || !req.body.password) {
+        res.status('400')
+        res.send('Invalid details!')
+    } else {
+        const username = req.body.username
+        const unhashedPassword = req.body.password
         // Hash the password
-        var hashedPassword = 5381
-        for (i = 0; i < unhashedPassword.length; i++) {
-            char = unhashedPassword.charCodeAt(i);
-            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char; /* hash * 33 + c */
+        let hashedPassword = 5381
+        for (let i = 0; i < unhashedPassword.length; i++) {
+            let char = unhashedPassword.charCodeAt(i)
+            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
         }
         // now reference `hashedPassword`
-        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function(err, cursor){
-            cursor.toArray(function(err, result) {
-                console.log(result)
+        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
+            if (err) return console.log(err)
+            cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
+                console.log(result)
                 if (result[0]) res.send('Username in use')
-                if (!result[0]) r.table('selectors').max('id').run(conn, function(err, _user){
+                r.table('selectors').max('id').run(conn, function (err, _user) {
                     if (err) return console.log(err)
                     if (_user) {
                         let id = _user.id + 1
@@ -156,7 +156,7 @@ app.post('/signup', function (req, res) {
                             username: username,
                             password: hashedPassword
                         }
-                        r.table('selectors').insert(user).run(conn, function(err){
+                        r.table('selectors').insert(user).run(conn, function (err) {
                             if (err) return console.log(err)
                             res.send('Registered')
                         })
