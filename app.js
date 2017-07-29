@@ -156,20 +156,22 @@ app.post('/signup', function (req, res) {
                 if (err) return console.log(err)
                 console.log(result)
                 if (result[0]) return res.send('Username in use')
-                r.table('selectors').max('id').run(conn, function (err, _user) {
-                    if (err) return console.log(err)
-                    if (_user) {
-                        let id = _user.id + 1
-                        let user = {
-                            id: id,
-                            username: username,
-                            password: hashedPassword
-                        }
-                        r.table('selectors').insert(user).run(conn, function (err) {
-                            if (err) return console.log(err)
-                            res.send('Registered')
-                        })
+                r.table('selectors').max('id').run(conn, function (err, lastUser) {
+                    if (err && err.name === 'ReqlNonExistenceError') {
+                        lastUser = {id: -1} // HACK - this should be restructured
+                    } else if (err) {
+                        return console.log(err)
                     }
+                    const id = lastUser.id + 1
+                    const user = {
+                        id: id,
+                        username: username,
+                        password: hashedPassword
+                    }
+                    r.table('selectors').insert(user).run(conn, function (err) {
+                        if (err) return console.log(err)
+                        res.send('Registered')
+                    })
                 })
             })
         })
@@ -197,6 +199,7 @@ app.post('/login', function (req, res) {
                 if (username === result[0].username && hashedPassword === result[0].password) {
                     req.session.user = result
                     res.send('Logged in')
+                    // req.session.save()
                 }
             })
         })
@@ -214,12 +217,14 @@ io.on('connection', function (socket, userData) {
 
     // Creates rooms
     socket.on('createRoom', function (data) {
+        console.log('[createRoom]', data)
         let sessionID = socket.handshake.sessionID
         let user = 'user'
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        sessionObject = JSON.parse(sessionObject)
         console.log(sessionObject)
         console.log(Object.keys(sessionObject))
-      //console.log('[createRoom]', data)
+        console.log(socket.handshake.session)
         var roomId = '' + data.id
         socket.room = roomId
         const room = new Room(data.name, data.password, roomId)
@@ -418,7 +423,7 @@ const ALLCARDS = Object.freeze([
         type: 'SIGNI',
         color: 'Green',
         class: 'Playground Equipment',
-        attack: 'Attack: 12000', 
+        attack: 'Attack: 12000',
         burst: true,
         level: '4',
         text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'

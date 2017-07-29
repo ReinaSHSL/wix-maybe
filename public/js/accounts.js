@@ -9,19 +9,19 @@ $('.login-form, signup-form').on('submit', function (e) {
         type: $this.attr('method'),
         data: $this.serialize(),
         success: function (response) {
-            const data = JSON.parse(response)
+            // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
-                loginSuccess(data)
+                loginSuccess()
             } else {
-                signupSuccess(data)
+                signupSuccess()
             }
         },
         error: function (response) {
-            const data = JSON.parse(response)
+            // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
-                loginFail(data)
+                loginFail()
             } else {
-                signupFail(data)
+                signupFail()
             }
         }
     })
