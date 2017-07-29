@@ -1,35 +1,10 @@
 /* eslint-disable */ // not worth it
 
-//Username stuff
-$('.username-form').submit(function (e) {
-    e.preventDefault()
-    var $input = $('.username-input')
-    var $setButton = $('.set-username')
-    var username = $input.val()
-    if (username) {
-        $input.replaceWith(`<span class="username-label" title="Click to change your username">${username}</span>`)
-    } else {
-        $input.replaceWith('<button class="username-label">Choose a username...</button>')
-    }
-    $setButton.hide()
-    socket.emit('setUsername', username)
-})
-// $('.username-label').click(function () {
-$(document).on('click', '.username-label', function () {
-    console.log('test')
-    var $this = $(this)
-    var $setButton = $('.set-username')
-    var username = $this.is('button') ? '' : $this.text()
-    $this.replaceWith(`<input type="text" class="username-input" placeholder="New username" value="${username}">`)
-    $setButton.show()
-    $('.username-input').focus()
-})
-
 $('#testButton').click(function () {
     socket.emit('userTest')
 })
 
-// Shit for hasing username colors
+// Shit for hashing username colors
 
 // warning stolen property
 // https://github.com/Zarel/Pokemon-Showdown-Client/blob/1e8340c850fb39abae280cf85bee31d6dbd9e3d7/js/battledata.js#L59-L114
