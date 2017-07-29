@@ -3,6 +3,7 @@
     <title>Batoru</title>
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/builderstyle.css">
+        <link rel="stylesheet" href="css/lobby.css">
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <!-- <script src="js/lib/jquery-3.2.1.min.js"></script> -->
@@ -12,7 +13,6 @@
         <header class="header">
             <div class="title-area">
                 <h1 class="title"><a href="#">Batoru</a></h1>
-                <span class="extra"></span>
                 <button class="builder-button">Open Deck Builder</button>
             </div>
             <span class="current-user username"></span>
@@ -32,9 +32,9 @@
                 </form>
             </section>
 
-            <section class="panel tabbed lobby"><!-- The chat interface itself -->
-                <div class="tabs" style="display:none">
-                    <a href="#" class="tab rooms">Rooms</a>
+            <section class="panel lobby"><!-- The chat interface itself -->
+                <div class="tabs">
+                    <a href="#" class="tab tab-rooms">Rooms</a>
                 </div>
                 <div class="rooms">
                     <h2>Create a room</h2>

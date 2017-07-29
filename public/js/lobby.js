@@ -3,14 +3,14 @@
 const $lobby = $('.lobby')
 const $roomsView = $lobby.find('.rooms')
 const $chatView = $lobby.find('.chat')
-const $tabBar = $lobby.find('tabs')
+const $tabBar = $lobby.find('.tabs')
 
 // Tab stuff
-$tabBar.on('click', '.rooms', function () {
+$tabBar.on('click', '.tab-rooms', function () {
     $chatView.hide()
     $roomsView.show()
 })
-$tabBar.on('click', '.chat', function () {
+$tabBar.on('click', '.tab-chat', function () {
     const $tab = $(this)
     $roomsView.hide()
     $chatView.show()
@@ -90,6 +90,12 @@ function userHTML (user) {
         <li class="user ${user.owner ? 'owner' : ''}">${usernameHTML(user.username)}</li>
     `
 }
+function roomTabHTML (room) {
+    console.log(room)
+    return `
+        <a href="#" class="tab tab-chat">${room.name}</a>
+    `
+}
 
 //Creates room
 $('.rooms .create').click(function () {
@@ -143,6 +149,8 @@ socket.on('joinRoomSuccess', function (room) {
     }
     // Scroll the chat down to the most recent message
     scrollChat()
+    // Also, let's update the tab bar with a new tab for the room
+    $tabBar.append(roomTabHTML(room))
 })
 socket.on('joinRoomFail', function (reason) {
     alert(`Failed to join room: ${reason}`)
