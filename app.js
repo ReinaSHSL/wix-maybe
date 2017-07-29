@@ -224,10 +224,16 @@ app.post('/login', function (req, res) {
                 console.log(err)
                 return res.status(500).send('Server error; check the console')
             }
-            if (!result[0] || hashedPassword !== result[0].password) {
+            const user = result[0]
+            if (result[1]) {
+                console.log("Go clean up your database, there's a duplicated user here")
+                console.log(user)
+                console.log(result[1])
+            }
+            if (!user || hashedPassword !== user.password) {
                 return res.status(400).send('Incorrect or invalid credentials')
             }
-            req.session.user = result
+            req.session.user = user // This stores the user's session for later
             return res.status(200).send('Logged in')
         })
     })
