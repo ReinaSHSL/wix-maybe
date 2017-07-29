@@ -137,73 +137,100 @@ function getRoom (id) {
 
 //Register
 app.post('/signup', function (req, res) {
+    // If they left off information, error back
     if (!req.body.username || !req.body.password) {
-        res.status('400')
-        res.send('Invalid details!')
-    } else {
-        const username = req.body.username
-        const unhashedPassword = req.body.password
-        // Hash the password
-        let hashedPassword = 5381
-        for (let i = 0; i < unhashedPassword.length; i++) {
-            let char = unhashedPassword.charCodeAt(i)
-            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
+        return res.status(400).send('Invalid details!')
+    }
+
+    const username = req.body.username
+    const unhashedPassword = req.body.password
+    // Hash the password
+    // TODO: I don't know much about security but I know doing this here is bad
+    let hashedPassword = 5381
+    for (let i = 0; i < unhashedPassword.length; i++) {
+        let char = unhashedPassword.charCodeAt(i)
+        hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
+    }
+
+    // Let's see if we have this username
+    r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
+        if (err) {
+            console.log(err)
+            return res.status(500).send('Server error; check the console')
         }
-        // now reference `hashedPassword`
-        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
-            if (err) return console.log(err)
-            cursor.toArray(function (err, result) {
-                if (err) return console.log(err)
-                console.log(result)
-                if (result[0]) return res.send('Username in use')
-                r.table('selectors').max('id').run(conn, function (err, lastUser) {
-                    if (err && err.name === 'ReqlNonExistenceError') {
-                        lastUser = {id: -1} // HACK - this should be restructured
-                    } else if (err) {
-                        return console.log(err)
+        cursor.toArray(function (err, result) {
+            if (err) {
+                console.log(err)
+                return res.status(500).send('Server error; check the console')
+            }
+            // We do already have this username, rip
+            if (result[0]) return res.status(400).send('Username in use')
+
+            // Get the highest ID
+            r.table('selectors').max('id').getField('id').run(conn, function (err, id) {
+                if (err && err.name === 'ReqlNonExistenceError') {
+                    // There are no users yet, so we'll start at 0
+                    id = 0
+                } else if (err) {
+                    // We actually fucked something up
+                    console.log(err)
+                    return res.status(500).send('Server error; check the console')
+                } else {
+                    // Increment the alst user's ID to get the next one
+                    id++
+                }
+                const user = {
+                    id: id,
+                    username: username,
+                    password: hashedPassword
+                }
+
+                // Insert the user into the table now
+                r.table('selectors').insert(user).run(conn, function (err) {
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).send('Server error; check the console')
                     }
-                    const id = lastUser.id + 1
-                    const user = {
-                        id: id,
-                        username: username,
-                        password: hashedPassword
-                    }
-                    r.table('selectors').insert(user).run(conn, function (err) {
-                        if (err) return console.log(err)
-                        res.send('Registered')
-                    })
+                    // Finally, we did it!
+                    res.status(200).send('Registered')
                 })
             })
         })
-    }
+    })
 })
 
 //Login
 app.post('/login', function (req, res) {
     if (!req.body.username || !req.body.password) {
-        res.send('Insert username and password')
+        return res.send('Insert username and password')
     }
-    else {
-        const username = req.body.username
-        const unhashedPassword = req.body.password
-        let hashedPassword = 5381
-        for (let i = 0; i < unhashedPassword.length; i++) {
-            let char = unhashedPassword.charCodeAt(i)
-            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
+
+    const username = req.body.username
+    const unhashedPassword = req.body.password
+
+    let hashedPassword = 5381
+    for (let i = 0; i < unhashedPassword.length; i++) {
+        let char = unhashedPassword.charCodeAt(i)
+        hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
+    }
+
+    r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
+        if (err) {
+            console.log(err)
+            return res.status(500).send('Server error; check the console')
         }
-        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
-            if (err) return console.log(err)
-            cursor.toArray(function (err, result) {
-                if (err) return console.log(err)
-                if (!result[0]) res.send('Username or password is invalid')
-                if (username === result[0].username && hashedPassword === result[0].password) {
-                    req.session.user = result
-                    res.send('Logged in')
-                    // req.session.save()
-                }
-            })
+        cursor.toArray(function (err, result) {
+            if (err) {
+                console.log(err)
+                return res.status(500).send('Server error; check the console')
+            }
+            if (!result[0] || hashedPassword !== result[0].password) {
+                return res.status(400).send('Incorrect or invalid credentials')
+            }
+            req.session.user = result
+            return res.status(200).send('Logged in')
         })
-    }
+    })
 })
 
 

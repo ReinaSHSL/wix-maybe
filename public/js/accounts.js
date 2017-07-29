@@ -1,6 +1,6 @@
 /* globals $ */
 
-$('.login-form, signup-form').on('submit', function (e) {
+$('.login-form, .signup-form').on('submit', function (e) {
     e.preventDefault()
     const $this = $(this)
     $this.find('input[type="submit"]').attr('disabled', true)
@@ -11,33 +11,19 @@ $('.login-form, signup-form').on('submit', function (e) {
         success: function (response) {
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
-                loginSuccess()
+                alert('logged in!')
+                $('.current-user').text()
             } else {
-                signupSuccess()
+                alert('signed up! please log in now')
             }
         },
         error: function (response) {
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
-                loginFail()
+                alert('failed to log in...')
             } else {
-                signupFail()
+                alert('failed to sign up...')
             }
         }
     })
 })
-
-function signupSuccess (data) {
-    alert('signed up!')
-}
-function signupFail (data) {
-    // TODO
-}
-
-function loginSuccess (data) {
-    alert('logged in!')
-    $('.current-user').text()
-}
-function loginFail (data) {
-    // TODO
-}
