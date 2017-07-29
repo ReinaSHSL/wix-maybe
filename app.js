@@ -3,7 +3,11 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-const session = require('express-session')({secret: 'welcome to hell', cookie: {maxAge: 60000}})
+const session = require("express-session")({
+    secret: "this is hell",
+    resave: true,
+    saveUninitialized: true
+});
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
 const sharedsession = require('express-socket.io-session')
@@ -15,7 +19,7 @@ const httpPort = 3000
 app.use(session)
 io.use(sharedsession(session, {
     autoSave:true
-}))
+}), cookieParser)
 
 // Escapes special characters for HTML.
 // https://stackoverflow.com/a/12034334/1070107
@@ -192,11 +196,6 @@ app.post('/login', function (req, res) {
                 if (!result[0]) res.send('Username or password is invalid')
                 if (username === result[0].username && hashedPassword === result[0].password) {
                     req.session.user = result
-                    io.set('authorization', function (data, callback) {
-                        data.user = result
-                        console.log(socket.request.user)
-                        callback(null, true)
-                    })
                     res.send('Logged in')
                 }
             })
@@ -206,9 +205,8 @@ app.post('/login', function (req, res) {
 
 
 // Accept incoming socket connections
-io.on('connection', function (socket) {
+io.on('connection', function (socket, userData) {
     console.log('[connection]')
-    socket.join('lobby') // TODO: is this necessary?
     socket.username = `user${(Math.random()+'').substr(2,5)}`
 
     // Send the list of active rooms to the client
@@ -216,8 +214,12 @@ io.on('connection', function (socket) {
 
     // Creates rooms
     socket.on('createRoom', function (data) {
-        console.log(socket.request.user)
-        console.log('[createRoom]', data)
+        let sessionID = socket.handshake.sessionID
+        let user = 'user'
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        console.log(sessionObject)
+        console.log(Object.keys(sessionObject))
+      //console.log('[createRoom]', data)
         var roomId = '' + data.id
         socket.room = roomId
         const room = new Room(data.name, data.password, roomId)
@@ -374,7 +376,6 @@ io.on('connection', function (socket) {
         // All right, we got all the matches, let's add them back to the page now
         for (var card of matchingCards) {
             socket.emit('cardMatches', card)
-            console.log(card)
         }
 
         // Dereference the objects so when they're removed they don't memleak the event handlers
@@ -417,7 +418,7 @@ const ALLCARDS = Object.freeze([
         type: 'SIGNI',
         color: 'Green',
         class: 'Playground Equipment',
-        attack: 'Attack: 12000', // idk what type this is
+        attack: 'Attack: 12000', 
         burst: true,
         level: '4',
         text: '[Constant]: When this SIGNI attacks, you may banish up to 2 of your other SIGNI. Then, add 1 card from your Ener Zone to your hand for each SIGNI banished this way.\nLife Burst: [Ener Charge 2]'
