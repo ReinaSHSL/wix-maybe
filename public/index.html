@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="css/builderstyle.css">
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <!-- <script src="js/lib/jquery-3.2.1.min.js"></script> -->
     </head>
 
     <body>
@@ -32,28 +33,22 @@
             </section>
 
             <section class="panel tabbed lobby"><!-- The chat interface itself -->
-                <div class="panel-tabs" style="display:none">
-                    <a href="#" class="tab rooms">Join a room</a>
+                <div class="tabs" style="display:none">
+                    <a href="#" class="tab rooms">Rooms</a>
                 </div>
-                <div class="panel-content">
-                    <div class="rooms">
-                        <h2>Create a room</h2>
-                        <input type="text" id="roomName" placeholder="Room Name">
-                        <input type="text" id="roomPass" placeholder="Password (optional)">
-                        <button class="create">Create Room</button>
-                        <h2>Rooms</h2>
-                        <ul class="roomList"></ul>
-                    </div>
-                    <div class="chat">
-                        <div class="chat-display">
-                            <table class="messages"></table>
-                            <ul class="users"></ul>
-                        </div>
-                        <div class="chat-bar">
-                            <input type="text" id="msgBox" placeholder="Type text here">
-                            <button id="leave">Leave Room</button>
-                        </div>
-                    </div>
+                <div class="rooms">
+                    <h2>Create a room</h2>
+                    <input type="text" id="roomName" placeholder="Room Name">
+                    <!-- <input type="text" id="roomPass" placeholder="Password (optional)"> -->
+                    <button class="create">Create Room</button>
+                    <h2>Rooms</h2>
+                    <ul class="roomList"></ul>
+                </div>
+                <div class="chat">
+                    <table class="messages"></table>
+                    <ul class="users"></ul>
+                    <input type="text" class="chatbar" id="msgBox" placeholder="Type text here">
+                    <button class="leaveroom" id="leave">Leave Room</button>
                 </div>
             </section>
 

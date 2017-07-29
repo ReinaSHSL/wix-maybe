@@ -36,22 +36,6 @@ body {
     flex: 1 1 100%;
 }
 .panel + .panel { border-left: 1px solid #BBB }
-.panel.tabbed {
-    display: flex;
-    flex-direction: column;
-}
-.panel.tabbed .panel-tabs {
-    flex: 0 0 32px;
-    height: 32px; background: red;
-}
-.panel.tabbed .panel-content {
-    flex: 1 1 100%;
-    display: flex;
-    flex-direction: column;
-}
-.panel.tabbed .panel-content > * {
-    flex: 1 1 100%;
-}
 
 #roomList:empty::after {
     content: "There are no rooms!?"
@@ -61,42 +45,29 @@ body {
 }
 
 
-.lobby .panel-content .chat {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.lobby {
+    display: grid;
+
 }
-.chat-display {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: row;
+
+.lobby .chat {
+    display: grid;
+    grid:
+        "messages users" calc(100% - 32px)
+        "chatbar  users" 32px
+        / auto 150px;
     font-family: monospace;
 }
+
+/* Main message display area */
 .messages {
-    flex: 1 1 100%;
+    grid-area: messages;
     display: block;
     width: 100%;
+    max-height: 100%;
     border-spacing: 0;
     overflow-y: scroll;
 }
-.users {
-    flex: 0 0 150px;
-    border-left: 1px solid #BBB;
-    background: #F7F7F7;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    overflow-y: scroll;
-}
-.user {
-    padding: 1px 5px;
-    border-bottom: 1px dotted #DDD;
-}
-.user.owner:after {
-    content: " *";
-    color: red;
-}
-
 .message:hover {
     background: #F7F7F7;
 }
@@ -123,25 +94,37 @@ body {
 .message.join .author { color: green }
 .message.leave .author { color: red }
 
-.chat-bar {
-    flex: 0 0 32px;
-    border-top: 1px solid #BBB;
-    display: flex;
-    height: 32px;
+/* User list */
+.users {
+    grid-area: users;
+    border-left: 1px solid #BBB;
+    background: #F7F7F7;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: scroll;
 }
-.chat-bar input {
-    flex: 1 1 100%;
+.user {
+    padding: 1px 5px;
+    border-bottom: 1px dotted #DDD;
+}
+.user.owner:after {
+    content: " *";
+    color: red;
+}
+
+/* Message composition bar */
+.chatbar {
+    grid-area: chatbar;
     border: 0;
-    height: 32px;
+    border-top: 1px solid #BBB;
     line-height: 32px;
     padding: 0 10px;
 }
-.chat-bar button {
-    flex: 0 0 151px;
-    height: 100%;
+.leaveroom {
+    display: none; /* TODO */
     background: none;
     border: 0;
+    border-top: 1px solid #BBB;
     border-left: 1px solid #BBB;
 }
-
-.panel.tabbed .panel-content .rooms { padding: 10px }

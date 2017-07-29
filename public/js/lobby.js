@@ -1,9 +1,9 @@
 /* globals $, socket, hashColor */
 
 const $lobby = $('.lobby')
-const $roomsView = $('.lobby .panel-content .rooms')
-const $chatView = $('.lobby .panel-content .chat')
-const $tabBar = $('.lobby .panel-tabs')
+const $roomsView = $lobby.find('.rooms')
+const $chatView = $lobby.find('.chat')
+const $tabBar = $lobby.find('tabs')
 
 // Tab stuff
 $tabBar.on('click', '.rooms', function () {
@@ -18,11 +18,11 @@ $tabBar.on('click', '.chat', function () {
 })
 
 $chatView.hide()
-$tabBar.hide()
 
 // Scroll the chat box to the bottom, the most recent messages.
 function scrollChat () {
-    $('.lobby .messages').scrollTop(function () { return this.scrollHeight })
+    const $el = $('.lobby .messages')
+    $el.scrollTop($el[0].scrollHeight)
 }
 
 function timeString (timestamp) {
@@ -93,6 +93,7 @@ function userHTML (user) {
 
 //Creates room
 $('.rooms .create').click(function () {
+    console.log('test?')
     var roomName = $('#roomName').val()
     var roomPass = $('#roomPass').val()
     if (!roomName) {
@@ -131,12 +132,16 @@ $('.rooms .roomList').on('click', '.activeRoom', function () {
     }
 })
 socket.on('joinRoomSuccess', function (room) {
+    // Hide the rooms list and show the message interface
     $roomsView.hide()
     $chatView.show()
+    // Show us which room we're in
     $('.header .extra').text(' > Chat: ' + room.name)
+    // Add the backlog messages to the interface
     for (let msg of room.messages) {
-        shit(msg)
+        processMessage(msg)
     }
+    // Scroll the chat down to the most recent message
     scrollChat()
 })
 socket.on('joinRoomFail', function (reason) {
@@ -159,7 +164,7 @@ $('#msgBox').keydown(function (e) {
         $('#msgBox').val('')
     }
 })
-function shit (msg) {
+function processMessage (msg) {
     let html
     switch (msg.type) {
         case 'normal':
@@ -182,8 +187,16 @@ function shit (msg) {
 //Display new msg
 socket.on('newMessage', function (msg) {
     console.log('[newMessage]', msg)
-    shit(msg)
-    scrollChat()
+    const $messages = $('.messages')
+    // Are we looking at the bottom of the chat right now? (this check must be
+    // before we add the message)
+    const isScrolled = $messages.scrollTop() + $messages.innerHeight() >= $messages[0].scrollHeight
+    // Add the message to the interface
+    processMessage(msg)
+    // If we were at the bottom before, put us back at the bottom
+    if (isScrolled) {
+        scrollChat()
+    }
 })
 
 socket.on('newJoinMessage', function (msg) {

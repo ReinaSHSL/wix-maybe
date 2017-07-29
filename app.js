@@ -82,19 +82,24 @@ class Room {
     }
 
     addMember (member) {
+        console.log('[addMember]', member)
+        console.log(this.members)
         this.members.push(member)
         if (this.members.length === 1) {
+            console.log('Making owner')
             this.owner = member
         }
     }
 
     removeMember (id) {
+        console.log('[removeMember]')
         const index = this.members.findIndex(u => u.id === id)
         this.members.splice(index, 1)
 
         if (id === this.ownerId && this.members.length) {
             this.owner = this.members[0]
         }
+        console.log(this.members, this.membersSorted)
     }
 
     set owner (user) {
@@ -110,7 +115,9 @@ class Room {
     }
 
     get membersSorted () {
-        return this.members.map(u => {
+        // Array.from() returns a new array so we don't modify this.members with
+        // the map function
+        return Array.from(this.members).map(u => {
             if (u.id === this.ownerId) u.owner = true
             return u
         })
@@ -278,15 +285,15 @@ io.on('connection', function (socket, userData) {
     socket.on('joinRoom', function (data) {
         console.log('[joinRoom]', data)
         const id = data.id
-        const password = data.password
+        // const password = data.password
         const room = getRoom(id)
 
-        if (room.members.length > 1) {
-            return socket.emit('joinRoomFail', 'Room full')
-        }
-        if (room.password && password !== room.password) {
-            return socket.emit('joinRoomFail', 'Missing or incorrect password')
-        }
+        // if (room.members.length > 1) {
+        //     return socket.emit('joinRoomFail', 'Room full')
+        // }
+        // if (room.password && password !== room.password) {
+        //     return socket.emit('joinRoomFail', 'Missing or incorrect password')
+        // }
 
         socket.join(id)
         socket.room = id
