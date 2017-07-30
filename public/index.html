@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/builderstyle.css">
         <link rel="stylesheet" href="css/lobby.css">
+        <link rel="stylesheet" href="css/login.css">
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <!-- <script src="js/lib/jquery-3.2.1.min.js"></script> -->
@@ -19,7 +20,8 @@
         </header>
 
         <main class="panels">
-            <section class="panel" style="padding:10px">
+            <!-- Initial screen - login/sighup stuff -->
+            <section class="panel login-signup">
                 <form action="/signup" method="POST" class="signup-form">
                     <input name="username" type="text" required placeholder = 'Username'>
                     <input name="password" type="password" required placeholder = 'Password'>
@@ -32,7 +34,11 @@
                 </form>
             </section>
 
-            <section class="panel lobby"><!-- The chat interface itself -->
+            <section class="panel rooms" style="display:none">
+                <h1>TODO: things</h1>
+            </section>
+
+            <section class="panel lobby" style="display:none">
                 <div class="tabs">
                     <a href="#" class="tab tab-rooms active">Rooms</a>
                 </div>
@@ -76,7 +82,7 @@
                         <label></label>
                         <select id="deckList">
                             <!--Shit will be added dynamically-->
-                            <option value=''>Blank Deck</option>
+                            <option value='0'>Blank Deck</option>
                         </select>
                         <button type="button" button id='new'>New Deck</button>
                         <button type="button" button id='ren'>Rename Deck</button>

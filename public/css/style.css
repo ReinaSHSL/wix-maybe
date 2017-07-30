@@ -24,22 +24,13 @@ body {
     text-decoration: inherit;
 }
 
-.header .username-form {
-    margin: 0;
-}
+.header .username-form { margin: 0 }
 
 .panels {
     flex: 1 1 auto;
     display: flex;
+    justify-content: center;
+    /*align-items: center;*/
 }
-.panel {
-    flex: 1 1 100%;
-}
+.panel { flex: 1 1 100%; }
 .panel + .panel { border-left: 1px solid #BBB }
-
-#roomList:empty::after {
-    content: "There are no rooms!?"
-}
-.username-label {
-    cursor: pointer;
-}

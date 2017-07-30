@@ -17,6 +17,8 @@ $('.login-form, .signup-form').on('submit', function (e) {
                 $('.current-user').text()
                 $submitButton.attr('disabled', false)
                 $('.current-user').text($('.login-form [name="username"]').val())
+                $('.panel.login-signup').hide()
+                $('.panel.lobby, .panel.rooms').show()
             } else {
                 alert('signed up! please log in now')
                 $submitButton.attr('disabled', false)
