@@ -248,25 +248,19 @@ app.post('/login', function (req, res) {
 
 
 // Accept incoming socket connections
-io.on('connection', function (socket, userData) {
+io.on('connection', function (socket) {
     console.log('[connection]')
     socket.username = `user${(Math.random()+'').substr(2,5)}`
-
+    socket.room = []
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
 
     // Creates rooms
     socket.on('createRoom', function (data) {
         console.log('[createRoom]', data)
-        let sessionID = socket.handshake.sessionID
-        let user = 'user'
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        sessionObject = JSON.parse(sessionObject)
-        console.log(sessionObject)
-        console.log(Object.keys(sessionObject))
-        console.log(socket.handshake.session)
         var roomId = '' + data.id
-        socket.room = roomId
+        socket.room.push(roomId)
+        console.log('socket room' + socket.room)
         const room = new Room(data.name, data.password, roomId)
         room.addMember({id: socket.handshake.session.id, username: socket.username})
         socket.join(roomId)
@@ -294,9 +288,9 @@ io.on('connection', function (socket, userData) {
         // if (room.password && password !== room.password) {
         //     return socket.emit('joinRoomFail', 'Missing or incorrect password')
         // }
-
+        socket.room.push(id)
+        console.log('socket room ' + socket.room)
         socket.join(id)
-        socket.room = id
         room.addMember({
             id: socket.handshake.session.id,
             username: socket.username
