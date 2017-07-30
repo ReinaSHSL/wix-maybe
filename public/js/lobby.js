@@ -200,8 +200,10 @@ socket.on('emptyRoom', function (emptyRoom) {
 $('.lobby').on('keydown', '.msgBox', function (e) {
     var key = e.which
     if (key === 13) {
+        let roomId = $('.tab.active').attr('data-room-id')
+        console.log(roomId)
         var msg = $(this).val()
-        socket.emit('sendLobbyMessage', msg)
+        socket.emit('sendLobbyMessage', {msg: msg, roomId: roomId})
         $(this).val('')
     }
 })
@@ -225,6 +227,7 @@ function processMessage (msg) {
     }
     $('.messages').append(html)
 }
+
 //Display new msg
 socket.on('newMessage', function (msg) {
     console.log('[newMessage]', msg)
@@ -252,7 +255,8 @@ socket.on('newLeaveMessage', function (msg) {
 //Leaving the lobby
 $('.leave').click(function () {
     const $this = $(this)
-    socket.emit('leaveRoom')
+    let roomId = $('.tab.active').attr('data-room-id')
+    socket.emit('leaveRoom', roomId)
     $lobby.find('.chat').hide()
     $roomsView.show()
     $this.closest('.chat').remove()
@@ -276,5 +280,6 @@ socket.on('roomUsers', function (users) {
 
 // Remove the user from the room when they reload or exit the page
 window.onbeforeunload = function () {
-    socket.emit('leaveRoom')
+    let roomId = $('.tab.active').attr('data-room-id')
+    socket.emit('leaveRoom', roomId)
 }

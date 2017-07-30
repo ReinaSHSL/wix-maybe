@@ -262,13 +262,16 @@ io.on('connection', function (socket) {
         socket.room.push(roomId)
         console.log('socket room' + socket.room)
         const room = new Room(data.name, data.password, roomId)
-        room.addMember({id: socket.handshake.session.id, username: socket.username})
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        currentUser = JSON.parse(sessionObject).user
+        room.addMember({id: currentUser.id, username: currentUser.username})
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
         const msg = {
             type: 'join',
-            username: socket.username,
+            username: currentUser.username,
             timestamp: Date.now()
         }
         room.messages.push(msg)
@@ -278,28 +281,31 @@ io.on('connection', function (socket) {
     //Joining Rooms
     socket.on('joinRoom', function (data) {
         console.log('[joinRoom]', data)
-        const id = data.id
-        // const password = data.password
-        const room = getRoom(id)
 
-        // if (room.members.length > 1) {
-        //     return socket.emit('joinRoomFail', 'Room full')
-        // }
-        // if (room.password && password !== room.password) {
-        //     return socket.emit('joinRoomFail', 'Missing or incorrect password')
-        // }
+        const id = data.id
+        const password = data.password
+        const room = getRoom(id)
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        currentUser = JSON.parse(sessionObject).user
+         if (room.members.length > 1) {
+             return socket.emit('joinRoomFail', 'Room full')
+         }
+         if (room.password && password !== room.password) {
+             return socket.emit('joinRoomFail', 'Missing or incorrect password')
+         }
         socket.room.push(id)
         console.log('socket room ' + socket.room)
         socket.join(id)
         room.addMember({
-            id: socket.handshake.session.id,
-            username: socket.username
+            id: currentUser.id,
+            username: currentUser.username
         })
         socket.emit('joinRoomSuccess', room)
         io.sockets.in(id).emit('roomUsers', room.membersSorted)
         const msg = {
             type: 'join',
-            username: socket.username,
+            username: currentUser.username,
             timestamp: Date.now()
         }
         room.messages.push(msg)
@@ -307,16 +313,19 @@ io.on('connection', function (socket) {
     })
 
     //Leaving Lobby
-    socket.on('leaveRoom', function () {
-        const room = getRoom(socket.room)
+    socket.on('leaveRoom', function (data) {
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        currentUser = JSON.parse(sessionObject).user
+        const room = getRoom(data)
         if (!room) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
         }
-        const ownerChanged = socket.handshake.session.id === room.ownerId
+        const ownerChanged = currentUser.id === room.ownerId
 
         // Remove the user from the room
-        room.removeMember(socket.handshake.session.id)
+        room.removeMember(currentUser.id)
 
         // If the room is empty, remove it
         if (!room.members.length) {
@@ -326,7 +335,7 @@ io.on('connection', function (socket) {
         io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
         const msg = {
             type: 'leave',
-            username: socket.username,
+            username: currentUser.username,
             timestamp: Date.now()
         }
         room.messages.push(msg)
@@ -347,24 +356,27 @@ io.on('connection', function (socket) {
     //Username shit
     socket.on('setUsername', function (username) {
         console.log('[setUsername]', username)
-        socket.username = escapeHTML(username)
+        currentUser.username = escapeHTML(username)
     })
 
     //Lobby chatting
-    socket.on('sendLobbyMessage', function (msg) {
-        console.log('[sendLobbyMessage]', msg)
-        const room = getRoom(socket.room)
+    socket.on('sendLobbyMessage', function (data) {
+        console.log('[sendLobbyMessage]', data.msg, data.roomId)
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        currentUser = JSON.parse(sessionObject).user
+        const room = getRoom(data.roomId)
         const _msg = {
             type: 'normal',
             author: {
-                id: socket.handshake.session.id,
-                username: socket.username
+                id: currentUser.id,
+                username: currentUser.username
             },
-            content: escapeHTML(msg),
+            content: escapeHTML(data.msg),
             timestamp: Date.now()
         }
         room.messages.push(_msg)
-        io.sockets.in(socket.room).emit('newMessage', _msg)
+        io.sockets.in(data.roomId).emit('newMessage', _msg)
     })
 
     //Fucking murder me builder shit
