@@ -12,7 +12,7 @@
     grid-area: tabs;
     display: flex;
     align-items: stretch;
-    border-bottom: 1px solid #BBB;
+    border-bottom: 1px solid #DDD;
 }
 .lobby .tab {
     flex: 1 1 100%;
@@ -22,7 +22,7 @@
     text-decoration: none;
     color: inherit;
 }
-.lobby .tab + .tab { border-left: 1px solid #BBB }
+.lobby .tab + .tab { border-left: 1px solid #DDD }
 .lobby .tab.active { background: orange; }
 
 /* Room list wrapper */
@@ -64,7 +64,7 @@
     padding-right: 0;
 }
 .message .author {
-    border-right: 1px solid #BBB;
+    border-right: 1px solid #DDD;
     text-align: right;
 }
 .message .content {
@@ -80,7 +80,7 @@
 /* User list */
 .users {
     grid-area: users;
-    border-left: 1px solid #BBB;
+    border-left: 1px solid #DDD;
     background: #F7F7F7;
     margin: 0;
     padding: 0;
@@ -100,7 +100,7 @@
 .chatbar {
     grid-area: chatbar;
     border: 0;
-    border-top: 1px solid #BBB;
+    border-top: 1px solid #DDD;
     line-height: 32px;
     padding: 0 10px;
 }
@@ -108,8 +108,8 @@
     display: none; /* TODO */
     background: none;
     border: 0;
-    border-top: 1px solid #BBB;
-    border-left: 1px solid #BBB;
+    border-top: 1px solid #DDD;
+    border-left: 1px solid #DDD;
 }
 .lobby {
     display: grid;
@@ -147,7 +147,7 @@
     padding-right: 0;
 }
 .message .author {
-    border-right: 1px solid #BBB;
+    border-right: 1px solid #DDD;
     text-align: right;
 }
 .message .content {
@@ -163,7 +163,7 @@
 /* User list */
 .users {
     grid-area: users;
-    border-left: 1px solid #BBB;
+    border-left: 1px solid #DDD;
     background: #F7F7F7;
     margin: 0;
     padding: 0;
@@ -183,7 +183,7 @@
 .chatbar {
     grid-area: chatbar;
     border: 0;
-    border-top: 1px solid #BBB;
+    border-top: 1px solid #DDD;
     line-height: 32px;
     padding: 0 10px;
 }
@@ -191,6 +191,6 @@
     display: none; /* TODO */
     background: none;
     border: 0;
-    border-top: 1px solid #BBB;
-    border-left: 1px solid #BBB;
+    border-top: 1px solid #DDD;
+    border-left: 1px solid #DDD;
 }
