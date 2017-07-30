@@ -1,0 +1,194 @@
+/* Panel styles */
+.lobby {
+    display: grid;
+    grid:
+        "tabs" 32px
+        "main" calc(100% - 32px)
+        / 100%;
+}
+
+/* Tab bar */
+.lobby .tabs {
+    grid-area: tabs;
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid #BBB;
+}
+.lobby .tab {
+    flex: 1 1 100%;
+    line-height: 32px;
+    background: orange;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Room list wrapper */
+.lobby .rooms {
+    padding: 10px;
+}
+
+/* Chat display wrapper */
+.lobby .chat {
+    grid-area: main;
+    max-height: 100%;
+    display: grid;
+    grid:
+        "messages users" calc(100% - 32px)
+        "chatbar  users" 32px
+        / auto 150px;
+    font-family: monospace;
+}
+
+/* Main message display area */
+.messages {
+    grid-area: messages;
+    display: block;
+    width: 100%;
+    max-height: 100%;
+    border-spacing: 0;
+    overflow-y: scroll;
+}
+.message:hover {
+    background: #F7F7F7;
+}
+.message .timestamp, .message .author, .message .content {
+    padding: 1px 5px;
+    display: table-cell;
+    vertical-align: top;
+}
+.message .timestamp {
+    opacity: .7;
+    padding-right: 0;
+}
+.message .author {
+    border-right: 1px solid #BBB;
+    text-align: right;
+}
+.message .content {
+    width: 100%;
+}
+.hidden {
+    font-size: 0;
+}
+.message.system .content { color: #666 }
+.message.join .author { color: green }
+.message.leave .author { color: red }
+
+/* User list */
+.users {
+    grid-area: users;
+    border-left: 1px solid #BBB;
+    background: #F7F7F7;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: scroll;
+}
+.user {
+    padding: 1px 5px;
+    border-bottom: 1px dotted #DDD;
+}
+.user.owner:after {
+    content: " *";
+    color: red;
+}
+
+/* Message composition bar */
+.chatbar {
+    grid-area: chatbar;
+    border: 0;
+    border-top: 1px solid #BBB;
+    line-height: 32px;
+    padding: 0 10px;
+}
+.leaveroom {
+    display: none; /* TODO */
+    background: none;
+    border: 0;
+    border-top: 1px solid #BBB;
+    border-left: 1px solid #BBB;
+}
+.lobby {
+    display: grid;
+
+}
+
+.lobby .chat {
+    display: grid;
+    grid:
+        "messages users" calc(100% - 32px)
+        "chatbar  users" 32px
+        / auto 150px;
+    font-family: monospace;
+}
+
+/* Main message display area */
+.messages {
+    grid-area: messages;
+    display: block;
+    width: 100%;
+    max-height: 100%;
+    border-spacing: 0;
+    overflow-y: scroll;
+}
+.message:hover {
+    background: #F7F7F7;
+}
+.message .timestamp, .message .author, .message .content {
+    padding: 1px 5px;
+    display: table-cell;
+    vertical-align: top;
+}
+.message .timestamp {
+    opacity: .7;
+    padding-right: 0;
+}
+.message .author {
+    border-right: 1px solid #BBB;
+    text-align: right;
+}
+.message .content {
+    width: 100%;
+}
+.hidden {
+    font-size: 0;
+}
+.message.system .content { color: #666 }
+.message.join .author { color: green }
+.message.leave .author { color: red }
+
+/* User list */
+.users {
+    grid-area: users;
+    border-left: 1px solid #BBB;
+    background: #F7F7F7;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: scroll;
+}
+.user {
+    padding: 1px 5px;
+    border-bottom: 1px dotted #DDD;
+}
+.user.owner:after {
+    content: " *";
+    color: red;
+}
+
+/* Message composition bar */
+.chatbar {
+    grid-area: chatbar;
+    border: 0;
+    border-top: 1px solid #BBB;
+    line-height: 32px;
+    padding: 0 10px;
+}
+.leaveroom {
+    display: none; /* TODO */
+    background: none;
+    border: 0;
+    border-top: 1px solid #BBB;
+    border-left: 1px solid #BBB;
+}
