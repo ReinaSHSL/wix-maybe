@@ -2,22 +2,26 @@
 
 const $lobby = $('.lobby')
 const $roomsView = $lobby.find('.rooms')
-const $chatView = $lobby.find('.chat')
 const $tabBar = $lobby.find('.tabs')
 
 // Tab stuff
 $tabBar.on('click', '.tab-rooms', function () {
-    $chatView.hide()
+    $tabBar.find('.tab').toggleClass('active', false)
+    $(this).toggleClass('active', true)
+    $lobby.find('.chat').hide()
     $roomsView.show()
 })
+function showChat (roomId, $tab = $tabBar.find(`[data-room-id="${roomId}"]`)) {
+    $roomsView.hide()
+    $lobby.find('.chat').hide()
+    $lobby.find(`.chat[data-room-id="${roomId}"]`).show()
+    $tabBar.find('.tab').toggleClass('active', false)
+    $tab.toggleClass('active', true)
+}
 $tabBar.on('click', '.tab-chat', function () {
     const $tab = $(this)
-    $roomsView.hide()
-    $chatView.show()
-    // TODO: load proper room based on data stored on button
+    showChat($tab.attr('data-room-id'), $tab)
 })
-
-$chatView.hide()
 
 // Scroll the chat box to the bottom, the most recent messages.
 function scrollChat () {
@@ -97,7 +101,18 @@ function userHTML (user) {
 function roomTabHTML (room) {
     console.log(room)
     return `
-        <a href="#" class="tab tab-chat">${room.name}</a>
+        <a href="#" class="tab tab-chat" data-room-id="${room.id}">${room.name}</a>
+    `
+}
+function roomDisplayHTML (room) {
+    console.log(room)
+    return `
+        <div class="chat" data-room-id="${room.id}">
+            <table class="messages"></table>
+            <ul class="users"></ul>
+            <input type="text" class="chatbar msgBox" placeholder="Type text here">
+            <button class="leaveroom" id="leave">Leave Room</button>
+        </div>
     `
 }
 
@@ -110,11 +125,22 @@ $('.rooms .create').click(function () {
         return alert('Please set a room name')
     } else {
         var roomId = Math.random()*1000000000000000000
-        socket.emit('createRoom', {id: roomId, name: roomName, password: roomPass})
+        const room = {
+            id: roomId,
+            name: roomName,
+            password: roomPass
+        }
+        socket.emit('createRoom', room)
+        // TODO: let activeRooms handle this
+        $('#roomList').append(roomHTML(room))
+        // Let's see the new room
         $roomsView.hide()
-        $chatView.show()
-        $('#roomList').append(roomHTML({id: roomId, name: roomName, password: roomPass}))
-        $('.header .extra').text(' > Chat: ' + roomName)
+        $lobby.find('.chat').hide()
+        $lobby.append(roomDisplayHTML(room))
+        // Also tabs, right
+        $tabBar.find('.tab').toggleClass('active', false)
+        $tabBar.append(roomTabHTML(room))
+        $tabBar.find('.tab:last-child').toggleClass('active', true)
     }
 })
 
@@ -145,19 +171,16 @@ $('.rooms .roomList').on('click', '.activeRoom', function () {
     }
 })
 socket.on('joinRoomSuccess', function (room) {
-    // Hide the rooms list and show the message interface
-    $roomsView.hide()
-    $chatView.show()
-    // Show us which room we're in
-    $('.header .extra').text(' > Chat: ' + room.name)
+    // Add a new tab for this room
+    $tabBar.append(roomTabHTML(room))
+    // Add a new room display for this room
+    $lobby.append(roomDisplayHTML(room))
     // Add the backlog messages to the interface
     for (let msg of room.messages) {
         processMessage(msg)
     }
     // Scroll the chat down to the most recent message
     scrollChat()
-    // Also, let's update the tab bar with a new tab for the room
-    $tabBar.append(roomTabHTML(room))
 })
 socket.on('joinRoomFail', function (reason) {
     alert(`Failed to join room: ${reason}`)
@@ -174,12 +197,12 @@ socket.on('emptyRoom', function (emptyRoom) {
 //Lobby stuff
 
 //Chatbox sends msg
-$('#msgBox').keydown(function (e) {
+$('.lobby').on('keydown', '.msgBox', function (e) {
     var key = e.which
     if (key === 13) {
-        var msg = $('#msgBox').val()
+        var msg = $(this).val()
         socket.emit('sendLobbyMessage', msg)
-        $('#msgBox').val('')
+        $(this).val('')
     }
 })
 function processMessage (msg) {
@@ -227,13 +250,13 @@ socket.on('newLeaveMessage', function (msg) {
 })
 
 //Leaving the lobby
-$('#leave').click(function () {
+$('.leave').click(function () {
+    const $this = $(this)
     socket.emit('leaveRoom')
-    $chatView.hide()
+    $lobby.find('.chat').hide()
     $roomsView.show()
-    $('.messages').empty()
-    $('#msgBox').val('')
-    $('.header .extra').text('')
+    $this.closest('.chat').remove()
+    $roomsView.show()
 })
 
 //Display usernames on room creation

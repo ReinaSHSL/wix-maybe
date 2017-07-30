@@ -17,11 +17,13 @@
 .lobby .tab {
     flex: 1 1 100%;
     line-height: 32px;
-    background: orange;
+    /*background: orange;*/
     text-align: center;
     text-decoration: none;
     color: inherit;
 }
+.lobby .tab + .tab { border-left: 1px solid #BBB }
+.lobby .tab.active { background: orange; }
 
 /* Room list wrapper */
 .lobby .rooms {
