@@ -373,6 +373,7 @@ io.on('connection', function (socket) {
                 username: currentUser.username
             },
             content: escapeHTML(data.msg),
+            roomId: data.roomId,
             timestamp: Date.now()
         }
         room.messages.push(_msg)

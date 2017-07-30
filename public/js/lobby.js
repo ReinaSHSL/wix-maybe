@@ -225,7 +225,7 @@ function processMessage (msg) {
         default:
             return console.log('Invalid message type')
     }
-    $('.messages').append(html)
+    $(`.chat[data-room-id="${msg.roomId}"] .messages`).append(html)
 }
 
 //Display new msg
