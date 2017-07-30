@@ -258,9 +258,8 @@ io.on('connection', function (socket) {
     // Creates rooms
     socket.on('createRoom', function (data) {
         console.log('[createRoom]', data)
-        var roomId = '' + data.id
+        var roomId = ''      + data.id
         socket.room.push(roomId)
-        console.log('socket room' + socket.room)
         const room = new Room(data.name, data.password, roomId)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
@@ -357,14 +356,25 @@ io.on('connection', function (socket) {
     socket.on('imDeadKthx', function () {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if(!sessionObject) {
+            return
+        }
         currentUser = JSON.parse(sessionObject).user
+        console.log('socket.room ' + socket.room)
+        console.log('otherRooms ' + rooms.map(r => r.id))
         for (let i of socket.room) {
             let room = getRoom(i)
+            console.log('room')
+            console.log(room)
+            if (!room) {
+                console.log('!room')
+                console.log(room)
+                continue
+            }
             room.removeMember(currentUser.id)
             if(!room.members.length) {
                 rooms.splice(rooms.findIndex(r => r.id === room, 1))
-                return io.sockets.emit('emptyRoom', room)
-                console.log(room)
+                io.sockets.emit('emptyRoom', room.id)
             }
         }
     })
