@@ -172,8 +172,12 @@ $('.rooms .roomList').on('click', '.activeRoom', function () {
 })
 socket.on('joinRoomSuccess', function (room) {
     // Add a new tab for this room
+    $tabBar.find('.tab').toggleClass('active', false)
     $tabBar.append(roomTabHTML(room))
+    $tabBar.find('.tab:last-child').toggleClass('active', true)
     // Add a new room display for this room
+    $roomsView.hide()
+    $lobby.find('.chat').hide()
     $lobby.append(roomDisplayHTML(room))
     // Add the backlog messages to the interface
     for (let msg of room.messages) {

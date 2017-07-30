@@ -139,6 +139,7 @@ class Room {
     }
 }
 function getRoom (id) {
+    console.log('[getRoom]', id, rooms.map(r => r.id))
     return rooms.find(r => r.id === id)
 }
 
@@ -263,7 +264,7 @@ io.on('connection', function (socket) {
         const room = new Room(data.name, data.password, roomId)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        currentUser = JSON.parse(sessionObject).user
+        let currentUser = JSON.parse(sessionObject).user
         room.addMember({id: currentUser.id, username: currentUser.username})
         socket.join(roomId)
         io.sockets.emit('activeRooms', rooms)
