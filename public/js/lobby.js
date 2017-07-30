@@ -127,6 +127,9 @@ socket.on('activeRooms', function (rooms) {
         // console.log('[activeRooms]', id)
         $roomList.append(roomHTML(room))
     }
+    if (!rooms.length) {
+        $roomList.append('<li>There are no rooms!?</li>')
+    }
 })
 
 //Clicking on a room will make you join
@@ -163,6 +166,9 @@ socket.on('joinRoomFail', function (reason) {
 //Delete empty rooms
 socket.on('emptyRoom', function (emptyRoom) {
     $('#' + emptyRoom).remove()
+    if (!$('.roomList').find('li').length) {
+        $('.roomList').append('<li>There are no rooms!?</li>')
+    }
 })
 
 //Lobby stuff
