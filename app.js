@@ -360,10 +360,11 @@ io.on('connection', function (socket) {
         currentUser = JSON.parse(sessionObject).user
         for (let i of socket.room) {
             let room = getRoom(i)
-            getRoom(i).removeMember(currentUser.id)
+            room.removeMember(currentUser.id)
             if(!room.members.length) {
-                rooms.splice(rooms.findIndex(r => r.id === socket.room), 1)
+                rooms.splice(rooms.findIndex(r => r.id === room, 1))
                 return io.sockets.emit('emptyRoom', room)
+                console.log(room)
             }
         }
     })
