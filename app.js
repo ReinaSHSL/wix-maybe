@@ -244,8 +244,16 @@ app.post('/login', function (req, res) {
             if (!user || hashedPassword !== user.password) {
                 return res.status(400).send('Incorrect or invalid credentials')
             }
-            req.session.user = user // This stores the user's session for later
-            return res.status(200).send('Logged in')
+            if(result[0].loggedIn) {
+                return res.status(400).send('This account is already logged in')
+            }
+            r.table('selectors').get(result[0].id).update({loggedIn:true}).run(conn, function(err, logIn) {
+                if (err) console.log(err)
+                if(logIn) {
+                    req.session.user = user // This stores the user's session for later
+                    return res.status(200).send('Logged in')
+                }
+            })
         })
     })
 })
