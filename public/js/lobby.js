@@ -41,6 +41,10 @@ function roomHTML (room) {
     `
 }
 function messageHTML (msg) {
+    msg.content = msg.content
+        .replace(/([^\\]|^)(__|\*\*)(?=[^\s\n])([^\n]*[^\s\\\n])\2/g, '$1<strong>$3</strong>')
+        .replace(/([^\\]|^)(_|\*)(?=[^\s\n])([^\n]*[^\s\\\n])\2/g, '$1<em>$3</em>')
+        .replace(/([^\\]|^)(~~)(?=[^\s\n])([^\n]*[^\s\\\n])\2/g, '$1<del>$3</del>')
     return `
         <tr class="message">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
