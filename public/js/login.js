@@ -29,12 +29,23 @@ $('.login-form, .signup-form').on('submit', function (e) {
         error: function (response) {
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
-                alert('failed to log in...\n' + response.responseText)
+                alert('Failed to log in...\n' + response.responseText)
                 $submitButton.attr('disabled', false)
             } else {
-                alert('failed to sign up...\n' + response.responseText)
+                alert('Failed to sign up...\n' + response.responseText)
                 $submitButton.attr('disabled', false)
             }
         }
     })
+})
+
+window.addEventListener('load', checkLogin)
+function checkLogin() {
+    console.log('check')
+    socket.emit('checkLogin')
+}
+
+socket.on('loggedIn', function(){
+    $('.panel.login').hide()
+    $('.panel.lobby, .panel.rooms').show()
 })

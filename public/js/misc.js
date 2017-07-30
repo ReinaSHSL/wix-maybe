@@ -52,3 +52,4 @@ function hashColor (name) {
 
     return 'hsl(' + H + ',' + S + '%,' + L + '%);'
 }
+

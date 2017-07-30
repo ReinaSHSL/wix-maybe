@@ -149,7 +149,6 @@ app.post('/signup', function (req, res) {
     if (!req.body.username || !req.body.password) {
         return res.status(400).send('Invalid details!')
     }
-
     const username = req.body.username
     const unhashedPassword = req.body.password
     // Hash the password
@@ -267,6 +266,19 @@ io.on('connection', function (socket) {
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
 
+    //Logged in users stay logged in
+    socket.on('checkLogin', function(){
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if(!sessionObject) {
+            return
+        }
+        let currentUser = JSON.parse(sessionObject).user
+        if(currentUser) {
+            socket.emit('loggedIn')
+        }
+    })
+
     // Creates rooms
     socket.on('createRoom', function (data) {
         console.log('[createRoom]', data)
@@ -327,7 +339,10 @@ io.on('connection', function (socket) {
     socket.on('leaveRoom', function (data) {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        currentUser = JSON.parse(sessionObject).user
+        if(!sessionObject) {
+            return
+        }
+        let currentUser = JSON.parse(sessionObject).user
         const room = getRoom(data)
         if (!room) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
@@ -372,6 +387,10 @@ io.on('connection', function (socket) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
+        r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function(err, out){
+            if (err) console.log(err)
+            return console.log('Log out')
+        })
         console.log('socket.room ' + socket.room)
         console.log('otherRooms ' + rooms.map(r => r.id))
         for (let i of socket.room) {
