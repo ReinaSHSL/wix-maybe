@@ -3,11 +3,11 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-const session = require("express-session")({
-    secret: "this is hell",
+const session = require('express-session')({
+    secret: 'this is hell',
     resave: true,
     saveUninitialized: true
-});
+})
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
 const sharedsession = require('express-socket.io-session')
@@ -288,12 +288,12 @@ io.on('connection', function (socket) {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         currentUser = JSON.parse(sessionObject).user
-         if (room.members.length > 1) {
-             return socket.emit('joinRoomFail', 'Room full')
-         }
-         if (room.password && password !== room.password) {
-             return socket.emit('joinRoomFail', 'Missing or incorrect password')
-         }
+        if (room.members.length > 1) {
+            return socket.emit('joinRoomFail', 'Room full')
+        }
+        if (room.password && password !== room.password) {
+            return socket.emit('joinRoomFail', 'Missing or incorrect password')
+        }
         socket.room.push(id)
         console.log('socket room ' + socket.room)
         socket.join(id)
@@ -330,7 +330,7 @@ io.on('connection', function (socket) {
         // If the room is empty, remove it
         if (!room.members.length) {
             rooms.splice(rooms.findIndex(r => r.id === socket.room), 1)
-            return io.sockets.emit('emptyRoom', socket.room)
+            return io.sockets.emit('emptyRoom', data)
         }
         io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
         const msg = {
@@ -351,6 +351,21 @@ io.on('connection', function (socket) {
         }
         socket.leave(socket.room)
         socket.room = ''
+    })
+
+    //Die on refresh
+    socket.on('imDeadKthx', function () {
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        currentUser = JSON.parse(sessionObject).user
+        for (let i of socket.room) {
+            let room = getRoom(i)
+            getRoom(i).removeMember(currentUser.id)
+            if(!room.members.length) {
+                rooms.splice(rooms.findIndex(r => r.id === socket.room), 1)
+                return io.sockets.emit('emptyRoom', room)
+            }
+        }
     })
 
     //Username shit

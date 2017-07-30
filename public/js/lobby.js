@@ -280,6 +280,5 @@ socket.on('roomUsers', function (users) {
 
 // Remove the user from the room when they reload or exit the page
 window.onbeforeunload = function () {
-    let roomId = $('.tab.active').attr('data-room-id')
-    socket.emit('leaveRoom', roomId)
+    socket.emit('imDeadKthx')
 }
