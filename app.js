@@ -209,42 +209,47 @@ app.post('/signup', function (req, res) {
 
 //Login
 app.post('/login', function (req, res) {
-    if (!req.body.username || !req.body.password) {
-        return res.send('Insert username and password')
-    }
-
-    const username = req.body.username
-    const unhashedPassword = req.body.password
-
-    let hashedPassword = 5381
-    for (let i = 0; i < unhashedPassword.length; i++) {
-        let char = unhashedPassword.charCodeAt(i)
-        hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
-    }
-
-    r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
-        if (err) {
-            console.log(err)
-            return res.status(500).send('Server error; check the console')
+    if (!req.session.user) {
+        if (!req.body.username || !req.body.password) {
+            return res.send('Insert username and password')
         }
-        cursor.toArray(function (err, result) {
+
+        const username = req.body.username
+        const unhashedPassword = req.body.password
+
+        let hashedPassword = 5381
+        for (let i = 0; i < unhashedPassword.length; i++) {
+            let char = unhashedPassword.charCodeAt(i)
+            hashedPassword = ((hashedPassword << 5) + hashedPassword) + char /* hash * 33 + c */
+        }
+
+        r.table('selectors').filter(r.row('username').eq(username)).run(conn, function (err, cursor) {
             if (err) {
                 console.log(err)
                 return res.status(500).send('Server error; check the console')
             }
-            const user = result[0]
-            if (result[1]) {
-                console.log("Go clean up your database, there's a duplicated user here")
-                console.log(user)
-                console.log(result[1])
-            }
-            if (!user || hashedPassword !== user.password) {
-                return res.status(400).send('Incorrect or invalid credentials')
-            }
-            req.session.user = user // This stores the user's session for later
-            return res.status(200).send('Logged in')
+            cursor.toArray(function (err, result) {
+                if (err) {
+                    console.log(err)
+                    return res.status(500).send('Server error; check the console')
+                }
+                const user = result[0]
+                if (result[1]) {
+                    console.log("Go clean up your database, there's a duplicated user here")
+                    console.log(user)
+                    console.log(result[1])
+                }
+                if (!user || hashedPassword !== user.password) {
+                    return res.status(400).send('Incorrect or invalid credentials')
+                }
+                req.session.user = user // This stores the user's session for later
+                return res.status(200).send('Logged in')
+            })
         })
-    })
+    }
+    else {
+        res.status(400).send('Already logged in')
+    }
 })
 
 
