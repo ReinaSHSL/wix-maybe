@@ -116,3 +116,16 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
 $('#save').on('click', function(){
     socket.emit('saveDeck', currentDeck)
 })
+
+$('#ren').on('click', function () {
+    const newName = prompt('Rename to what?')
+    $('#deckList :selected').text(newName)
+})
+
+$('#new').on('click', function () {
+    // TODO: Store the current deck's contents somewhere and clear the UI
+    const newName = prompt('New deck name?')
+    const escapedName = $('<div>').text(newName).html() // html escape input
+    $('#deckList').append(`<option name="">${escapedName}</option>`)
+    $('#deckList').val(newName)
+})
