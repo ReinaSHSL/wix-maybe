@@ -113,6 +113,6 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
     $wrap.remove()
 })
 
-$('save').on('click', function(){
+$('#save').on('click', function(){
     socket.emit('saveDeck', currentDeck)
 })
