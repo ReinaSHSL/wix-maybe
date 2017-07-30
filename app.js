@@ -356,10 +356,10 @@ io.on('connection', function (socket) {
     socket.on('imDeadKthx', function () {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if(!sessionObject) {
+        if (!sessionObject) {
             return
         }
-        currentUser = JSON.parse(sessionObject).user
+        let currentUser = JSON.parse(sessionObject).user
         console.log('socket.room ' + socket.room)
         console.log('otherRooms ' + rooms.map(r => r.id))
         for (let i of socket.room) {
@@ -372,9 +372,9 @@ io.on('connection', function (socket) {
                 continue
             }
             room.removeMember(currentUser.id)
-            if(!room.members.length) {
-                rooms.splice(rooms.findIndex(r => r.id === room, 1))
-                io.sockets.emit('emptyRoom', room.id)
+            if (!room.members.length) {
+                rooms.splice(rooms.findIndex(r => r.id === i, 1))
+                io.sockets.emit('emptyRoom', i)
             }
         }
     })
