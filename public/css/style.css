@@ -30,7 +30,6 @@ body {
     flex: 1 1 auto;
     display: flex;
     justify-content: center;
-    /*align-items: center;*/
 }
 .panel { flex: 1 1 100%; }
 .panel + .panel { border-left: 1px solid #BBB }

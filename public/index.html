@@ -21,7 +21,7 @@
 
         <main class="panels">
             <!-- Initial screen - login/sighup stuff -->
-            <section class="panel login-signup">
+            <section class="panel login">
                 <form action="/signup" method="POST" class="signup-form">
                     <input name="username" type="text" required placeholder = 'Username'>
                     <input name="password" type="password" required placeholder = 'Password'>
@@ -32,10 +32,6 @@
                     <input name="password" type="password" required placeholder = 'Password'>
                     <input type="Submit" value="Login">
                 </form>
-            </section>
-
-            <section class="panel rooms" style="display:none">
-                <h1>TODO: things</h1>
             </section>
 
             <section class="panel lobby" style="display:none">
@@ -50,6 +46,10 @@
                     <h2>Rooms</h2>
                     <ul class="roomList"></ul>
                 </div>
+            </section>
+
+            <section class="panel rooms" style="display:none">
+                <h1>TODO: these class names are swapped because I'm lazy</h1>
             </section>
 
             <section class="panel builder" style="display:none"><!-- The deck builder woo -->
@@ -172,7 +172,7 @@
         </script>
 
         <!-- Login stuffs -->
-        <script src="js/accounts.js"></script>
+        <script src="js/login.js"></script>
         <!-- GLobal chats -->
         <script src="js/lobby.js"></script>
         <!-- Builder stuff -->
