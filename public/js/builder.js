@@ -103,33 +103,39 @@ $('#results').on('click', '.card', function () {
 })
 
 //Displays cards from server
-socket.on('deckUpdate', function (card) {
-    var cardType = card.type
-    if (cardType === 'LRIG' || cardType === 'RESONA' || cardsType === 'ARTS') {
-        currentDecks.lrig.push(parseInt(card.id))
-        $('#lrigDeckDisplay').append(cardElementFromData(card))
-    } else {
-        currentDecks.main.push(parseInt(card.id))
-        $('#mainDeckDisplay').append(cardElementFromData(card))
+socket.on('deckUpdate', function (deck) {
+    for (let card of deck) {
+        var cardType = card.type
+        if (cardType === 'LRIG' || cardType === 'RESONA' || cardType === 'ARTS') {
+            currentDecks.lrig.push(parseInt(card.id))
+            $('#lrigDeckDisplay').append(cardElementFromData(card))
+        } else {
+            currentDecks.main.push(parseInt(card.id))
+            $('#mainDeckDisplay').append(cardElementFromData(card))
+        }
+   
     }
 })
 
 //Updates deck on dropdown change
 $('#deckList').change(function () {
+    $('#mainDeckDisplay').empty()
+    $('#lrigDeckDisplay').empty()
     let deckId = $('#deckList :selected').attr('value')
     socket.emit('deckChange', deckId) 
-    currentDecks = {lrig: [], main: []}
 }) 
-socket.on('deckChange', function (card) {
-    var cardType = card.type
-    if (cardType === 'LRIG' || cardType === 'RESONA' || cardsType === 'ARTS') {
-        currentDecks.lrig.push(parseInt(card.id))
-        $('#lrigDeckDisplay').empty()
-        $('#lrigDeckDisplay').append(cardElementFromData(card))
-    } else {
-        currentDecks.main.push(parseInt(card.id))
-        $('#mainDeckDisplay').empty()
-        $('#mainDeckDisplay').append(cardElementFromData(card))
+socket.on('deckChange', function (deck) {
+    currentDecks.lrig = []
+    currentDecks.main = []
+    for (let card of deck) {
+        var cardType = card.type
+        if (cardType === 'LRIG' || cardType === 'RESONA' || cardType === 'ARTS') {
+            currentDecks.lrig.push(parseInt(card.id))
+            $('#lrigDeckDisplay').append(cardElementFromData(card))
+        } else {
+            currentDecks.main.push(parseInt(card.id))
+            $('#mainDeckDisplay').append(cardElementFromData(card))
+        }
     }
 })
 

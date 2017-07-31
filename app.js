@@ -554,6 +554,8 @@ io.on('connection', function (socket) {
                 if (err) return console.log(err)
                 if (!result[0]) return
                 if (result) {
+                    var lrigCards = []
+                    var mainCards = []
                     for (let i of result[0].deck.lrig) {
                         var matchingCards = ALLCARDS.filter(card => {
                             if (card.id !== result[0].deck.lrig[i]) {
@@ -563,7 +565,7 @@ io.on('connection', function (socket) {
                             }
                         })
                         for (var card of matchingCards) {
-                            socket.emit('deckUpdate', card)                            
+                            lrigCards.push(card)                       
                         }
                     }
                     for (let i of result[0].deck.main) {
@@ -575,9 +577,11 @@ io.on('connection', function (socket) {
                             }
                         })
                         for (var card of matchingCards) {
-                            socket.emit('deckUpdate', card)
+                            mainCards.push(card)
                         }
                     }
+                    socket.emit('deckUpdate', mainCards)
+                    socket.emit('deckUpdate', lrigCards)  
                 }
             })
         })
@@ -590,6 +594,8 @@ io.on('connection', function (socket) {
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
                 if (result) {
+                    var lrigCards = []
+                    var mainCards = []
                     for (let i of result[0].deck.lrig) {
                         var matchingCards = ALLCARDS.filter(card => {
                             if (card.id !== result[0].deck.lrig[i]) {
@@ -599,7 +605,7 @@ io.on('connection', function (socket) {
                             }
                         })
                         for (var card of matchingCards) {
-                            socket.emit('deckChange', card)
+                            lrigCards.push(card)
                         }
                     }
                     for (let i of result[0].deck.main) {
@@ -611,9 +617,11 @@ io.on('connection', function (socket) {
                             }
                         })
                         for (var card of matchingCards) {
-                            socket.emit('deckChange', card)
+                            mainCards.push(card)
                         }
                     }
+                    socket.emit('deckChange', lrigCards)
+                    socket.emit('deckChange', mainCards)
                 }
             })
         })
