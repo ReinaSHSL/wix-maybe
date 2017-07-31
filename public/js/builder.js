@@ -103,7 +103,7 @@ $('#results').on('click', '.card', function () {
 })
 
 //Displays cards from server
-socket.on('deckUpdate', function(card) {
+socket.on('deckUpdate', function (card) {
     var cardType = card.type
     if (cardType === 'LRIG' || cardType === 'RESONA' || cardsType === 'ARTS') {
         currentDecks.lrig.push(parseInt(card.id))
@@ -113,6 +113,26 @@ socket.on('deckUpdate', function(card) {
         $('#mainDeckDisplay').append(cardElementFromData(card))
     }
 })
+
+//Updates deck on dropdown change
+$('#deckList').change(function () {
+    let deckId = $('#deckList :selected').attr('value')
+    socket.emit('deckChange', deckId) 
+    currentDecks = {lrig: [], main: []}
+}) 
+socket.on('deckChange', function (card) {
+    var cardType = card.type
+    if (cardType === 'LRIG' || cardType === 'RESONA' || cardsType === 'ARTS') {
+        currentDecks.lrig.push(parseInt(card.id))
+        $('#lrigDeckDisplay').empty()
+        $('#lrigDeckDisplay').append(cardElementFromData(card))
+    } else {
+        currentDecks.main.push(parseInt(card.id))
+        $('#mainDeckDisplay').empty()
+        $('#mainDeckDisplay').append(cardElementFromData(card))
+    }
+})
+
 
 // When clicking on a card in the deck area, remove it from the deck
 $('#mainDeckDisplay').on('click', '.card', function () {
@@ -126,7 +146,7 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
     $wrap.remove()
 })
 
-$('#save').on('click', function(){
+$('#save').on('click', function () {
     let deckName = $('#deckList :selected').text()
     let deckId = $('#decklist :selected').attr('value')
     socket.emit('saveDeck', {deck: currentDecks, name: deckName, id: deckId})
@@ -145,13 +165,13 @@ $('#new').on('click', function () {
     $('#deckList').val(newName)
 })
 
-socket.on('savedDeck', function(data){
+socket.on('savedDeck', function (data) {
     let deckName = $('#deckList :selected').text()
     $('#deckList :selected').after('<option value="' + data + '">' + deckName + '</option>')
     $('#deckList :selected').remove()
 })
 
-socket.on('loadDeck', function(data){
+socket.on('loadDeck', function (data) {
     $('#deckList [value="unsaved"]').remove()
     $('#deckList').append('<option value="' + data.id + '">' + data.name + '</option>')
 })

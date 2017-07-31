@@ -528,16 +528,16 @@ io.on('connection', function (socket) {
     })
 
     //Load decks on login
-    socket.on('loadDecks', function(){
+    socket.on('loadDecks', function () {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         if (!sessionObject) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
-        r.table('decks').filter(r.row('owner').eq(currentUser.id)).run(conn, function(err, cursor) {
+        r.table('decks').filter(r.row('owner').eq(currentUser.id)).run(conn, function (err, cursor) {
             if (err) return console.log (err)
-            cursor.toArray(function (err, result){
+            cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
                 for (let deck of result) {
                     socket.emit('loadDeck', deck)
@@ -547,14 +547,14 @@ io.on('connection', function (socket) {
     })
 
     //Load cards
-    socket.on('updateDeck', function(data){
-        r.table('decks').filter(r.row('id').eq(data)).run(conn, function(err, cursor){
+    socket.on('updateDeck', function (data) {
+        r.table('decks').filter(r.row('id').eq(data)).run(conn, function (err, cursor) {
             if (err) return console.log(err)
-            cursor.toArray(function(err, result){
+            cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
+                if (!result[0]) return
                 if (result) {
-                    for (let i of result[0].deck.lrig){
-                        console.log(result[0].deck.lrig[i])
+                    for (let i of result[0].deck.lrig) {
                         var matchingCards = ALLCARDS.filter(card => {
                             if (card.id !== result[0].deck.lrig[i]) {
                                 return false
@@ -566,7 +566,7 @@ io.on('connection', function (socket) {
                             socket.emit('deckUpdate', card)                            
                         }
                     }
-                    for (let i of result[0].deck.main){
+                    for (let i of result[0].deck.main) {
                         var matchingCards = ALLCARDS.filter(card => {
                             if (card.id !== result[0].deck.main[i]) {
                                 return false
@@ -576,6 +576,42 @@ io.on('connection', function (socket) {
                         })
                         for (var card of matchingCards) {
                             socket.emit('deckUpdate', card)
+                        }
+                    }
+                }
+            })
+        })
+    })
+
+    //Changing Decks
+    socket.on('deckChange', function (data) {
+        r.table('decks').filter(r.row('id').eq(data)).run(conn, function (err, cursor) {
+            if (err) return console.log(err)
+            cursor.toArray(function (err, result) {
+                if (err) return console.log(err)
+                if (result) {
+                    for (let i of result[0].deck.lrig) {
+                        var matchingCards = ALLCARDS.filter(card => {
+                            if (card.id !== result[0].deck.lrig[i]) {
+                                return false
+                            } else {
+                                return true
+                            }
+                        })
+                        for (var card of matchingCards) {
+                            socket.emit('deckChange', card)
+                        }
+                    }
+                    for (let i of result[0].deck.main) {
+                        var matchingCards = ALLCARDS.filter(card => {
+                            if (card.id !== result[0].deck.main[i]) {
+                                return false
+                            } else {
+                                return true
+                            }
+                        })
+                        for (var card of matchingCards) {
+                            socket.emit('deckChange', card)
                         }
                     }
                 }
