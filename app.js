@@ -243,12 +243,12 @@ app.post('/login', function (req, res) {
             if (!user || hashedPassword !== user.password) {
                 return res.status(400).send('Incorrect or invalid credentials')
             }
-            if(result[0].loggedIn) {
+            if (result[0].loggedIn) {
                 return res.status(400).send('This account is already logged in')
             }
-            r.table('selectors').get(result[0].id).update({loggedIn:true}).run(conn, function(err, logIn) {
+            r.table('selectors').get(result[0].id).update({loggedIn:true}).run(conn, function (err, logIn) {
                 if (err) console.log(err)
-                if(logIn) {
+                if (logIn) {
                     req.session.user = user // This stores the user's session for later
                     return res.status(200).send('Logged in')
                 }
@@ -267,14 +267,14 @@ io.on('connection', function (socket) {
     socket.emit('activeRooms', rooms)
 
     //Logged in users stay logged in
-    socket.on('checkLogin', function(){
+    socket.on('checkLogin', function () {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if(!sessionObject) {
+        if (!sessionObject) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
-        if(currentUser) {
+        if (currentUser) {
             socket.emit('loggedIn')
         }
     })
@@ -339,7 +339,7 @@ io.on('connection', function (socket) {
     socket.on('leaveRoom', function (data) {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if(!sessionObject) {
+        if (!sessionObject) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
@@ -387,8 +387,8 @@ io.on('connection', function (socket) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
-        if(!currentUser) return
-        r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function(err, out){
+        if (!currentUser) return
+        r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err, out) {
             if (err) console.log(err)
             return console.log('Log out')
         })
@@ -493,7 +493,63 @@ io.on('connection', function (socket) {
             card = null
         }
     })
+    
+    //Save
+    socket.on('saveDeck', function (data) {
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if (!sessionObject) {
+            return
+        }
+        let currentUser = JSON.parse(sessionObject).user
+        r.table('decks').filter(r.row('id').eq(data.id || '')).run(conn, function (err, cursor) {
+            if (err) return console.log (err)
+            cursor.toArray(function (err, result) {
+                if (err) return console.log(err)
+                if (result[0]) {
+                    r.table('decks').get(data.id).update({deck: data.deck, name: data.name}).run(conn, function (err, result) {
+                        if (err) console.log(err)
+                        return
+                    })
+                }
+                r.table('decks').insert({
+                    deck: data.deck,
+                    owner: currentUser.id,
+                    name: data.name
+                }).run(conn, function (err, insert) {
+                    if (err) console.log(err)
+                    if (insert) {
+                        let genKey = insert.generated_keys[0]
+                        socket.emit('savedDeck', genKey)
+                    }
+                })
+            })
+        })
+    })
+
+    //Load decks on login
+    socket.on('loadDecks', function(){
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if (!sessionObject) {
+            return
+        }
+        let currentUser = JSON.parse(sessionObject).user
+        r.table('decks').filter(r.row('owner').eq(currentUser.id)).run(conn, function(err, cursor) {
+            if (err) return console.log (err)
+            cursor.toArray(function (err, result){
+                if (err) return console.log(err)
+                for (let deck of result) {
+                    socket.emit('loadDeck', deck)
+                    console.log(deck)
+                }
+            })
+        })
+    })
+
 })
+
+
 
 // A listing of every card in its default state.
 const ALLCARDS = Object.freeze([

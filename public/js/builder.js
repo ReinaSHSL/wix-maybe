@@ -114,7 +114,9 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
 })
 
 $('#save').on('click', function(){
-    socket.emit('saveDeck', currentDeck)
+    let deckName = $('#deckList :selected').text()
+    let deckId = $('#decklist :selected').attr('value')
+    socket.emit('saveDeck', {deck: currentDecks, name: deckName, id: deckId})
 })
 
 $('#ren').on('click', function () {
@@ -128,4 +130,15 @@ $('#new').on('click', function () {
     const escapedName = $('<div>').text(newName).html() // html escape input
     $('#deckList').append(`<option name="">${escapedName}</option>`)
     $('#deckList').val(newName)
+})
+
+socket.on('savedDeck', function(data){
+    let deckName = $('#deckList :selected').text()
+    $('#deckList :selected').after('<option value="' + data + '">' + deckName + '</option>')
+    $('#deckList :selected').remove()
+})
+
+socket.on('loadDeck', function(data){
+    $('#deckList :selected').remove()
+    $('#deckList').append('<option value="' + data.id + '">' + data.name + '</option>')
 })
