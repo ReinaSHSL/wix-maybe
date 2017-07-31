@@ -387,6 +387,7 @@ io.on('connection', function (socket) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
+        if(!currentUser) return
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function(err, out){
             if (err) console.log(err)
             return console.log('Log out')
