@@ -17,7 +17,7 @@ $('.login-form, .signup-form').on('submit', function (e) {
                 $('.current-user').text()
                 $submitButton.attr('disabled', false)
                 $('.current-user').text($('.login-form [name="username"]').val())
-
+                socket.emit('loadDecks')
                 // Hide this panel and show the main ones
                 $('.panel.login').hide()
                 $('.panel.lobby, .panel.rooms').show()
@@ -42,7 +42,6 @@ $('.login-form, .signup-form').on('submit', function (e) {
 
 window.addEventListener('load', checkLogin)
 function checkLogin() {
-    console.log('check')
     socket.emit('checkLogin')
 }
 

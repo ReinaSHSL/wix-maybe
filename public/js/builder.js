@@ -10,6 +10,7 @@ $builderButton.click(function () {
         $('.panel:not(.builder)').show()
         $builderButton.text('Open Deck Builder')
     } else {
+        socket.emit('updateDeck', $('#deckList :selected').attr('value'))
         $('.panel').hide()
         $builderPanel.show()
         $builderButton.text('Close Deck Builder')
@@ -101,6 +102,18 @@ $('#results').on('click', '.card', function () {
     }
 })
 
+//Displays cards from server
+socket.on('deckUpdate', function(card) {
+    var cardType = card.type
+    if (cardType === 'LRIG' || cardType === 'RESONA' || cardsType === 'ARTS') {
+        currentDecks.lrig.push(parseInt(card.id))
+        $('#lrigDeckDisplay').append(cardElementFromData(card))
+    } else {
+        currentDecks.main.push(parseInt(card.id))
+        $('#mainDeckDisplay').append(cardElementFromData(card))
+    }
+})
+
 // When clicking on a card in the deck area, remove it from the deck
 $('#mainDeckDisplay').on('click', '.card', function () {
     var $wrap = $(this)
@@ -139,6 +152,6 @@ socket.on('savedDeck', function(data){
 })
 
 socket.on('loadDeck', function(data){
-    $('#deckList :selected').remove()
+    $('#deckList [value="unsaved"]').remove()
     $('#deckList').append('<option value="' + data.id + '">' + data.name + '</option>')
 })
