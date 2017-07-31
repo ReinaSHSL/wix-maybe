@@ -554,8 +554,7 @@ io.on('connection', function (socket) {
                 if (err) return console.log(err)
                 if (!result[0]) return
                 if (result) {
-                    var lrigCards = []
-                    var mainCards = []
+                    var deck = {lrig: [], main: []}
                     for (let i of result[0].deck.lrig) {
                         var matchingCards = ALLCARDS.filter(card => {
                             if (card.id !== result[0].deck.lrig[i]) {
@@ -565,7 +564,7 @@ io.on('connection', function (socket) {
                             }
                         })
                         for (var card of matchingCards) {
-                            lrigCards.push(card)                       
+                            deck.lrig.push(card)                       
                         }
                     }
                     for (let i of result[0].deck.main) {
@@ -577,11 +576,10 @@ io.on('connection', function (socket) {
                             }
                         })
                         for (var card of matchingCards) {
-                            mainCards.push(card)
+                            deck.main.push(card)
                         }
                     }
-                    socket.emit('deckUpdate', mainCards)
-                    socket.emit('deckUpdate', lrigCards)  
+                    socket.emit('deckUpdate', deck)
                 }
             })
         })

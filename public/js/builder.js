@@ -7,10 +7,14 @@ const $builderPanel = $('.panel.builder')
 $builderButton.click(function () {
     if ($builderPanel.is(':visible')) {
         $builderPanel.hide()
+        $('#mainDeckDisplay').empty()
+        $('#lrigDeckDisplay').empty()
         $('.panel:not(.builder)').show()
         $builderButton.text('Open Deck Builder')
+
     } else {
         socket.emit('updateDeck', $('#deckList :selected').attr('value'))
+        socket.emit('loadDecks')
         $('.panel').hide()
         $builderPanel.show()
         $builderButton.text('Close Deck Builder')
@@ -104,29 +108,28 @@ $('#results').on('click', '.card', function () {
 
 //Displays cards from server
 socket.on('deckUpdate', function (deck) {
-    for (let card of deck) {
-        var cardType = card.type
-        if (cardType === 'LRIG' || cardType === 'RESONA' || cardType === 'ARTS') {
+    currentDecks.lrig = []
+    currentDecks.main = []
+    for (let card of deck.lrig) {
             currentDecks.lrig.push(parseInt(card.id))
             $('#lrigDeckDisplay').append(cardElementFromData(card))
-        } else {
+        } 
+        for (let card of deck.main) {
             currentDecks.main.push(parseInt(card.id))
             $('#mainDeckDisplay').append(cardElementFromData(card))
         }
-   
-    }
 })
 
 //Updates deck on dropdown change
 $('#deckList').change(function () {
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()
+    currentDecks.lrig = []
+    currentDecks.main = []
     let deckId = $('#deckList :selected').attr('value')
     socket.emit('deckChange', deckId) 
 }) 
 socket.on('deckChange', function (deck) {
-    currentDecks.lrig = []
-    currentDecks.main = []
     for (let card of deck) {
         var cardType = card.type
         if (cardType === 'LRIG' || cardType === 'RESONA' || cardType === 'ARTS') {
