@@ -9,7 +9,7 @@ $builderButton.click(function () {
         $builderPanel.hide()
         $('#mainDeckDisplay').empty()
         $('#lrigDeckDisplay').empty()
-        $('.panel:not(.builder)').show()
+        $('.panel:not(.builder, .login)').show()
         $builderButton.text('Open Deck Builder')
 
     } else {
@@ -167,17 +167,37 @@ $('#ren').on('click', function () {
 })
 
 $('#new').on('click', function () {
-    // TODO: Store the current deck's contents somewhere and clear the UI
     const newName = prompt('New deck name?')
     const escapedName = $('<div>').text(newName).html() // html escape input
     $('#deckList').append(`<option name="">${escapedName}</option>`)
+    $('#mainDeckDisplay').empty()
+    $('#lrigDeckDisplay').empty()
+    currentDecks.lrig = []
+    currentDecks.main = []
     $('#deckList').val(newName)
+
+})
+
+$('#del').on('click', function() {
+    let deckId = $('#deckList :selected').attr('value')
+    socket.emit('deleteDeck', deckId)
+})
+
+socket.on('deleted', function() {
+    $('#deckList :selected').remove()
+    $('#mainDeckDisplay').empty()
+    $('#lrigDeckDisplay').empty()
+    currentDecks.lrig = []
+    currentDecks.main = []
+    let deckId = $('#deckList :selected').attr('value')
+    socket.emit('deckChange', deckId)
 })
 
 socket.on('savedDeck', function (data) {
     let deckName = $('#deckList :selected').text()
     $('#deckList :selected').after('<option value="' + data + '">' + deckName + '</option>')
     $('#deckList :selected').remove()
+    $('#deckList').val(deckName)
 })
 
 socket.on('loadDeck', function (data) {

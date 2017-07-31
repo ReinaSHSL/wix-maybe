@@ -591,6 +591,7 @@ io.on('connection', function (socket) {
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
+                if (!result[0]) return
                 if (result) {
                     var deck = {lrig: [], main: []}
                     for (let i of result[0].deck.lrig) {
@@ -620,6 +621,17 @@ io.on('connection', function (socket) {
                     socket.emit('deckUpdate', deck)
                 }
             })
+        })
+    })
+
+    //Deleting decks
+    socket.on('deleteDeck', function(data) {
+        if (!data) {
+            socket.emit('deleted')
+        }
+        r.table('decks').get(data).delete().run(conn, function(err, success) {
+            if (err) return console.log(err)
+            socket.emit('deleted')
         })
     })
 
