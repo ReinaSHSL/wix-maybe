@@ -178,12 +178,12 @@ $('#new').on('click', function () {
 
 })
 
-$('#del').on('click', function() {
+$('#del').on('click', function () {
     let deckId = $('#deckList :selected').attr('value')
     socket.emit('deleteDeck', deckId)
 })
 
-socket.on('deleted', function() {
+socket.on('deleted', function () {
     $('#deckList :selected').remove()
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()

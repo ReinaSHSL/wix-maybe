@@ -625,11 +625,11 @@ io.on('connection', function (socket) {
     })
 
     //Deleting decks
-    socket.on('deleteDeck', function(data) {
+    socket.on('deleteDeck', function (data) {
         if (!data) {
             socket.emit('deleted')
         }
-        r.table('decks').get(data).delete().run(conn, function(err, success) {
+        r.table('decks').get(data).delete().run(conn, function (err, success) {
             if (err) return console.log(err)
             socket.emit('deleted')
         })
