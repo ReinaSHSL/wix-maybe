@@ -609,6 +609,17 @@ io.on('connection', function (socket) {
         })
     })
 
+    //Importing decks
+    socket.on('importDeck', function (data) {
+        if (!data) return
+        let lrigDeck = JSON.parse(data.deck.lrig)
+        let mainDeck = JSON.parse(data.deck.main)
+        var deck = {}
+        deck.lrig = lrigDeck.map(id => ALLCARDS.find(card => card.id === id))
+        deck.main = mainDeck.map(id => ALLCARDS.find(card => card.id === id))
+        socket.emit('importComplete', {deck: deck, name: data.name})
+    })
+
 })
 
 

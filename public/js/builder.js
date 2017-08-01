@@ -187,7 +187,27 @@ $('#del').on('click', function () {
 })
 
 $('#exim').on('click', function () {
-    prompt(JSON.stringify(currentDecks))
+    prompt('Deck to Export' + JSON.stringify(currentDecks))
+    let deckName = prompt('Imported deck name?')
+    let deck = prompt('Imported deck contents?')
+    socket.emit('importDeck', {deck: deck, name: deckName})
+})
+
+socket.on('importComplete', function(data) {
+    $('#mainDeckDisplay').empty()
+    $('#lrigDeckDisplay').empty()
+    currentDecks.lrig = []
+    currentDecks.main = []
+    $('#deckList').append('<option value="importDeck">' + data.name + '</option>')
+    $('#deckList').val('importDeck')
+    for (let card of data.lrig) {
+        currentDecks.lrig.push(parseInt(card.id))
+        $('#lrigDeckDisplay').append(cardElementFromData(card))
+    }
+    for (let card of data.main) {
+        currentDecks.main.push(parseInt(card.id))
+        $('#mainDeckDisplay').append(cardElementFromData(card))
+    }
 })
 
 socket.on('deleted', function () {
