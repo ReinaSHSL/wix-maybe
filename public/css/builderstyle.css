@@ -15,11 +15,6 @@
 	background: #EEE;
 }
 
-#exit{
-  position:absolute;
-  top: 96%;
-}
-
 #center {
 	flex: 1;
 	order: 1;

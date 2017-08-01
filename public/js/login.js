@@ -21,8 +21,6 @@ $('.login-form, .signup-form').on('submit', function (e) {
                 // Hide this panel and show the main ones
                 $('.panel.login').hide()
                 $('.panel.lobby, .panel.rooms').show()
-                socket.emit('loadDecks')
-                socket.emit('updateDeck', $('#deckList :selected').attr('value'))
             } else {
                 alert('signed up! please log in now')
                 $submitButton.attr('disabled', false)
