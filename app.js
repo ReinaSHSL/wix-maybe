@@ -507,22 +507,27 @@ io.on('connection', function (socket) {
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
                 if (result[0]) {
-                    r.table('decks').get(data.id).update({deck: data.deck, name: data.name}).run(conn, function (err, result) {
-                        if (err) console.log(err)
-                        return
+                    r.table('decks').get(data.id).update({deck: data.deck, name: data.name}).run(conn, function (err, updated) {
+                        if (err) return console.log(err)
+                        if (updated) {
+                            console.log('existing deck updated')
+                            return
+                        }
                     })
                 }
-                r.table('decks').insert({
-                    deck: data.deck,
-                    owner: currentUser.id,
-                    name: data.name
-                }).run(conn, function (err, insert) {
-                    if (err) console.log(err)
-                    if (insert) {
-                        let genKey = insert.generated_keys[0]
-                        socket.emit('savedDeck', genKey)
-                    }
-                })
+                if (!result[0]) {
+                    r.table('decks').insert({
+                        deck: data.deck,
+                        owner: currentUser.id,
+                        name: data.name
+                    }).run(conn, function (err, insert) {
+                        if (err) return console.log(err)
+                        if (insert) {
+                            let genKey = insert.generated_keys[0]
+                            socket.emit('savedDeck', genKey)
+                        }
+                    })
+                }
             })
         })
     })

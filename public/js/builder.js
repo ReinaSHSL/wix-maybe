@@ -7,14 +7,15 @@ const $builderPanel = $('.panel.builder')
 $builderButton.click(function () {
     if ($builderPanel.is(':visible')) {
         $builderPanel.hide()
+        $('#deckList').empty()
         $('#mainDeckDisplay').empty()
         $('#lrigDeckDisplay').empty()
         $('.panel:not(.builder, .login)').show()
         $builderButton.text('Open Deck Builder')
 
     } else {
-        socket.emit('updateDeck', $('#deckList :selected').attr('value'))
         socket.emit('loadDecks')
+        socket.emit('updateDeck', $('#deckList :selected').attr('value'))
         $('.panel').hide()
         $builderPanel.show()
         $builderButton.text('Close Deck Builder')
@@ -157,7 +158,7 @@ $('#lrigDeckDisplay').on('click', '.card', function () {
 
 $('#save').on('click', function () {
     let deckName = $('#deckList :selected').text()
-    let deckId = $('#decklist :selected').attr('value')
+    let deckId = $('#deckList :selected').attr('value')
     socket.emit('saveDeck', {deck: currentDecks, name: deckName, id: deckId})
 })
 
@@ -183,6 +184,10 @@ $('#del').on('click', function () {
     socket.emit('deleteDeck', deckId)
 })
 
+$('#exim').on('click', function() {
+    prompt(JSON.stringify(currentDecks))
+})
+
 socket.on('deleted', function () {
     $('#deckList :selected').remove()
     $('#mainDeckDisplay').empty()
@@ -197,7 +202,7 @@ socket.on('savedDeck', function (data) {
     let deckName = $('#deckList :selected').text()
     $('#deckList :selected').after('<option value="' + data + '">' + deckName + '</option>')
     $('#deckList :selected').remove()
-    $('#deckList').val(deckName)
+    $('#deckList').val(data)
 })
 
 socket.on('loadDeck', function (data) {
