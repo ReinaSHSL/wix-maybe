@@ -7,15 +7,17 @@ const $builderPanel = $('.panel.builder')
 $builderButton.click(function () {
     if ($builderPanel.is(':visible')) {
         $builderPanel.hide()
-        $('#deckList').empty()
         $('#mainDeckDisplay').empty()
         $('#lrigDeckDisplay').empty()
         $('.panel:not(.builder, .login)').show()
         $builderButton.text('Open Deck Builder')
 
     } else {
-        socket.emit('loadDecks')
-        socket.emit('updateDeck', $('#deckList :selected').attr('value'))
+        if(!$('#deckList').val()) {
+            $('#deckList').append('<option value=unsaved> Blank Deck </option>')
+        }
+        let deckId = $('#deckList :selected').attr('value')
+        socket.emit('updateDeck', deckId)
         $('.panel').hide()
         $builderPanel.show()
         $builderButton.text('Close Deck Builder')
@@ -206,6 +208,5 @@ socket.on('savedDeck', function (data) {
 })
 
 socket.on('loadDeck', function (data) {
-    $('#deckList [value="unsaved"]').remove()
     $('#deckList').append('<option value="' + data.id + '">' + data.name + '</option>')
 })

@@ -13,7 +13,7 @@ $('.login-form, .signup-form').on('submit', function (e) {
         success: function (response) {
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
-                alert('logged in!')
+                socket.emit('loadDecks')
                 $('.current-user').text()
                 $submitButton.attr('disabled', false)
                 $('.current-user').text($('.login-form [name="username"]').val())

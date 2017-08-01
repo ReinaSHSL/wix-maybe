@@ -557,33 +557,11 @@ io.on('connection', function (socket) {
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
-                if (!result[0]) return
+                if (!result[0]) return console.log('reee')
                 if (result) {
-                    var deck = {lrig: [], main: []}
-                    for (let i of result[0].deck.lrig) {
-                        var matchingCards = ALLCARDS.filter(card => {
-                            if (card.id !== result[0].deck.lrig[i]) {
-                                return false
-                            } else {
-                                return true
-                            }
-                        })
-                        for (var card of matchingCards) {
-                            deck.lrig.push(card)                       
-                        }
-                    }
-                    for (let i of result[0].deck.main) {
-                        var matchingCards = ALLCARDS.filter(card => {
-                            if (card.id !== result[0].deck.main[i]) {
-                                return false
-                            } else {
-                                return true
-                            }
-                        })
-                        for (var card of matchingCards) {
-                            deck.main.push(card)
-                        }
-                    }
+                    var deck = {}
+                    deck.lrig = result[0].deck.lrig.map(id => ALLCARDS.find(card => card.id === id))
+                    deck.main = result[0].deck.main.map(id => ALLCARDS.find(card => card.id === id))
                     socket.emit('deckUpdate', deck)
                 }
             })
@@ -596,33 +574,11 @@ io.on('connection', function (socket) {
             if (err) return console.log(err)
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
-                if (!result[0]) return
+                if (!result[0]) return //Safety feature
                 if (result) {
-                    var deck = {lrig: [], main: []}
-                    for (let i of result[0].deck.lrig) {
-                        var matchingCards = ALLCARDS.filter(card => {
-                            if (card.id !== result[0].deck.lrig[i]) {
-                                return false
-                            } else {
-                                return true
-                            }
-                        })
-                        for (var card of matchingCards) {
-                            deck.lrig.push(card)                       
-                        }
-                    }
-                    for (let i of result[0].deck.main) {
-                        var matchingCards = ALLCARDS.filter(card => {
-                            if (card.id !== result[0].deck.main[i]) {
-                                return false
-                            } else {
-                                return true
-                            }
-                        })
-                        for (var card of matchingCards) {
-                            deck.main.push(card)
-                        }
-                    }
+                    var deck = {}
+                    deck.lrig = result[0].deck.lrig.map(id => ALLCARDS.find(card => card.id === id))
+                    deck.main = result[0].deck.main.map(id => ALLCARDS.find(card => card.id === id))
                     socket.emit('deckUpdate', deck)
                 }
             })
