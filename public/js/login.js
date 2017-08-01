@@ -1,6 +1,6 @@
 /* globals $ */
 
-$('.login-form, .signup-form').on('submit', function (e) {
+$('.login-form, .signup-form, .logout-button').on('submit', function (e) {
     e.preventDefault()
     const $this = $(this)
     const $submitButton = $this.find('input[type="submit"]')
@@ -19,9 +19,15 @@ $('.login-form, .signup-form').on('submit', function (e) {
                 $('.current-user').text($('.login-form [name="username"]').val())
                 // Hide this panel and show the main ones
                 $('.panel.login').hide()
-                $('.panel.lobby, .panel.rooms').show()
-            } else {
+                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
+            } 
+            if ($this.is('.signup-form')) {
                 alert('signed up! please log in now')
+                $submitButton.attr('disabled', false)
+            } 
+            if ($this.is('.logout-button')) {
+                $('.panel.login').show()
+                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').hide()
                 $submitButton.attr('disabled', false)
             }
         },

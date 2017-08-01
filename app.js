@@ -257,6 +257,19 @@ app.post('/login', function (req, res) {
     })
 })
 
+//Log Out 
+app.post('/logout', function(req, res) {
+    if (!req.session.user) {
+        return
+    }
+    let userId = req.session.user.id
+    req.session.destroy()
+    r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function(err, success) {
+        if (err) return console.log(err)
+        return res.status(200).send('Logged Out')
+    })
+})
+
 
 // Accept incoming socket connections
 io.on('connection', function (socket) {
