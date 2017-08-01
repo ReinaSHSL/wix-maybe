@@ -184,7 +184,7 @@ $('#del').on('click', function () {
     socket.emit('deleteDeck', deckId)
 })
 
-$('#exim').on('click', function() {
+$('#exim').on('click', function () {
     prompt(JSON.stringify(currentDecks))
 })
 
