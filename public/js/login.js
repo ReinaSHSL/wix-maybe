@@ -21,7 +21,7 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
             } else if ($this.is('.signup-form')) {
                 alert('signed up! please log in now')
-            } else if ($this.is('.logout-button')) {
+            } else if ($this.is('.logout-form')) {
                 $('.panel.login').show()
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
             }
