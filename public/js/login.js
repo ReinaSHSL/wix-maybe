@@ -1,6 +1,6 @@
 /* globals $ */
 
-$('.login-form, .signup-form, .logout-button').on('submit', function (e) {
+$('.login-form, .signup-form, .logout-form').on('submit', function (e) {
     e.preventDefault()
     const $this = $(this)
     const $submitButton = $this.find('input[type="submit"]')
