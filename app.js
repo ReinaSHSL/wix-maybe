@@ -257,14 +257,14 @@ app.post('/login', function (req, res) {
     })
 })
 
-//Log Out 
-app.post('/logout', function(req, res) {
+//Log Out
+app.post('/logout', function (req, res) {
     if (!req.session.user) {
         return
     }
     let userId = req.session.user.id
     req.session.destroy()
-    r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function(err, success) {
+    r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function (err) {
         if (err) return console.log(err)
         return res.status(200).send('Logged Out')
     })
@@ -323,7 +323,7 @@ io.on('connection', function (socket) {
         const room = getRoom(id)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        currentUser = JSON.parse(sessionObject).user
+        let currentUser = JSON.parse(sessionObject).user
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
@@ -401,7 +401,7 @@ io.on('connection', function (socket) {
         }
         let currentUser = JSON.parse(sessionObject).user
         if (!currentUser) return
-        r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err, out) {
+        r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) console.log(err)
             return console.log('Log out')
         })
@@ -425,9 +425,10 @@ io.on('connection', function (socket) {
     })
 
     //Username shit
+    // TODO: This is obsolete now right
     socket.on('setUsername', function (username) {
         console.log('[setUsername]', username)
-        currentUser.username = escapeHTML(username)
+        // currentUser.username = escapeHTML(username)
     })
 
     //Lobby chatting
@@ -435,7 +436,7 @@ io.on('connection', function (socket) {
         console.log('[sendLobbyMessage]', data.msg, data.roomId)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        currentUser = JSON.parse(sessionObject).user
+        let currentUser = JSON.parse(sessionObject).user
         const room = getRoom(data.roomId)
         const _msg = {
             type: 'normal',
@@ -506,7 +507,7 @@ io.on('connection', function (socket) {
             card = null
         }
     })
-    
+
     //Save
     socket.on('saveDeck', function (data) {
         let sessionID = socket.handshake.sessionID
@@ -603,7 +604,7 @@ io.on('connection', function (socket) {
         if (!data) {
             socket.emit('deleted')
         }
-        r.table('decks').get(data).delete().run(conn, function (err, success) {
+        r.table('decks').get(data).delete().run(conn, function (err) {
             if (err) return console.log(err)
             socket.emit('deleted')
         })

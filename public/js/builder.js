@@ -13,7 +13,7 @@ $builderButton.click(function () {
         $builderButton.text('Open Deck Builder')
 
     } else {
-        if(!$('#deckList').val()) {
+        if (!$('#deckList').val()) {
             $('#deckList').append('<option value=unsaved> Blank Deck </option>')
         }
         let deckId = $('#deckList :selected').attr('value')
@@ -45,7 +45,7 @@ function cardElementFromData (card) {
 
 //Search Function
 var $results = $('#results')
-function search () {
+function search () { // eslint-disable-line no-unused-vars // called via onclick
     $results.empty()
 
     // Get the search parameters from the interface
@@ -116,7 +116,7 @@ socket.on('deckUpdate', function (deck) {
     for (let card of deck.lrig) {
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
-    } 
+    }
     for (let card of deck.main) {
         currentDecks.main.push(parseInt(card.id))
         $('#mainDeckDisplay').append(cardElementFromData(card))
@@ -130,15 +130,15 @@ $('#deckList').change(function () {
     currentDecks.lrig = []
     currentDecks.main = []
     let deckId = $('#deckList :selected').attr('value')
-    socket.emit('deckChange', deckId) 
-}) 
+    socket.emit('deckChange', deckId)
+})
 socket.on('deckChange', function (deck) {
     currentDecks.lrig = []
     currentDecks.main = []
     for (let card of deck.lrig) {
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
-    } 
+    }
     for (let card of deck.main) {
         currentDecks.main.push(parseInt(card.id))
         $('#mainDeckDisplay').append(cardElementFromData(card))
@@ -215,7 +215,7 @@ $('#exim').on('click', function () {
     })
 })
 
-socket.on('importComplete', function(data) {
+socket.on('importComplete', function (data) {
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()
     currentDecks.lrig = []
