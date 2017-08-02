@@ -33,3 +33,46 @@ body {
 }
 .panel { flex: 1 1 100%; }
 .panel + .panel { border-left: 1px solid #BBB }
+
+.popup-background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.popup {
+    background: #FFF;
+    border: 1px solid #BBB;
+    border-radius: 2px;
+    padding: 10px;
+    width: 400px;
+    max-width: 100%;
+}
+.popup .title {
+    margin: -10px -10px 10px;
+    padding: 10px;
+    background: #F7F7F7;
+    border-bottom: 1px solid #BBB;
+    line-height: 1;
+    font-size: large;
+}
+.popup .button-row {
+    margin: 10px -10px -10px;
+    padding: 10px;
+    background: #F7F7F7;
+    border-top: 1px solid #BBB;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.popup .content input[type=text],
+.popup .content textarea {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+}

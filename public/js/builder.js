@@ -187,10 +187,32 @@ $('#del').on('click', function () {
 })
 
 $('#exim').on('click', function () {
-    prompt('Deck to Export' + JSON.stringify(currentDecks))
-    let deckName = prompt('Imported deck name?')
-    let deck = prompt('Imported deck contents?')
-    socket.emit('importDeck', {deck: deck, name: deckName})
+    const deckName = $('#deckList :selected').text()
+    const exportString = JSON.stringify(currentDecks)
+
+    const $nameInput = $('<input type="text" class="nameInput">').val(deckName)
+    const $textarea = $('<textarea class="jsonTextarea">').text(exportString)
+
+    popup({
+        title: 'Import/Export Deck',
+        content: [
+            $nameInput,
+            $textarea
+        ],
+        action: 'Save',
+        onAction: function () {
+            const $this = $(this) // The button that was pressed
+            const $popup = $this.closest('.popup')
+            const $nameInput = $popup.find('.nameInput')
+            const $jsonTextarea = $popup.find('.jsonTextarea')
+
+            const newDeckName = $nameInput.val()
+            const deckJSON = $jsonTextarea.text()
+
+            socket.emit('importDeck', {deck: deckJSON, name: newDeckName})
+            $this.closest('.popup-background').remove() // Close the popup
+        }
+    })
 })
 
 socket.on('importComplete', function(data) {
@@ -230,3 +252,27 @@ socket.on('savedDeck', function (data) {
 socket.on('loadDeck', function (data) {
     $('#deckList').append('<option value="' + data.id + '">' + data.name + '</option>')
 })
+
+
+
+function popup (stuff) {
+    console.log('hi')
+    const $wrapper = $('<div class="popup-background">')
+    const $popup = $('<div class="popup">')
+    $wrapper.append($popup)
+    const $title = $('<h1 class="title">').text(stuff.title || 'Hey!')
+    const $content = $('<div class="content">').append(stuff.content)
+    const $buttonRow = $('<div class="button-row">')
+    $popup.append($title).append($content).append($buttonRow)
+    const $cancelButton = $('<button class="cancel">').text(stuff.cancel || 'Cancel')
+    const $actionButton = stuff.action ? $('<button class="confirm">').text(stuff.action) : ''
+    $buttonRow.append($actionButton).append($cancelButton)
+
+    $cancelButton.on('click', function () {
+        $wrapper.remove()
+    })
+    if (stuff.onAction) $actionButton.on('click', stuff.onAction)
+
+    $('body').append($wrapper)
+    return $popup
+}
