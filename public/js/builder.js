@@ -206,7 +206,8 @@ $('#exim').on('click', function () {
             const $jsonTextarea = $popup.find('.jsonTextarea')
 
             const newDeckName = $nameInput.val()
-            const deckJSON = $jsonTextarea.text()
+            const deckJSON = $jsonTextarea.val()
+            console.log(deckJSON)
 
             socket.emit('importDeck', {deck: deckJSON, name: newDeckName})
             $this.closest('.popup-background').remove() // Close the popup
@@ -223,12 +224,10 @@ socket.on('importComplete', function (data) {
     currentDecks.lrig = []
     currentDecks.main = []
     for (let card of data.deck.lrig) {
-        console.log(card)
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
     }
     for (let card of data.deck.main) {
-        console.log(card)
         currentDecks.main.push(parseInt(card.id))
         $('#mainDeckDisplay').append(cardElementFromData(card))
     }

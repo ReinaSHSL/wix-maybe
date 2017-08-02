@@ -613,10 +613,10 @@ io.on('connection', function (socket) {
     //Importing decks
     socket.on('importDeck', function (data) {
         try {
-            let deck = JSON.parse(data.deck)
+            let oldDeck = JSON.parse(data.deck)
             let newDeck = {}
-            newDeck.lrig = deck.lrig.map(id => ALLCARDS.find(card => card.id === id))
-            newDeck.main = deck.main.map(id => ALLCARDS.find(card => card.id === id))
+            newDeck.lrig = oldDeck.lrig.map(id => ALLCARDS.find(card => card.id === id))
+            newDeck.main = oldDeck.main.map(id => ALLCARDS.find(card => card.id === id))
             let tempId = Math.random()
             socket.emit('importComplete', {deck: newDeck, name: data.name, tempId: tempId})
         } catch (err) {
