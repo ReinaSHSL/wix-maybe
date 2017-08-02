@@ -29,7 +29,7 @@ body {
     text-decoration: inherit;
 }
 
-.header .username-form { margin: 0 }
+.header .logout-form { display: inline }
 
 .panels {
     grid-area: content;
