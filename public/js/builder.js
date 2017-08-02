@@ -135,23 +135,19 @@ $('#deckList').on('click', function () {
     prevValue = $('#deckList :selected').attr('value')
 })
 $('#deckList').change(function () {
-        if (!prevValue || prevValue.startsWith(0.)) {
-            if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
-                $('#deckList').val(prevValue)
-                return
-            }
+    if (!prevValue || prevValue.startsWith(0.)) {
+        if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
+            $('#deckList').val(prevValue)
+            return
         }
-        $('#mainDeckDisplay').empty()
-        $('#lrigDeckDisplay').empty()
-        currentDecks.lrig = []
-        currentDecks.main = []
-        let deckId = $('#deckList :selected').attr('value')
-        socket.emit('deckChange', deckId)
+    }
+    emptyEverything()
+    let deckId = $('#deckList :selected').attr('value')
+    socket.emit('deckChange', deckId)
 })
 
 socket.on('deckChange', function (deck) {
-    currentDecks.lrig = []
-    currentDecks.main = []
+    emptyEverything()
     for (let card of deck.lrig) {
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
@@ -191,10 +187,7 @@ $('#new').on('click', function () {
     const escapedName = $('<div>').text(newName).html() // html escape input
     var tempId = Math.random()
     $('#deckList').append('<option value="' + tempId + '">' +  escapedName + '</option>')
-    $('#mainDeckDisplay').empty()
-    $('#lrigDeckDisplay').empty()
-    currentDecks.lrig = []
-    currentDecks.main = []
+    emptyEverything()
     $('#deckList').val(tempId)
 
 })
@@ -237,10 +230,7 @@ socket.on('importComplete', function (data) {
     console.log(data.deck)
     $('#deckList').append('<option value="' + data.tempId + '">' + data.name + '</option>')
     $('#deckList').val(data.tempId)
-    $('#mainDeckDisplay').empty()
-    $('#lrigDeckDisplay').empty()
-    currentDecks.lrig = []
-    currentDecks.main = []
+    emptyEverything()
     for (let card of data.deck.lrig) {
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
@@ -253,10 +243,7 @@ socket.on('importComplete', function (data) {
 
 socket.on('deleted', function () {
     $('#deckList :selected').remove()
-    $('#mainDeckDisplay').empty()
-    $('#lrigDeckDisplay').empty()
-    currentDecks.lrig = []
-    currentDecks.main = []
+    emptyEverything()
     let deckId = $('#deckList :selected').attr('value')
     socket.emit('deckChange', deckId)
 })
@@ -293,4 +280,11 @@ function popup (stuff) {
 
     $('body').append($wrapper)
     return $popup
+}
+
+function emptyEverything () {
+    $('#mainDeckDisplay').empty()
+    $('#lrigDeckDisplay').empty()
+    currentDecks.lrig = []
+    currentDecks.main = []
 }
