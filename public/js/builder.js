@@ -14,7 +14,8 @@ $builderButton.click(function () {
 
     } else {
         if (!$('#deckList').val()) {
-            $('#deckList').append('<option value=unsaved> Blank Deck </option>')
+            let tempId = Math.random()
+            $('#deckList').append('<option value="' + tempId + '"> Blank Deck </option>')
         }
         let deckId = $('#deckList :selected').attr('value')
         socket.emit('updateDeck', deckId)
@@ -124,14 +125,25 @@ socket.on('deckUpdate', function (deck) {
 })
 
 //Updates deck on dropdown change
-$('#deckList').change(function () {
-    $('#mainDeckDisplay').empty()
-    $('#lrigDeckDisplay').empty()
-    currentDecks.lrig = []
-    currentDecks.main = []
-    let deckId = $('#deckList :selected').attr('value')
-    socket.emit('deckChange', deckId)
+var prevValue
+$('#deckList').on('click', function () {
+    prevValue = $('#deckList :selected').attr('value')
 })
+$('#deckList').change(function () {
+        if (!prevValue || prevValue.startsWith(0.)) {
+            if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
+                $('#deckList').val(prevValue)
+                return
+            }
+        }
+        $('#mainDeckDisplay').empty()
+        $('#lrigDeckDisplay').empty()
+        currentDecks.lrig = []
+        currentDecks.main = []
+        let deckId = $('#deckList :selected').attr('value')
+        socket.emit('deckChange', deckId)
+})
+
 socket.on('deckChange', function (deck) {
     currentDecks.lrig = []
     currentDecks.main = []
@@ -172,12 +184,13 @@ $('#ren').on('click', function () {
 $('#new').on('click', function () {
     const newName = prompt('New deck name?')
     const escapedName = $('<div>').text(newName).html() // html escape input
-    $('#deckList').append(`<option name="unsaved">${escapedName}</option>`)
+    var tempId = Math.random()
+    $('#deckList').append('<option value="' + tempId + '">' +  escapedName + '</option>')
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()
     currentDecks.lrig = []
     currentDecks.main = []
-    $('#deckList').val(newName)
+    $('#deckList').val(tempId)
 
 })
 
