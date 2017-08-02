@@ -57,7 +57,7 @@
 
             <section class="panel builder" style="display:none"><!-- The deck builder woo -->
                 <!-- Preview column -->
-                <div id="left">
+                <div class="info-sidebar">
                     <!-- This will be the card preview and shit -->
                     <img id='previewCard' src='http://i.imgur.com/zKrhNaW.png'>
                     <div id="cardInfo">
@@ -77,30 +77,27 @@
                     </div>
                 </div>
 
-                <!-- The area for useful things -->
-                <div id="center">
-                    <!-- This will be the buttons and shit -->
-                    <div id="top">
-                        <label></label>
-                        <select id="deckList">
-                            <!--Shit will be added dynamically-->
-                        </select>
-                        <button type="button" button id='new'>New Deck</button>
-                        <button type="button" button id='ren'>Rename Deck</button>
-                        <button type="button" button id='save'>Save Deck</button>
-                        <button type="button" button id='del'>Delete Deck</button>
-                        <button type="button" button id='exim'>Export/Import</button>
-                    </div>
+                <!-- This will be the buttons and shit -->
+                <div class="toolbar" id="top">
+                    <label></label>
+                    <select id="deckList">
+                        <!--Shit will be added dynamically-->
+                    </select>
+                    <button type="button" button id='new'>New Deck</button>
+                    <button type="button" button id='ren'>Rename Deck</button>
+                    <button type="button" button id='save'>Save Deck</button>
+                    <button type="button" button id='del'>Delete Deck</button>
+                    <button type="button" button id='exim'>Export/Import</button>
+                </div>
 
-                    <!-- Cards live here -->
-                    <div id="deckDisplayWrap">
-                        <ul id="mainDeckDisplay" class="cardList"></ul>
-                        <ul id="lrigDeckDisplay" class="cardList"></ul>
-                    </div>
+                <!-- Cards live here -->
+                <div class="deck-display" id="deckDisplayWrap">
+                    <ul id="mainDeckDisplay" class="cardList"></ul>
+                    <ul id="lrigDeckDisplay" class="cardList"></ul>
                 </div>
 
                 <!-- Searching and all that good stuff -->
-                <div id="right">
+                <div class="search-sidebar">
                     <!-- this shit searches out cards -->
                     <div id="search">
                         <input type="text" id="cardName" onkeyup="search()" placeholder="Card name">

@@ -1,16 +1,21 @@
 body {
     margin: 0;
     font-family: sans-serif;
-    display: flex;
-    flex-direction: column;
     height: 100vh;
     overflow: hidden;
+    display: grid;
+    grid:
+        "header" 33px
+        "content" calc(100% - 33px)
+        / 100%;
 }
 .header {
+    grid-area: header;
     flex: 0 0 auto;
     background: #F7F7F7;
     border-bottom: 1px solid #BBB;
-    padding: 5px 10px;
+    line-height: 32px;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
 }
@@ -27,7 +32,7 @@ body {
 .header .username-form { margin: 0 }
 
 .panels {
-    flex: 1 1 auto;
+    grid-area: content;
     display: flex;
     justify-content: center;
 }
