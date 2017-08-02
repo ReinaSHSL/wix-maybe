@@ -216,12 +216,12 @@ $('#exim').on('click', function () {
 
 socket.on('importComplete', function (data) {
     console.log(data.deck)
+    $('#deckList').append('<option value="' + data.tempId + '">' + data.name + '</option>')
+    $('#deckList').val(data.tempId)
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()
     currentDecks.lrig = []
     currentDecks.main = []
-    $('#deckList').append('<option value="' + data.tempId + '">' + data.name + '</option>')
-    $('#deckList').val(data.tempId)
     for (let card of data.deck.lrig) {
         console.log(card)
         currentDecks.lrig.push(parseInt(card.id))

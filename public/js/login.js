@@ -27,7 +27,7 @@ $('.login-form, .signup-form, .logout-button').on('submit', function (e) {
             } 
             if ($this.is('.logout-button')) {
                 $('.panel.login').show()
-                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').hide()
+                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
                 $submitButton.attr('disabled', false)
             }
         },
