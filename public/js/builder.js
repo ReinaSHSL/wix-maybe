@@ -172,7 +172,7 @@ $('#ren').on('click', function () {
 $('#new').on('click', function () {
     const newName = prompt('New deck name?')
     const escapedName = $('<div>').text(newName).html() // html escape input
-    $('#deckList').append(`<option name="">${escapedName}</option>`)
+    $('#deckList').append(`<option name="unsaved">${escapedName}</option>`)
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()
     currentDecks.lrig = []
@@ -189,7 +189,6 @@ $('#del').on('click', function () {
 $('#exim').on('click', function () {
     const deckName = $('#deckList :selected').text()
     const exportString = JSON.stringify(currentDecks)
-
     const $nameInput = $('<input type="text" class="nameInput">').val(deckName)
     const $textarea = $('<textarea class="jsonTextarea">').text(exportString)
 
@@ -216,17 +215,20 @@ $('#exim').on('click', function () {
 })
 
 socket.on('importComplete', function (data) {
+    console.log(data.deck)
     $('#mainDeckDisplay').empty()
     $('#lrigDeckDisplay').empty()
     currentDecks.lrig = []
     currentDecks.main = []
-    $('#deckList').append('<option value="importDeck">' + data.name + '</option>')
-    $('#deckList').val('importDeck')
-    for (let card of data.lrig) {
+    $('#deckList').append('<option value="' + data.tempId + '">' + data.name + '</option>')
+    $('#deckList').val(data.tempId)
+    for (let card of data.deck.lrig) {
+        console.log(card)
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
     }
-    for (let card of data.main) {
+    for (let card of data.deck.main) {
+        console.log(card)
         currentDecks.main.push(parseInt(card.id))
         $('#mainDeckDisplay').append(cardElementFromData(card))
     }
@@ -256,7 +258,6 @@ socket.on('loadDeck', function (data) {
 
 
 function popup (stuff) {
-    console.log('hi')
     const $wrapper = $('<div class="popup-background">')
     const $popup = $('<div class="popup">')
     $wrapper.append($popup)

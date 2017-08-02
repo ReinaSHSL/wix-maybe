@@ -51,5 +51,5 @@ function checkLogin() {
 
 socket.on('loggedIn', function(){
     $('.panel.login').hide()
-    $('.panel.lobby, .panel.rooms').show()
+    $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
 })

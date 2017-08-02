@@ -612,13 +612,16 @@ io.on('connection', function (socket) {
 
     //Importing decks
     socket.on('importDeck', function (data) {
-        if (!data) return
-        let lrigDeck = JSON.parse(data.deck.lrig)
-        let mainDeck = JSON.parse(data.deck.main)
-        var deck = {}
-        deck.lrig = lrigDeck.map(id => ALLCARDS.find(card => card.id === id))
-        deck.main = mainDeck.map(id => ALLCARDS.find(card => card.id === id))
-        socket.emit('importComplete', {deck: deck, name: data.name})
+        try {
+            let deck = JSON.parse(data.deck)
+            let newDeck = {}
+            newDeck.lrig = deck.lrig.map(id => ALLCARDS.find(card => card.id === id))
+            newDeck.main = deck.main.map(id => ALLCARDS.find(card => card.id === id))
+            let tempId = Math.random()
+            socket.emit('importComplete', {deck: newDeck, name: data.name, tempId: tempId})
+        } catch (err) {
+            return console.log(err)
+        }
     })
 
 })
