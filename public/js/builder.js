@@ -6,6 +6,11 @@ const $builderPanel = $('.panel.builder')
 
 $builderButton.click(function () {
     if ($builderPanel.is(':visible')) {
+        if ($('#deckList :selected').attr('value') < 1 && !NaN) {
+            if (!confirm('Are you sure you want to leave? Your deck has not been saved. If you leave it will be lost.')) {
+                return
+            }
+        }
         $builderPanel.hide()
         $('#mainDeckDisplay').empty()
         $('#lrigDeckDisplay').empty()
