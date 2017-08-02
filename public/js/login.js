@@ -28,6 +28,7 @@ $('.login-form, .signup-form, .logout-button').on('submit', function (e) {
             if ($this.is('.logout-button')) {
                 $('.panel.login').show()
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
+                socket.emit('imDeadKthx')
                 $submitButton.attr('disabled', false)
             }
         },
