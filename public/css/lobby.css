@@ -2,8 +2,8 @@
 .lobby {
     display: grid;
     grid:
-        "tabs" 32px
-        "main" calc(100% - 32px)
+        "tabs" 33px
+        "main" calc(100% - 33px)
         / 100%;
 }
 
@@ -12,18 +12,28 @@
     grid-area: tabs;
     display: flex;
     align-items: stretch;
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #BBB;
+    padding: 0 5px;
+    background: #F7F7F7;
 }
 .lobby .tab {
-    flex: 1 1 100%;
-    line-height: 32px;
-    /*background: orange;*/
+    flex: 0 0 auto;
+    margin-top: 4px;
+    line-height: 27px;
+    padding: 0 10px;
     text-align: center;
     text-decoration: none;
+    color: #666;
+    border: 1px solid #DDD;
+    border-bottom: 0;
+    background: #FFF;
+    margin-right: 4px;
+}
+.lobby .tab.active {
+    box-shadow: 0 2px 0 -1px #FFF;
+    border-color: #BBB;
     color: inherit;
 }
-.lobby .tab + .tab { border-left: 1px solid #DDD }
-.lobby .tab.active { background: orange; }
 
 /* Room list wrapper */
 .lobby .rooms {

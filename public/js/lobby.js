@@ -235,10 +235,9 @@ function processMessage (msg) {
 //Display new msg
 socket.on('newMessage', function (msg) {
     console.log('[newMessage]', msg)
-    const $messages = $('.messages')
     // Are we looking at the bottom of the chat right now? (this check must be
     // before we add the message)
-    const isScrolled = $messages.scrollTop() + $messages.innerHeight() >= $messages[0].scrollHeight
+    const isScrolled = true // TODO: issue #13
     // Add the message to the interface
     processMessage(msg)
     // If we were at the bottom before, put us back at the bottom

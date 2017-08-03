@@ -4,41 +4,42 @@
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
-	display: flex;
-	align-items: stretch;
+	max-height: 100%;
+	display: grid;
+	grid:
+		"info toolbar search" 33px
+		"info deck    search" calc(100% - 33px)
+		/ 251px auto 251px;
 }
-#left {
-	flex: 0 1 250px;
-	order: 0;
+.card-info-sidebar {
+	grid-area: info;
 	padding: 10px;
 	border-right: 1px solid #DDD;
 	background: #EEE;
+	overflow-y: scroll;
 }
 
-#center {
-	flex: 1;
-	order: 1;
-	display: flex;
-	flex-direction: column;
-}
-#right {
-	flex: 0 1 250px;
-	order: 2;
+.search-sidebar {
+	grid-area: search;
 	padding: 10px;
 	border-left: 1px solid #DDD;
 	background: #EEE;
 }
-#top {
-	flex: 0 1 auto;
+
+.toolbar {
+	grid-area: toolbar;
 	background: #F7F7F7;
-	padding: 5px 10px;
 	border-bottom: 1px solid #DDD;
+	line-height: 32px;
+	padding: 0 10px;
 }
-#deckDisplayWrap {
-	flex: 1;
-	overflow: auto;
+
+.deck-display {
+	grid-area: deck;
+	padding: 5px 10px;
 }
-#deckDisplayWrap .cardList {
+
+.deck-display .cardList {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 5px;
