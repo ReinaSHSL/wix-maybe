@@ -24,7 +24,6 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
             } else if ($this.is('.logout-form')) {
                 $('.panel.login').show()
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
-<<<<<<< HEAD
                 socket.emit('imDeadKthx')
                 $submitButton.attr('disabled', false)
             }
