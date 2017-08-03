@@ -191,12 +191,12 @@ socket.on('joinRoomFail', function (reason) {
 })
 
 //Delete empty rooms
-socket.on('emptyRoom', function (emptyRoom) {
-    $('#' + emptyRoom).remove()
-    if (!$('.roomList').find('li').length) {
-        $('.roomList').append('<li>There are no rooms!?</li>')
-    }
-})
+// socket.on('emptyRoom', function (emptyRoom) {
+//     $('#' + emptyRoom).remove()
+//     if (!$('.roomList').find('li').length) {
+//         $('.roomList').append('<li>There are no rooms!?</li>')
+//     }
+// })
 
 //Lobby stuff
 

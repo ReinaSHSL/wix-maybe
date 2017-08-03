@@ -268,9 +268,9 @@ app.post('/logout', function (req, res) {
         if (err) return console.log(err)
         if (out) {
             logOutVar = req.session.user
-            res.status(200).send('Logged Out') 
+            res.status(200).send('Logged Out')
             req.session.destroy
-        } 
+        }
     })
 })
 
@@ -328,6 +328,9 @@ io.on('connection', function (socket) {
         const id = data.id
         const password = data.password
         const room = getRoom(id)
+        if (!room) {
+            return socket.emit('joinRoomFail', 'Room does not exist')
+        }
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         let currentUser = JSON.parse(sessionObject).user
@@ -376,7 +379,7 @@ io.on('connection', function (socket) {
         // If the room is empty, remove it
         if (!room.members.length) {
             rooms.splice(rooms.findIndex(r => r.id === socket.room), 1)
-            return io.sockets.emit('emptyRoom', data)
+            return io.sockets.emit('activeRooms', rooms)
         }
         io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
         const msg = {
@@ -429,8 +432,8 @@ io.on('connection', function (socket) {
             room.removeMember(currentUser.id)
             if (!room.members.length) {
                 rooms.splice(rooms.findIndex(r => r.id === i, 1))
-                io.sockets.emit('emptyRoom', i)
             }
+            io.sockets.emit('activeRooms', rooms)
         }
     })
 
