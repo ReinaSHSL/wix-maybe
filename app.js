@@ -258,6 +258,7 @@ app.post('/login', function (req, res) {
 })
 
 //Log Out
+var logOutVar
 app.post('/logout', function (req, res) {
     if (!req.session.user) {
         return
@@ -266,8 +267,9 @@ app.post('/logout', function (req, res) {
     r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function (err, out) {
         if (err) return console.log(err)
         if (out) {
+            logOutVar = req.session.user
             res.status(200).send('Logged Out') 
-            setTimeout(function() {req.session.destroy()}, 500)
+            req.session.destroy
         } 
     })
 })
@@ -302,6 +304,9 @@ io.on('connection', function (socket) {
         const room = new Room(data.name, data.password, roomId)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if (!sessionObject) {
+            return
+        }
         let currentUser = JSON.parse(sessionObject).user
         room.addMember({id: currentUser.id, username: currentUser.username})
         socket.join(roomId)
@@ -396,15 +401,16 @@ io.on('connection', function (socket) {
 
     //Die on refresh
     socket.on('imDeadKthx', function () {
-        console.log('check')
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         if (!sessionObject) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
-        console.log('pls' + currentUser)
         if (!currentUser) return
+        if (logOutVar) {
+            currentUser = logOutVar
+        }
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) console.log(err)
             return console.log('Log out')
