@@ -269,7 +269,7 @@ app.post('/logout', function (req, res) {
         if (out) {
             logOutVar = req.session.user
             res.status(200).send('Logged Out')
-            req.session.destroy
+            req.session.destroy()
         }
     })
 })
@@ -404,16 +404,17 @@ io.on('connection', function (socket) {
 
     //Die on refresh
     socket.on('imDeadKthx', function () {
+        let currentUser
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
-        if (!currentUser) return
-        if (logOutVar) {
+            if (!logOutVar) return
             currentUser = logOutVar
         }
+        if (sessionObject) {
+            currentUser = JSON.parse(sessionObject).user
+        }
+        if (!currentUser) return console.log('check')
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) console.log(err)
             return console.log('Log out')
