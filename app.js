@@ -315,6 +315,7 @@ io.on('connection', function (socket) {
         const msg = {
             type: 'join',
             username: currentUser.username,
+            roomId: roomId,
             timestamp: Date.now()
         }
         room.messages.push(msg)
@@ -352,6 +353,7 @@ io.on('connection', function (socket) {
         const msg = {
             type: 'join',
             username: currentUser.username,
+            roomId: id,
             timestamp: Date.now()
         }
         room.messages.push(msg)
@@ -385,6 +387,7 @@ io.on('connection', function (socket) {
         const msg = {
             type: 'leave',
             username: currentUser.username,
+            roomId: roomId,
             timestamp: Date.now()
         }
         room.messages.push(msg)
@@ -393,6 +396,7 @@ io.on('connection', function (socket) {
             const msg2 = {
                 type: 'ownerChange',
                 username: room.owner.username,
+                roomId: roomId,
                 timestamp: Date.now()
             }
             room.messages.push(msg)
