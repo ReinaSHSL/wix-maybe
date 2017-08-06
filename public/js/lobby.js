@@ -3,14 +3,16 @@
 const $lobby = $('.lobby')
 const $roomsView = $lobby.find('.rooms')
 const $tabBar = $lobby.find('.tabs')
+const $roomsTab = $tabBar.find('.tab-rooms')
 
 // Tab stuff
-$tabBar.on('click', '.tab-rooms', function () {
-    $tabBar.find('.tab').toggleClass('active', false)
-    $(this).toggleClass('active', true)
-    $lobby.find('.chat').hide()
-    $roomsView.show()
-})
+function showRooms () {
+    console.log($tabBar.find('.tab').toggleClass('active', false))
+    console.log($roomsTab.toggleClass('active', true))
+    console.log($lobby.find('.chat').hide())
+    console.log($roomsView.show())
+}
+$roomsTab.click(showRooms)
 function showChat (roomId, $tab = $tabBar.find(`[data-room-id="${roomId}"]`)) {
     $roomsView.hide()
     $lobby.find('.chat').hide()
@@ -101,7 +103,10 @@ function userHTML (user) {
 function roomTabHTML (room) {
     console.log(room)
     return `
-        <a href="#" class="tab tab-chat" data-room-id="${room.id}">${room.name}</a>
+        <a href="#" class="tab tab-chat" data-room-id="${room.id}">
+            <span class="tab-title">${room.name}</span>
+            <button class="tab-close">Leave room</button>
+        </a>
     `
 }
 function roomDisplayHTML (room) {
@@ -111,7 +116,6 @@ function roomDisplayHTML (room) {
             <table class="messages"></table>
             <ul class="users"></ul>
             <input type="text" class="chatbar msgBox" placeholder="Type text here">
-            <button class="leaveroom" id="leave">Leave Room</button>
         </div>
     `
 }
@@ -256,16 +260,16 @@ socket.on('newLeaveMessage', function (msg) {
 })
 
 //Leaving the lobby
-$('.leave').click(function () {
+$tabBar.on('click', '.tab-close', function (e) {
+    e.stopPropagation()
     const $this = $(this)
-    let roomId = $('.tab.active').attr('data-room-id')
+    const $tab = $this.closest('.tab')
+    const roomId = $tab.attr('data-room-id')
     socket.emit('leaveRoom', roomId)
-    $lobby.find('.chat').hide()
-    $roomsView.show()
-    $this.closest('.chat').remove()
-    $roomsView.show()
+    showRooms()
+    $tab.remove()
+    $lobby.find(`.chat[data-room-id="${roomId}"]`).remove()
 })
-
 //Display usernames on room creation
 socket.on('roomUsers', function (users) {
     console.log('[roomUsers]', users)
