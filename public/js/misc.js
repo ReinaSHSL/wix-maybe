@@ -1,9 +1,5 @@
 /* eslint-disable */ // not worth it
 
-$('#testButton').click(function () {
-    socket.emit('userTest')
-})
-
 // Shit for hashing username colors
 
 // warning stolen property
@@ -52,4 +48,3 @@ function hashColor (name) {
 
     return 'hsl(' + H + ',' + S + '%,' + L + '%);'
 }
-

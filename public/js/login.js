@@ -10,7 +10,7 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
         url: $this.attr('action'),
         type: $this.attr('method'),
         data: $this.serialize(),
-        success: function (response) {
+        success: function (response) { // eslint-disable-line no-unused-vars
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
                 socket.emit('loadDecks')
@@ -25,14 +25,17 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 // Just alert, nothing fancy here
                 alert('signed up! please log in now')
             } else if ($this.is('.logout-form')) {
-                $('.panel.login').show()
-                // Show login form again
-                $('.lobby, .rooms, .builder-button, .logout-button, .builder').hide()
                 // Tell the server we died
                 socket.emit('imDeadKthx')
-                $submitButton.attr('disabled', false)
+                // Reset lobby contents
+                showRooms()
+                $('.lobby .chat, .lobby .tab-chat').remove()
+                // Show login form again
+                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
+                $('.panel.login').show()
                 // Remove username
                 $('.current-user').text()
+                $submitButton.attr('disabled', false)
             }
             $submitButton.attr('disabled', false)
         },

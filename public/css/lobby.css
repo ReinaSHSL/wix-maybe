@@ -28,11 +28,36 @@
     border-bottom: 0;
     background: #FFF;
     margin-right: 4px;
+    cursor: default;
+}
+.lobby-tabs .tab.active, .lobby .tab:hover {
+    border-color: #BBB;
+    color: inherit;
 }
 .lobby-tabs .tab.active {
     box-shadow: 0 2px 0 -1px #FFF;
-    border-color: #BBB;
-    color: inherit;
+}
+.lobby-tabs .tab-close {
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    color: #333;
+    font-size: 0;
+    padding: 0;
+    height: 16px;
+    line-height: 16px;
+    width: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+.lobby-tabs .tab-close:hover {
+    background: #DDD;
+}
+.lobby-tabs .tab-close::after {
+    display: inline-block;
+    content: "\2716";
+    vertical-align: center;
+    font-size: small;
 }
 
 /* Room list wrapper */
@@ -70,10 +95,12 @@
     vertical-align: top;
 }
 .message .timestamp {
+    white-space: nowrap;
     opacity: .7;
     padding-right: 0;
 }
 .message .author {
+    white-space: nowrap;
     border-right: 1px solid #DDD;
     text-align: right;
 }
@@ -114,13 +141,6 @@
     line-height: 32px;
     padding: 0 10px;
 }
-.leaveroom {
-    display: none; /* TODO */
-    background: none;
-    border: 0;
-    border-top: 1px solid #DDD;
-    border-left: 1px solid #DDD;
-}
 
 .lobby .chat {
     display: grid;
@@ -158,9 +178,6 @@
 }
 .message .content {
     width: 100%;
-}
-.hidden {
-    font-size: 0;
 }
 .message.system .content { color: #666 }
 .message.join .author { color: green }

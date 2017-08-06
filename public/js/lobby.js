@@ -3,14 +3,16 @@
 const $lobby = $('.panel.lobby')
 const $roomsView = $lobby.find('.rooms')
 const $tabBar = $('.lobby-tabs')
+const $roomsTab = $tabBar.find('.tab-rooms')
 
 // Tab stuff
-$tabBar.on('click', '.tab-rooms', function () {
+function showRooms () {
     $tabBar.find('.tab').toggleClass('active', false)
-    $(this).toggleClass('active', true)
+    $roomsTab.toggleClass('active', true)
     $lobby.find('.chat').hide()
     $roomsView.show()
-})
+}
+$roomsTab.click(showRooms)
 function showChat (roomId, $tab = $tabBar.find(`[data-room-id="${roomId}"]`)) {
     $roomsView.hide()
     $lobby.find('.chat').hide()
@@ -52,9 +54,7 @@ function messageHTML (msg) {
     return `
         <tr class="message">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
-            <td class="author">
-                <span class="hidden">&lt;</span>${usernameHTML(msg.author.username)}<span class="hidden">&gt;</span>
-            </td>
+            <td class="author">${usernameHTML(msg.author.username)}</td>
             <td class="content">${msg.content}</td>
         </tr>
     `
@@ -71,7 +71,7 @@ function systemMessageHTML (msg) {
 function joinMessageHTML (msg) {
     return systemMessageHTML({
         classes: ['join', 'muted'],
-        author: '-->',
+        author: '--&gt;',
         content: `${usernameHTML(msg.username)} has joined.`,
         timestamp: msg.timestamp
     })
@@ -79,7 +79,7 @@ function joinMessageHTML (msg) {
 function leaveMessageHTML (msg) {
     return systemMessageHTML({
         classes: ['leave', 'muted'],
-        author: '<--',
+        author: '&lt;--',
         content: `${usernameHTML(msg.username)} has left.`,
         timestamp: msg.timestamp
     })
@@ -101,7 +101,10 @@ function userHTML (user) {
 function roomTabHTML (room) {
     console.log(room)
     return `
-        <a href="#" class="tab tab-chat" data-room-id="${room.id}">${room.name}</a>
+        <a href="#" class="tab tab-chat" data-room-id="${room.id}">
+            <span class="tab-title">${room.name}</span>
+            <button class="tab-close">Leave room</button>
+        </a>
     `
 }
 function roomDisplayHTML (room) {
@@ -111,7 +114,6 @@ function roomDisplayHTML (room) {
             <table class="messages"></table>
             <ul class="users"></ul>
             <input type="text" class="chatbar msgBox" placeholder="Type text here">
-            <button class="leaveroom" id="leave">Leave Room</button>
         </div>
     `
 }
@@ -256,14 +258,15 @@ socket.on('newLeaveMessage', function (msg) {
 })
 
 //Leaving the lobby
-$('.leave').click(function () {
+$tabBar.on('click', '.tab-close', function (e) {
+    e.stopPropagation()
     const $this = $(this)
-    let roomId = $('.tab.active').attr('data-room-id')
+    const $tab = $this.closest('.tab')
+    const roomId = $tab.attr('data-room-id')
     socket.emit('leaveRoom', roomId)
-    $lobby.find('.chat').hide()
-    $roomsView.show()
-    $this.closest('.chat').remove()
-    $roomsView.show()
+    showRooms()
+    $tab.remove()
+    $lobby.find(`.chat[data-room-id="${roomId}"]`).remove()
 })
 
 //Display usernames on room creation
