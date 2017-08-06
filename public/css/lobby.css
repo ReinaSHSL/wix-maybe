@@ -95,10 +95,12 @@
     vertical-align: top;
 }
 .message .timestamp {
+    white-space: nowrap;
     opacity: .7;
     padding-right: 0;
 }
 .message .author {
+    white-space: nowrap;
     border-right: 1px solid #DDD;
     text-align: right;
 }
