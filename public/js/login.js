@@ -10,7 +10,7 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
         url: $this.attr('action'),
         type: $this.attr('method'),
         data: $this.serialize(),
-        success: function (response) {
+        success: function (response) { // eslint-disable-line no-unused-vars
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
                 socket.emit('loadDecks')

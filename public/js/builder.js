@@ -51,7 +51,7 @@ function cardElementFromData (card) {
 
 //Search Function
 var $results = $('#results')
-function search () { // eslint-disable-line no-unused-vars // called via onclick
+function search () { // eslint-disable-line no-unused-vars
     $results.empty()
 
     // Get the search parameters from the interface
