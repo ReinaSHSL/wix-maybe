@@ -450,6 +450,9 @@ io.on('connection', function (socket) {
         console.log('[sendLobbyMessage]', data.msg, data.roomId)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if (!sessionObject) {
+            return
+        }
         let currentUser = JSON.parse(sessionObject).user
         const room = getRoom(data.roomId)
         const _msg = {
