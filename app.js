@@ -142,6 +142,12 @@ function getRoom (id) {
     console.log('[getRoom]', id, rooms.map(r => r.id))
     return rooms.find(r => r.id === id)
 }
+function getRoomIndex (id) {
+    return rooms.findIndex(r => r.id === id)
+}
+function deleteRoom (id) {
+    return rooms.splice(getRoomIndex(id), 1)
+}
 
 //Register
 app.post('/signup', function (req, res) {
@@ -389,7 +395,7 @@ io.on('connection', function (socket) {
 
         // If the room is empty, remove it
         if (!room.members.length) {
-            rooms.splice(rooms.findIndex(r => r.id === data), 1)
+            deleteRoom(roomId)
             return io.sockets.emit('activeRooms', rooms)
         }
 
