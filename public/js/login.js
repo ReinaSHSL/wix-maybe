@@ -25,14 +25,17 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 // Just alert, nothing fancy here
                 alert('signed up! please log in now')
             } else if ($this.is('.logout-form')) {
-                $('.panel.login').show()
-                // Show login form again
-                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
                 // Tell the server we died
                 socket.emit('imDeadKthx')
-                $submitButton.attr('disabled', false)
+                // Reset lobby contents
+                showRooms()
+                $('.lobby .chat, .lobby .tab-chat').remove()
+                // Show login form again
+                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
+                $('.panel.login').show()
                 // Remove username
                 $('.current-user').text()
+                $submitButton.attr('disabled', false)
             }
             $submitButton.attr('disabled', false)
         },
