@@ -279,7 +279,6 @@ app.post('/logout', function (req, res) {
 io.on('connection', function (socket) {
     console.log('[connection]')
     socket.username = `user${(Math.random()+'').substr(2,5)}`
-    socket.room = []
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
 
@@ -299,19 +298,24 @@ io.on('connection', function (socket) {
     // Creates rooms
     socket.on('createRoom', function (data) {
         console.log('[createRoom]', data)
-        var roomId = ''      + data.id
-        socket.room.push(roomId)
-        const room = new Room(data.name, data.password, roomId)
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         if (!sessionObject) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
+
+        const roomId = data.id
+        const roomName = data.name
+        const roomPass = data.password
+        const room = new Room(roomName, roomPass, roomId)
+
         room.addMember({id: currentUser.id, username: currentUser.username})
         socket.join(roomId)
+
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
+
         const msg = {
             type: 'join',
             username: currentUser.username,
@@ -326,24 +330,29 @@ io.on('connection', function (socket) {
     socket.on('joinRoom', function (data) {
         console.log('[joinRoom]', data)
 
+        let sessionID = socket.handshake.sessionID
+        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
+        if (!sessionObject) {
+            return socket.emit('joinRoomFail', "You don't appear to have a session")
+        }
+        let currentUser = JSON.parse(sessionObject).user
+
         const id = data.id
         const password = data.password
+
         const room = getRoom(id)
         if (!room) {
             return socket.emit('joinRoomFail', 'Room does not exist')
         }
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        let currentUser = JSON.parse(sessionObject).user
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
         if (room.password && password !== room.password) {
             return socket.emit('joinRoomFail', 'Missing or incorrect password')
         }
-        socket.room.push(id)
-        console.log('socket room ' + socket.room)
+
         socket.join(id)
+        console.log('socket.rooms:', socket.rooms)
         room.addMember({
             id: currentUser.id,
             username: currentUser.username
@@ -357,18 +366,18 @@ io.on('connection', function (socket) {
             timestamp: Date.now()
         }
         room.messages.push(msg)
-        io.sockets.in(socket.room).emit('newMessage', msg)
+        io.sockets.in(id).emit('newMessage', msg)
     })
 
     //Leaving Lobby
-    socket.on('leaveRoom', function (data) {
+    socket.on('leaveRoom', function (roomId) {
         let sessionID = socket.handshake.sessionID
         let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
         if (!sessionObject) {
             return
         }
         let currentUser = JSON.parse(sessionObject).user
-        const room = getRoom(data)
+        const room = getRoom(roomId)
         if (!room) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
@@ -383,7 +392,8 @@ io.on('connection', function (socket) {
             rooms.splice(rooms.findIndex(r => r.id === data), 1)
             return io.sockets.emit('activeRooms', rooms)
         }
-        io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
+
+        io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
         const msg = {
             type: 'leave',
             username: currentUser.username,
@@ -391,7 +401,7 @@ io.on('connection', function (socket) {
             timestamp: Date.now()
         }
         room.messages.push(msg)
-        io.sockets.in(socket.room).emit('newMessage', msg)
+        io.sockets.in(roomId).emit('newMessage', msg)
         if (ownerChanged) {
             const msg2 = {
                 type: 'ownerChange',
@@ -400,10 +410,9 @@ io.on('connection', function (socket) {
                 timestamp: Date.now()
             }
             room.messages.push(msg)
-            io.sockets.in(socket.room).emit('newMessage', msg2)
+            io.sockets.in(roomId).emit('newMessage', msg2)
         }
-        socket.leave(socket.room)
-        socket.room = ''
+        socket.leave(roomId)
     })
 
     //Die on refresh
@@ -423,9 +432,9 @@ io.on('connection', function (socket) {
             if (err) console.log(err)
             return console.log('Log out')
         })
-        console.log('socket.room ' + socket.room)
+        console.log('socket.rooms:', socket.rooms)
         console.log('otherRooms ' + rooms.map(r => r.id))
-        for (let i of socket.room) {
+        for (let i in socket.rooms) {
             let room = getRoom(i)
             console.log('room')
             console.log(room)
@@ -439,6 +448,7 @@ io.on('connection', function (socket) {
                 rooms.splice(rooms.findIndex(r => r.id === i, 1))
             }
             io.sockets.emit('activeRooms', rooms)
+            socket.leave(i)
         }
     })
 
