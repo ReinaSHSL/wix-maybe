@@ -1,22 +1,22 @@
 /* Panel styles */
-.lobby {
+.panel.lobby {
     display: grid;
     grid:
-        "tabs" 33px
-        "main" calc(100% - 33px)
+        /*"tabs" 33px*/
+        "main" calc(100%)
         / 100%;
 }
 
 /* Tab bar */
-.lobby .tabs {
-    grid-area: tabs;
+.lobby-tabs {
+    /*grid-area: tabs;*/
     display: flex;
     align-items: stretch;
-    border-bottom: 1px solid #BBB;
+    /*border-bottom: 1px solid #BBB;*/
     padding: 0 5px;
     background: #F7F7F7;
 }
-.lobby .tab {
+.lobby-tabs .tab {
     flex: 0 0 auto;
     margin-top: 4px;
     line-height: 27px;
@@ -30,14 +30,14 @@
     margin-right: 4px;
     cursor: default;
 }
-.lobby .tab.active, .lobby .tab:hover {
+.lobby-tabs .tab.active, .lobby .tab:hover {
     border-color: #BBB;
     color: inherit;
 }
-.lobby .tab.active {
+.lobby-tabs .tab.active {
     box-shadow: 0 2px 0 -1px #FFF;
 }
-.lobby .tab-close {
+.lobby-tabs .tab-close {
     background: none;
     border: 0;
     border-radius: 50%;
@@ -50,10 +50,10 @@
     text-align: center;
     cursor: pointer;
 }
-.lobby .tab-close:hover {
+.lobby-tabs .tab-close:hover {
     background: #DDD;
 }
-.lobby .tab-close::after {
+.lobby-tabs .tab-close::after {
     display: inline-block;
     content: "\2716";
     vertical-align: center;

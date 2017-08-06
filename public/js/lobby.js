@@ -1,8 +1,8 @@
 /* globals $, socket, hashColor */
 
-const $lobby = $('.lobby')
+const $lobby = $('.panel.lobby')
 const $roomsView = $lobby.find('.rooms')
-const $tabBar = $lobby.find('.tabs')
+const $tabBar = $('.lobby-tabs')
 const $roomsTab = $tabBar.find('.tab-rooms')
 
 // Tab stuff

@@ -19,9 +19,13 @@ body {
     display: flex;
     justify-content: space-between;
 }
+.header .title-area {
+    display: flex;
+    align-items: center;
+}
 .header .title {
     display: inline;
-    margin: 0;
+    margin: 0 5px 0 0;
     font-size: inherit;
 }
 .header .title a {
