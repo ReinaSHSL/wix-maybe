@@ -7,10 +7,10 @@ const $roomsTab = $tabBar.find('.tab-rooms')
 
 // Tab stuff
 function showRooms () {
-    console.log($tabBar.find('.tab').toggleClass('active', false))
-    console.log($roomsTab.toggleClass('active', true))
-    console.log($lobby.find('.chat').hide())
-    console.log($roomsView.show())
+    $tabBar.find('.tab').toggleClass('active', false)
+    $roomsTab.toggleClass('active', true)
+    $lobby.find('.chat').hide()
+    $roomsView.show()
 }
 $roomsTab.click(showRooms)
 function showChat (roomId, $tab = $tabBar.find(`[data-room-id="${roomId}"]`)) {
@@ -270,6 +270,7 @@ $tabBar.on('click', '.tab-close', function (e) {
     $tab.remove()
     $lobby.find(`.chat[data-room-id="${roomId}"]`).remove()
 })
+
 //Display usernames on room creation
 socket.on('roomUsers', function (users) {
     console.log('[roomUsers]', users)
