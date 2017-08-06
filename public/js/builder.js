@@ -14,7 +14,7 @@ $builderButton.click(function () {
         $builderPanel.hide()
         $('#mainDeckDisplay').empty()
         $('#lrigDeckDisplay').empty()
-        $('.panel:not(.builder, .login)').show()
+        $('.lobby, .rooms').show()
         $builderButton.text('Open Deck Builder')
 
     } else {
@@ -24,7 +24,7 @@ $builderButton.click(function () {
         }
         let deckId = $('#deckList :selected').attr('value')
         socket.emit('updateDeck', deckId)
-        $('.panel').hide()
+        $('.lobby, .rooms').hide()
         $builderPanel.show()
         $builderButton.text('Close Deck Builder')
     }

@@ -19,15 +19,15 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 // Load decks into the builder for this user
                 socket.emit('loadDecks')
                 // Hide this panel and show the main ones
-                $('.panel.login').hide()
-                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
+                $('.login').hide()
+                $('.lobby, .rooms, .builder-button, .logout-button').show()
             } else if ($this.is('.signup-form')) {
                 // Just alert, nothing fancy here
                 alert('signed up! please log in now')
             } else if ($this.is('.logout-form')) {
                 $('.panel.login').show()
                 // Show login form again
-                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
+                $('.lobby, .rooms, .builder-button, .logout-button, .builder').hide()
                 // Tell the server we died
                 socket.emit('imDeadKthx')
                 $submitButton.attr('disabled', false)
@@ -55,6 +55,6 @@ function checkLogin () {
 }
 
 socket.on('loggedIn', function () {
-    $('.panel.login').hide()
-    $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
+    $('.login').hide()
+    $('.lobby, .rooms, .builder-button, .logout-button').show()
 })
