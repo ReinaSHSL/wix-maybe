@@ -71,7 +71,7 @@ function systemMessageHTML (msg) {
 function joinMessageHTML (msg) {
     return systemMessageHTML({
         classes: ['join', 'muted'],
-        author: '-->',
+        author: '--&gt;',
         content: `${usernameHTML(msg.username)} has joined.`,
         timestamp: msg.timestamp
     })
@@ -79,7 +79,7 @@ function joinMessageHTML (msg) {
 function leaveMessageHTML (msg) {
     return systemMessageHTML({
         classes: ['leave', 'muted'],
-        author: '<--',
+        author: '&lt;--',
         content: `${usernameHTML(msg.username)} has left.`,
         timestamp: msg.timestamp
     })
