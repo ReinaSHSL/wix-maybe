@@ -378,7 +378,7 @@ io.on('connection', function (socket) {
 
         // If the room is empty, remove it
         if (!room.members.length) {
-            rooms.splice(rooms.findIndex(r => r.id === socket.room), 1)
+            rooms.splice(rooms.findIndex(r => r.id === data), 1)
             return io.sockets.emit('activeRooms', rooms)
         }
         io.sockets.in(socket.room).emit('roomUsers', room.membersSorted)
