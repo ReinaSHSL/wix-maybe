@@ -11,7 +11,7 @@
 		"info deck    search" calc(100% - 33px)
 		/ 251px auto 251px;
 }
-.card-info-sidebar {
+.info-sidebar {
 	grid-area: info;
 	padding: 10px;
 	border-right: 1px solid #DDD;
