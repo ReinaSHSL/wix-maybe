@@ -54,9 +54,7 @@ function messageHTML (msg) {
     return `
         <tr class="message">
             <td class="timestamp">${timeString(msg.timestamp)}</td>
-            <td class="author">
-                <span class="hidden">&lt;</span>${usernameHTML(msg.author.username)}<span class="hidden">&gt;</span>
-            </td>
+            <td class="author">${usernameHTML(msg.author.username)}</td>
             <td class="content">${msg.content}</td>
         </tr>
     `
