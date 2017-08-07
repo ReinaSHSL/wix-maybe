@@ -374,8 +374,8 @@ io.on('connection', function (socket) {
         io.sockets.in(id).emit('newMessage', msg)
     })
 
-    //Leaving Lobby
-    socket.on('leaveRoom', function (roomId) {
+    // Record the user leaving a room
+    function leaveRoom (roomId) {
         if (!socket.handshake.session) return
         const room = getRoom(roomId)
         if (!room) {
@@ -413,7 +413,10 @@ io.on('connection', function (socket) {
             io.sockets.in(roomId).emit('newMessage', msg2)
         }
         socket.leave(roomId)
-    })
+    }
+
+    // Manually initiated room leave - i.e. closing room tab
+    socket.on('leaveRoom', leaveRoom)
 
     // Clean up socket's data
     socket.on('imDeadKthx', function () {
@@ -426,26 +429,15 @@ io.on('connection', function (socket) {
         }
         if (!currentUser) return console.log('check')
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
-            if (err) console.log(err)
-            return console.log('Log out')
+            if (err) return console.log(err)
+            console.log('Log out')
         })
+
+        // Leave all rooms
         console.log('socket.rooms:', socket.rooms)
         console.log('otherRooms ' + rooms.map(r => r.id))
         for (let i in socket.rooms) {
-            let room = getRoom(i)
-            console.log('room')
-            console.log(room)
-            if (!room) {
-                console.log('!room')
-                console.log(room)
-                continue
-            }
-            room.removeMember(currentUser.id)
-            if (!room.members.length) {
-                rooms.splice(rooms.findIndex(r => r.id === i, 1))
-            }
-            io.sockets.emit('activeRooms', rooms)
-            socket.leave(i)
+            leaveRoom(i)
         }
     })
 
