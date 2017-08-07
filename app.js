@@ -42,8 +42,11 @@ function escapeHTML (string) {
 // Initialize the database connection and store it for use later
 var conn = null
 r.connect(dbConfig, function (err, connection) {
+    if (err) {
+        console.log(err)
+        process.exit(1)
+    }
     console.log('[db] Database listening on', dbConfig.port)
-    if (err) return console.log(err)
     conn = connection
 })
 
