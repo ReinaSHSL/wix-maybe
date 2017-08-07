@@ -287,7 +287,6 @@ app.post('/logout', function (req, res) {
 // Accept incoming socket connections
 io.on('connection', function (socket) {
     console.log('[connection]')
-    socket.username = `user${(Math.random()+'').substr(2,5)}`
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
 
