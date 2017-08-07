@@ -3,10 +3,13 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-const session = require('express-session')({
-    secret: 'this is hell',
-    resave: true,
-    saveUninitialized: true
+const expressSession = require('express-session')
+const sessionStore = new expressSession.MemoryStore()
+const session = new expressSession({
+    store: sessionStore,
+    secret: 'this is hell'
+    // resave: true,
+    // saveUninitialized: true
 })
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
@@ -290,15 +293,18 @@ io.on('connection', function (socket) {
     // Send the list of active rooms to the client
     socket.emit('activeRooms', rooms)
 
+    socket.use(function (packet, next) {
+        socket.handshake.session.reload(function (err) {
+            if (err && err.message !== 'failed to load session') {
+                return next(new Error(err))
+            }
+            next()
+        })
+    })
+
     //Logged in users stay logged in
     socket.on('checkLogin', function () {
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
-        if (currentUser) {
+        if (socket.handshake.session && socket.handshake.session.user) {
             socket.emit('loggedIn')
         }
     })
@@ -306,19 +312,15 @@ io.on('connection', function (socket) {
     // Creates rooms
     socket.on('createRoom', function (data) {
         console.log('[createRoom]', data)
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
+
+        if (!socket.handshake.session) return
 
         const roomId = data.id
         const roomName = data.name
         const roomPass = data.password
         const room = new Room(roomName, roomPass, roomId)
 
-        room.addMember({id: currentUser.id, username: currentUser.username})
+        room.addMember({id: socket.handshake.session.id, username: socket.handshake.session.user.username})
         socket.join(roomId)
 
         io.sockets.emit('activeRooms', rooms)
@@ -326,7 +328,7 @@ io.on('connection', function (socket) {
 
         const msg = {
             type: 'join',
-            username: currentUser.username,
+            username: socket.handshake.session.user.username,
             roomId: roomId,
             timestamp: Date.now()
         }
@@ -338,12 +340,7 @@ io.on('connection', function (socket) {
     socket.on('joinRoom', function (data) {
         console.log('[joinRoom]', data)
 
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return socket.emit('joinRoomFail', "You don't appear to have a session")
-        }
-        let currentUser = JSON.parse(sessionObject).user
+        if (!socket.handshake.session) return
 
         const id = data.id
         const password = data.password
@@ -362,14 +359,14 @@ io.on('connection', function (socket) {
         socket.join(id)
         console.log('socket.rooms:', socket.rooms)
         room.addMember({
-            id: currentUser.id,
-            username: currentUser.username
+            id: socket.handshake.session.user.id,
+            username: socket.handshake.session.user.username
         })
         socket.emit('joinRoomSuccess', room)
         io.sockets.in(id).emit('roomUsers', room.membersSorted)
         const msg = {
             type: 'join',
-            username: currentUser.username,
+            username: socket.handshake.session.user.username,
             roomId: id,
             timestamp: Date.now()
         }
@@ -379,21 +376,16 @@ io.on('connection', function (socket) {
 
     //Leaving Lobby
     socket.on('leaveRoom', function (roomId) {
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
+        if (!socket.handshake.session) return
         const room = getRoom(roomId)
         if (!room) {
             console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
             return
         }
-        const ownerChanged = currentUser.id === room.ownerId
+        const ownerChanged = socket.handshake.session.user.id === room.ownerId
 
         // Remove the user from the room
-        room.removeMember(currentUser.id)
+        room.removeMember(socket.handshake.session.user.id)
 
         // If the room is empty, remove it
         if (!room.members.length) {
@@ -404,7 +396,7 @@ io.on('connection', function (socket) {
         io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
         const msg = {
             type: 'leave',
-            username: currentUser.username,
+            username: socket.handshake.session.user.username,
             roomId: roomId,
             timestamp: Date.now()
         }
@@ -423,17 +415,14 @@ io.on('connection', function (socket) {
         socket.leave(roomId)
     })
 
-    //Die on refresh
+    // Clean up socket's data
     socket.on('imDeadKthx', function () {
         let currentUser
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
+        if (!socket.handshake.session) {
             if (!logOutVar) return
             currentUser = logOutVar
-        }
-        if (sessionObject) {
-            currentUser = JSON.parse(sessionObject).user
+        } else {
+            currentUser = socket.handshake.session.user
         }
         if (!currentUser) return console.log('check')
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
@@ -470,18 +459,15 @@ io.on('connection', function (socket) {
     //Lobby chatting
     socket.on('sendLobbyMessage', function (data) {
         console.log('[sendLobbyMessage]', data.msg, data.roomId)
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
+
+        if (!socket.handshake.session) return
+
         const room = getRoom(data.roomId)
         const _msg = {
             type: 'normal',
             author: {
-                id: currentUser.id,
-                username: currentUser.username
+                id: socket.handshake.session.user.id,
+                username: socket.handshake.session.user.username
             },
             content: escapeHTML(data.msg),
             roomId: data.roomId,
@@ -549,12 +535,8 @@ io.on('connection', function (socket) {
 
     //Save
     socket.on('saveDeck', function (data) {
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
+        if (!socket.handshake.session) return
+
         r.table('decks').filter(r.row('id').eq(data.id || '')).run(conn, function (err, cursor) {
             if (err) return console.log (err)
             cursor.toArray(function (err, result) {
@@ -571,7 +553,7 @@ io.on('connection', function (socket) {
                 if (!result[0]) {
                     r.table('decks').insert({
                         deck: data.deck,
-                        owner: currentUser.id,
+                        owner: socket.handshake.session.user.id,
                         name: data.name
                     }).run(conn, function (err, insert) {
                         if (err) return console.log(err)
@@ -587,13 +569,8 @@ io.on('connection', function (socket) {
 
     //Load decks on login
     socket.on('loadDecks', function () {
-        let sessionID = socket.handshake.sessionID
-        let sessionObject = socket.handshake.sessionStore.sessions[sessionID]
-        if (!sessionObject) {
-            return
-        }
-        let currentUser = JSON.parse(sessionObject).user
-        r.table('decks').filter(r.row('owner').eq(currentUser.id)).run(conn, function (err, cursor) {
+        if (!socket.handshake.session) return
+        r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
             if (err) return console.log (err)
             cursor.toArray(function (err, result) {
                 if (err) return console.log(err)
