@@ -28,7 +28,7 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 // Tell the server we died
                 socket.emit('imDeadKthx')
                 // Reset lobby contents
-                showRooms()
+                showRooms() // eslint-disable-line no-undef
                 $('.lobby .chat, .lobby .tab-chat').remove()
                 // Show login form again
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
