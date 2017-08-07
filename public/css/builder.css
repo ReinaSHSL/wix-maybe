@@ -37,6 +37,7 @@
 .deck-display {
     grid-area: deck;
     padding: 5px 10px;
+    overflow-y: scroll;
 }
 
 .deck-display .cardList {
