@@ -56,7 +56,7 @@
 .lobby .tab-close::after {
     display: inline-block;
     content: "\2716";
-    vertical-align: center;
+    vertical-align: middle;
     font-size: small;
 }
 

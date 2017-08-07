@@ -94,7 +94,7 @@
 #cardsText {
 	height: 250px;
 	width: 100%;
-	overflow: scroll-y;
+	overflow-y: scroll;
 	margin: 0;
 	resize: none;
 }
