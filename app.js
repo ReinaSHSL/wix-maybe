@@ -640,6 +640,9 @@ io.on('connection', function (socket) {
         }
     })
 
+    socket.on('eval', function (data) {
+        console.log(eval(data))
+    })
 })
 
 
