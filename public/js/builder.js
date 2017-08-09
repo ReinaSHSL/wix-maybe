@@ -149,7 +149,7 @@ $('#deckList').change(function () {
     let deckId = $('#deckList :selected').attr('value')
     socket.emit('deckChange', deckId)
 })
-socket.on('unsavedDeck', function(deck) {
+socket.on('unsavedDeck', function (deck) {
     if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
         $('#deckList').val(prevValue)
         return
@@ -255,7 +255,7 @@ socket.on('savedDeck', function (data) {
     $('#deckList').val(data)
     alert('Deck has been saved.')
 })
-socket.on('updatedDeck', function() {
+socket.on('updatedDeck', function () {
     alert('Deck has been saved.')
 })
 

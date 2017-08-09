@@ -439,6 +439,7 @@ io.on('connection', function (socket) {
         for (let i in socket.rooms) {
             leaveRoom(i)
         }
+        socket.handshake.session.destroy()
     })
 
     //Username shit
