@@ -537,7 +537,7 @@ io.on('connection', function (socket) {
                     r.table('decks').get(data.id).update({deck: data.deck, name: data.name}).run(conn, function (err, updated) {
                         if (err) return console.log(err)
                         if (updated) {
-                            console.log('existing deck updated')
+                            socket.emit('updatedDeck')
                             return
                         }
                     })
@@ -630,6 +630,48 @@ io.on('connection', function (socket) {
         } catch (err) {
             return console.log(err)
         }
+    })
+
+    //Checks if an already saved deck has unsaved changes
+    socket.on('checkIfSaved', function (data) {
+        r.table('decks').get(data.dbDeck).run(conn, function (err, deck) {
+            if (err) return console.log(err)
+            if (deck) {
+                if (data.currentDeck.lrig.length !== deck.deck.lrig.length) {
+                    socket.emit('unsavedDeck')
+                    return
+                }
+                if (data.currentDeck.main.length !== deck.deck.main.length) {
+                    socket.emit('unsavedDeck')
+                    return
+                }
+                for (let card in deck.lrig) {
+                    if (deck.deck.lrig[card] !== data.currentDeck.lrig[card]) {
+                        socket.emit('unsavedDeck')
+                        return
+                    }
+                }
+                for (let card in deck.main) {
+                    if (deck.deck.main[card] !== data.currentDeck.main[card]) {
+                        socket.emit('unsavedDeck')
+                        return
+                    }
+                }
+                r.table('decks').filter(r.row('id').eq(data.newDeck)).run(conn, function (err, cursor) {
+                    if (err) return console.log(err)
+                    cursor.toArray(function (err, result) {
+                        if (err) return console.log(err)
+                        if (!result[0]) return
+                        if (result) {
+                            var deck = {}
+                            deck.lrig = result[0].deck.lrig.map(id => ALLCARDS.find(card => card.id === id))
+                            deck.main = result[0].deck.main.map(id => ALLCARDS.find(card => card.id === id))
+                            socket.emit('deckUpdate', deck)
+                        }
+                    })
+                })
+            }
+        })
     })
 
     socket.on('eval', function (data) {

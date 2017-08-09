@@ -117,8 +117,7 @@ $('#results').on('click', '.card', function () {
 
 //Displays cards from server
 socket.on('deckUpdate', function (deck) {
-    currentDecks.lrig = []
-    currentDecks.main = []
+    emptyEverything()
     for (let card of deck.lrig) {
         currentDecks.lrig.push(parseInt(card.id))
         $('#lrigDeckDisplay').append(cardElementFromData(card))
@@ -135,6 +134,11 @@ $('#deckList').on('click', function () {
     prevValue = $('#deckList :selected').attr('value')
 })
 $('#deckList').change(function () {
+    if (!prevValue.startsWith(0.)) {
+        let deckId = $('#deckList :selected').attr('value')
+        socket.emit('checkIfSaved', {dbDeck: prevValue, currentDeck: currentDecks, newDeck: deckId})
+        return
+    }
     if (!prevValue || prevValue.startsWith(0.)) {
         if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
             $('#deckList').val(prevValue)
@@ -145,19 +149,16 @@ $('#deckList').change(function () {
     let deckId = $('#deckList :selected').attr('value')
     socket.emit('deckChange', deckId)
 })
+socket.on('unsavedDeck', function(deck) {
+    if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
+        $('#deckList').val(prevValue)
+        return
+        emptyEverything()
+        let deckId = $('#deckList :selected').attr('value')
+        socket.emit('deckChange', deckId)
+    }
 
-socket.on('deckChange', function (deck) {
-    emptyEverything()
-    for (let card of deck.lrig) {
-        currentDecks.lrig.push(parseInt(card.id))
-        $('#lrigDeckDisplay').append(cardElementFromData(card))
-    }
-    for (let card of deck.main) {
-        currentDecks.main.push(parseInt(card.id))
-        $('#mainDeckDisplay').append(cardElementFromData(card))
-    }
 })
-
 
 // When clicking on a card in the deck area, remove it from the deck
 $('#mainDeckDisplay').on('click', '.card', function () {
@@ -227,7 +228,6 @@ $('#exim').on('click', function () {
 })
 
 socket.on('importComplete', function (data) {
-    console.log(data.deck)
     $('#deckList').append('<option value="' + data.tempId + '">' + data.name + '</option>')
     $('#deckList').val(data.tempId)
     emptyEverything()
@@ -253,6 +253,10 @@ socket.on('savedDeck', function (data) {
     $('#deckList :selected').after('<option value="' + data + '">' + deckName + '</option>')
     $('#deckList :selected').remove()
     $('#deckList').val(data)
+    alert('Deck has been saved.')
+})
+socket.on('updatedDeck', function() {
+    alert('Deck has been saved.')
 })
 
 socket.on('loadDeck', function (data) {
