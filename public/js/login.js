@@ -59,3 +59,9 @@ socket.on('loggedIn', function () {
     $('.panel.login').hide()
     $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
 })
+
+socket.on('logOut', function() {
+    $('#mainDeckDisplay').empty()
+    $('#lrigDeckDisplay').empty()
+    $builderButton.text('Open Deck Builder')
+})
