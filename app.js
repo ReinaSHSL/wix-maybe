@@ -18,7 +18,7 @@ const sharedsession = require('express-socket.io-session')
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
-const httpPort = 3000
+const httpPort = process.env.PORT || 3000
 app.use(session)
 io.use(sharedsession(session, {
     autoSave:true
