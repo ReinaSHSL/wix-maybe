@@ -163,8 +163,6 @@ app.post('/signup', function (req, res) {
     }
     const username = req.body.username
     const unhashedPassword = req.body.password
-    // Hash the password
-    // TODO: I don't know much about security but I know doing this here is bad
     let hashedPassword = 5381
     for (let i = 0; i < unhashedPassword.length; i++) {
         let char = unhashedPassword.charCodeAt(i)
