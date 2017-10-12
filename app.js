@@ -218,7 +218,7 @@ app.post('/signup', function (req, res) {
 
 //Login
 app.post('/login', function (req, res) {
-    if (req.session.user) {
+    if (req.session.user && req.session.user !== '') {
         return res.status(400).send('Already logged in')
     }
     if (!req.body.username || !req.body.password) {
@@ -273,11 +273,11 @@ app.post('/logout', function (req, res) {
         return
     }
     let userId = req.session.user.id
+    req.session.user = ''
     r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function (err, out) {
         if (err) return console.log(err)
         if (out) {
             res.status(200).send('Logged Out')
-            req.session.destroy()
         }
     })
 })
