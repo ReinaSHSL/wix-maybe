@@ -32,7 +32,7 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button, .panel.builder').hide()
                 $('.panel.login').show()
                 // Remove username
-                $('.current-user').text()
+                $('.current-user').text('')
                 $submitButton.attr('disabled', false)
             }
             $submitButton.attr('disabled', false)

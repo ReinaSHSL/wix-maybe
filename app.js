@@ -268,7 +268,6 @@ app.post('/login', function (req, res) {
 })
 
 //Log Out
-var logOutVar
 app.post('/logout', function (req, res) {
     if (!req.session.user) {
         return
@@ -277,8 +276,8 @@ app.post('/logout', function (req, res) {
     r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function (err, out) {
         if (err) return console.log(err)
         if (out) {
-            logOutVar = req.session.user
             res.status(200).send('Logged Out')
+            req.session.destroy()
         }
     })
 })
@@ -420,6 +419,7 @@ io.on('connection', function (socket) {
             return
         }
         let currentUser = socket.handshake.session.user
+        socket.disconnect()
         if (!currentUser) return console.log('check')
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) return console.log(err)
@@ -432,7 +432,6 @@ io.on('connection', function (socket) {
         for (let i in socket.rooms) {
             leaveRoom(i)
         }
-        socket.handshake.session.destroy()
     })
 
     //Username shit
