@@ -19,7 +19,6 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 // Hide this panel and show the main ones
                 $('.panel.login').hide()
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
-                socket.emit('userRefresh')
             } else if ($this.is('.signup-form')) {
                 // Just alert, nothing fancy here
                 alert('signed up! please log in now')

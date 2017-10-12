@@ -218,7 +218,7 @@ app.post('/signup', function (req, res) {
 
 //Login
 app.post('/login', function (req, res) {
-    if (req.session.user && req.session.user !== '') {
+    if (req.session.user === 'Limbo') {
         return res.status(400).send('Already logged in')
     }
     if (!req.body.username || !req.body.password) {
@@ -272,12 +272,13 @@ app.post('/logout', function (req, res) {
     if (!req.session.user) {
         return
     }
+    console.log(req.session.user)
     let userId = req.session.user.id
-    req.session.user = ''
     r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function (err, out) {
         if (err) return console.log(err)
         if (out) {
             res.status(200).send('Logged Out')
+            req.session.user = 'Limbo'
         }
     })
 })
@@ -419,7 +420,6 @@ io.on('connection', function (socket) {
             return
         }
         let currentUser = socket.handshake.session.user
-        socket.disconnect()
         if (!currentUser) return console.log('check')
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) return console.log(err)
@@ -432,6 +432,7 @@ io.on('connection', function (socket) {
         for (let i in socket.rooms) {
             leaveRoom(i)
         }
+        socket.disconnect()
     })
 
     //Username shit
@@ -554,6 +555,8 @@ io.on('connection', function (socket) {
 
     //Load decks on login
     socket.on('loadDecks', function () {
+        console.log('loading decks')
+        console.log(socket.handshake.session.user)
         if (!socket.handshake.session) return
         r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
             if (err) return console.log (err)
