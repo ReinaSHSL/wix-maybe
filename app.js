@@ -51,6 +51,19 @@ r.connect(dbConfig, function (err, connection) {
     }
     console.log('[db] Database listening on', dbConfig.port)
     conn = connection
+
+    // Now that we're here, let's make sure our database structure is good
+    r.dbList().run(conn, (err, list) => {
+        if (err) return console.log(err) // well shit
+        if (list.indexOf('batoru') < 0) {
+            // Create the batoru database and selectors tables
+            r.dbCreate('batoru').run(conn, (err, status) => {
+                r.createTable('selectors').run(conn, (err, status) => {
+                    // TODO
+                })
+            })
+        }
+    })
 })
 
 // Initialize the HTTP web server
