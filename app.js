@@ -1,9 +1,26 @@
 const path = require('path')
+
+// Express
 const express = require('express')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
+
+// Sockets
+const socketio = require('socket.io')
+const sharedsession = require('express-socket.io-session')
+
+// Database
+const r = require('rethinkdb')
+const dbConfig = require('./dbConfig.json')
+
+
+// Create an express app
+const app = express()
+const server = require('http').createServer(app)
+
+// Add session storage
 const sessionStore = new expressSession.MemoryStore()
 const session = new expressSession({
     store: sessionStore,
@@ -11,28 +28,34 @@ const session = new expressSession({
     // resave: true,
     // saveUninitialized: true
 })
-const r = require('rethinkdb')
-const dbConfig = require('./dbConfig')
-const sharedsession = require('express-socket.io-session')
-
-const app = express()
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
-const httpPort = process.env.PORT || 3000
 app.use(session)
+// Static directory for web siles
+app.use(express.static(path.join(__dirname, 'public')))
+// Favicon
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+// Cookies and parsers
+app.use(bodyParser())
+app.use(cookieParser())
+
+// Initialize the HTTP web server
+const port = process.env.PORT || 3000
+server.listen(port, function () {
+    console.log('[http] Server listening on', port)
+})
+
+// Set up websocket shit
+const io = socketio(server)
 io.use(sharedsession(session, {
     autoSave:true
 }), cookieParser)
 
-// Initialize the database connection and store it for use later
-var conn = null
-r.connect(dbConfig, function (err, connection) {
+// Initialize the database connection and start our stuff after
+r.connect(dbConfig, function (err, conn) {
     if (err) {
         console.log(err)
         process.exit(1)
     }
     console.log('[db] Database listening on', dbConfig.port)
-    conn = connection
 
     // Register express paths for logging in/out
     require('./logins.js')(app, r, conn)
@@ -42,20 +65,6 @@ r.connect(dbConfig, function (err, connection) {
         require('./sockets.js')(io, socket, r, conn)
     })
 })
-
-// Initialize the HTTP web server
-server.listen(httpPort, function () {
-    console.log('[http] Server listening on', httpPort)
-})
-
-// This folder contains the client stuff
-app.use(express.static(path.join(__dirname, 'public')))
-// Favicon
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-// Cookies and shit
-app.use(bodyParser())
-app.use(cookieParser())
-app.use(session)
 
 // TODO: User class, have the rooms only store the ID, this will let us do
 // actions in a room when a person changes usernames and stuff
