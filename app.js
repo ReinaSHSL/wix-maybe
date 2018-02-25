@@ -57,6 +57,9 @@ r.connect(dbConfig, function (err, conn) {
     }
     console.log('[db] Database listening on', dbConfig.port)
 
+    // Log everyone out on server start because lul
+    r.db('batorume').table('selectors').update({loggedIn: false}).run(conn)
+
     // Register express paths for logging in/out
     require('./logins.js')(app, r, conn)
 
