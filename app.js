@@ -62,7 +62,8 @@ r.connect(dbConfig, function (err, conn) {
 
     // Accept incoming socket connections
     io.on('connection', function (socket) {
-        require('./sockets.js')(io, socket, r, conn)
+        require('./sockets/builder.js')(io, socket, r, conn)
+        require('./sockets/rooms.js')(io, socket, r, conn)
     })
 })
 
