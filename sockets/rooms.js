@@ -143,7 +143,7 @@ module.exports = function (io, socket, r, conn) {
             return
         }
         let currentUser = socket.handshake.session.user
-        if (!currentUser) return 
+        if (!currentUser) return
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) return console.log(err)
             console.log('Log out')
@@ -157,9 +157,9 @@ module.exports = function (io, socket, r, conn) {
         }
     })
 
-    //Lobby chatting
-    socket.on('sendLobbyMessage', function (data) {
-        console.log('[sendLobbyMessage]', data.msg, data.roomId)
+    // Room chatting
+    socket.on('sendRoomMessage', function (data) {
+        console.log('[sendRoomMessage]', data.msg, data.roomId)
 
         if (!socket.handshake.session) return
 

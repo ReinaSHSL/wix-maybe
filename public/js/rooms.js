@@ -209,7 +209,7 @@ $('.rooms').on('keydown', '.msgBox', function (e) {
         let roomId = $('.tab.active').attr('data-room-id')
         console.log(roomId)
         var msg = $(this).val()
-        socket.emit('sendLobbyMessage', {msg: msg, roomId: roomId})
+        socket.emit('sendRoomMessage', {msg: msg, roomId: roomId})
         $(this).val('')
     }
 })
