@@ -27,13 +27,6 @@ module.exports = function (io, socket, r, conn) {
         })
     })
 
-    //Logged in users stay logged in
-    socket.on('checkLogin', function () {
-        if (socket.handshake.session && socket.handshake.session.user) {
-            socket.emit('loggedIn')
-        }
-    })
-
     // Creates rooms
     socket.on('createRoom', function (data) {
         console.log('[createRoom]', data)
@@ -150,7 +143,7 @@ module.exports = function (io, socket, r, conn) {
             return
         }
         let currentUser = socket.handshake.session.user
-        if (!currentUser) return console.log('check')
+        if (!currentUser) return 
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) return console.log(err)
             console.log('Log out')
@@ -162,14 +155,6 @@ module.exports = function (io, socket, r, conn) {
         for (let i in socket.rooms) {
             leaveRoom(i)
         }
-        socket.disconnect()
-    })
-
-    //Username shit
-    // TODO: This is obsolete now right
-    socket.on('setUsername', function (username) {
-        console.log('[setUsername]', username)
-    // currentUser.username = escapeHTML(username)
     })
 
     //Lobby chatting

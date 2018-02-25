@@ -63,9 +63,6 @@ module.exports = function (app, r, conn) {
 
     //Login
     app.post('/login', function (req, res) {
-        if (req.session.user === 'Limbo') {
-            return res.status(400).send('Already logged in')
-        }
         if (!req.body.username || !req.body.password) {
             return res.status(400).send('Insert username and password')
         }
@@ -123,9 +120,7 @@ module.exports = function (app, r, conn) {
             if (err) return console.log(err)
             if (out) {
                 res.status(200).send('Logged Out')
-                req.session.user = 'Limbo'
             }
         })
     })
-
 }
