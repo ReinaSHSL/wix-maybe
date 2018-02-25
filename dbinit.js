@@ -1,8 +1,9 @@
 const r = require('rethinkdb')
 const dbConfig = require('./dbConfig')
 
-const dbName = 'batoru'
+const dbName = 'batorume'
 const dbTables = [
+    'decks',
     'selectors'
 ]
 
