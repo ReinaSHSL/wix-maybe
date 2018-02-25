@@ -1,22 +1,22 @@
 /* globals $, socket, hashColor */
 
-const $lobby = $('.lobby')
-const $roomsView = $lobby.find('.rooms')
-const $tabBar = $lobby.find('.tabs')
-const $roomsTab = $tabBar.find('.tab-rooms')
+const $roomsPanel = $('.rooms')
+const $roomsList = $roomsPanel.find('.roomsList')
+const $tabBar = $roomsPanel.find('.tabs')
+const $roomsListTab = $tabBar.find('.tab-rooms')
 
 // Tab stuff
 function showRooms () {
     $tabBar.find('.tab').toggleClass('active', false)
-    $roomsTab.toggleClass('active', true)
-    $lobby.find('.chat').hide()
-    $roomsView.show()
+    $roomsListTab.toggleClass('active', true)
+    $roomsPanel.find('.chat').hide()
+    $roomsList.show()
 }
-$roomsTab.click(showRooms)
+$roomsListTab.click(showRooms)
 function showChat (roomId, $tab = $tabBar.find(`[data-room-id="${roomId}"]`)) {
-    $roomsView.hide()
-    $lobby.find('.chat').hide()
-    $lobby.find(`.chat[data-room-id="${roomId}"]`).show()
+    $roomsList.hide()
+    $roomsPanel.find('.chat').hide()
+    $roomsPanel.find(`.chat[data-room-id="${roomId}"]`).show()
     $tabBar.find('.tab').toggleClass('active', false)
     $tab.toggleClass('active', true)
 }
@@ -27,7 +27,7 @@ $tabBar.on('click', '.tab-chat', function () {
 
 // Scroll the chat box to the bottom, the most recent messages.
 function scrollChat () {
-    const $el = $('.lobby .messages')
+    const $el = $('.rooms .messages')
     $el.scrollTop($el[0].scrollHeight)
 }
 
@@ -136,9 +136,9 @@ $('.rooms .create').click(function () {
         // TODO: let activeRooms handle this
         $('#roomList').append(roomHTML(room))
         // Let's see the new room
-        $roomsView.hide()
-        $lobby.find('.chat').hide()
-        $lobby.append(roomDisplayHTML(room))
+        $roomsList.hide()
+        $roomsPanel.find('.chat').hide()
+        $roomsPanel.append(roomDisplayHTML(room))
         // Also tabs, right
         $tabBar.find('.tab').toggleClass('active', false)
         $tabBar.append(roomTabHTML(room))
@@ -149,7 +149,7 @@ $('.rooms .create').click(function () {
 //On connection list all active rooms
 socket.on('activeRooms', function (rooms) {
     console.log('[activeRooms]', rooms)
-    const $roomList = $('.lobby .roomList')
+    const $roomList = $('.roomsListUl')
     $roomList.empty()
     for (let room of rooms) {
         // console.log('[activeRooms]', id)
@@ -178,9 +178,9 @@ socket.on('joinRoomSuccess', function (room) {
     $tabBar.append(roomTabHTML(room))
     $tabBar.find('.tab:last-child').toggleClass('active', true)
     // Add a new room display for this room
-    $roomsView.hide()
-    $lobby.find('.chat').hide()
-    $lobby.append(roomDisplayHTML(room))
+    $roomsList.hide()
+    $roomsPanel.find('.chat').hide()
+    $roomsPanel.append(roomDisplayHTML(room))
     // Add the backlog messages to the interface
     for (let msg of room.messages) {
         processMessage(msg)
@@ -192,7 +192,7 @@ socket.on('joinRoomFail', function (reason) {
     alert(`Failed to join room: ${reason}`)
 })
 
-//Delete empty rooms
+// Delete empty rooms
 // socket.on('emptyRoom', function (emptyRoom) {
 //     $('#' + emptyRoom).remove()
 //     if (!$('.roomList').find('li').length) {
@@ -200,10 +200,10 @@ socket.on('joinRoomFail', function (reason) {
 //     }
 // })
 
-//Lobby stuff
+// Room stuff
 
-//Chatbox sends msg
-$('.lobby').on('keydown', '.msgBox', function (e) {
+// Chatbox sends msg
+$('.rooms').on('keydown', '.msgBox', function (e) {
     var key = e.which
     if (key === 13) {
         let roomId = $('.tab.active').attr('data-room-id')
@@ -257,7 +257,7 @@ socket.on('newLeaveMessage', function (msg) {
     $('.messages').append(leaveMessageHTML(msg))
 })
 
-//Leaving the lobby
+//Leaving the room
 $tabBar.on('click', '.tab-close', function (e) {
     e.stopPropagation()
     const $this = $(this)
@@ -266,7 +266,7 @@ $tabBar.on('click', '.tab-close', function (e) {
     socket.emit('leaveRoom', roomId)
     showRooms()
     $tab.remove()
-    $lobby.find(`.chat[data-room-id="${roomId}"]`).remove()
+    $roomsPanel.find(`.chat[data-room-id="${roomId}"]`).remove()
 })
 
 //Display usernames on room creation

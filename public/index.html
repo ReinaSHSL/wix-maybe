@@ -39,22 +39,22 @@
                 </form>
             </section>
 
-            <section class="panel lobby" style="display:none">
+            <section class="panel rooms" style="display:none">
                 <div class="tabs">
                     <a href="#" class="tab tab-rooms active">Rooms</a>
                 </div>
-                <div class="rooms">
+                <div class="roomsList">
                     <h2>Create a room</h2>
                     <input type="text" id="roomName" placeholder="Room Name">
                     <input type="text" id="roomPass" placeholder="Password (optional)">
                     <button class="create">Create Room</button>
                     <h2>Rooms</h2>
-                    <ul class="roomList"></ul>
+                    <ul class="roomsListUl"></ul>
                 </div>
             </section>
 
-            <section class="panel rooms" style="display:none">
-                <h1>TODO: these class names are swapped because I'm lazy</h1>
+            <section class="panel lobby" style="display:none">
+                <p>This will be a public chatroom</p>
             </section>
 
             <section class="panel builder" style="display:none"><!-- The deck builder woo -->
@@ -173,8 +173,8 @@
 
         <!-- Login stuffs -->
         <script src="js/login.js"></script>
-        <!-- GLobal chats -->
-        <script src="js/lobby.js"></script>
+        <!-- Game chats -->
+        <script src="js/rooms.js"></script>
         <!-- Builder stuff -->
         <script src="js/builder.js"></script>
 

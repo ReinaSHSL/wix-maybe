@@ -1,5 +1,5 @@
 /* Panel styles */
-.lobby {
+.rooms {
     display: grid;
     grid:
         "tabs" 33px
@@ -8,7 +8,7 @@
 }
 
 /* Tab bar */
-.lobby .tabs {
+.rooms .tabs {
     grid-area: tabs;
     display: flex;
     align-items: stretch;
@@ -16,7 +16,7 @@
     padding: 0 5px;
     background: #F7F7F7;
 }
-.lobby .tab {
+.rooms .tab {
     flex: 0 0 auto;
     margin-top: 4px;
     line-height: 27px;
@@ -30,14 +30,14 @@
     margin-right: 4px;
     cursor: default;
 }
-.lobby .tab.active, .lobby .tab:hover {
+.rooms .tab.active, .rooms .tab:hover {
     border-color: #BBB;
     color: inherit;
 }
-.lobby .tab.active {
+.rooms .tab.active {
     box-shadow: 0 2px 0 -1px #FFF;
 }
-.lobby .tab-close {
+.rooms .tab-close {
     background: none;
     border: 0;
     border-radius: 50%;
@@ -48,21 +48,21 @@
     font-size: 0;
     width: 18px;
 }
-.lobby .tab-close:hover {
+.rooms .tab-close:hover {
     background: #DDD;
 }
-.lobby .tab-close::after {
+.rooms .tab-close::after {
     content: "\2716";
     font-size: small;
 }
 
 /* Room list wrapper */
-.lobby .rooms {
+.rooms-list {
     padding: 10px;
 }
 
 /* Chat display wrapper */
-.lobby .chat {
+.rooms .chat {
     grid-area: main;
     max-height: 100%;
     display: grid;
@@ -138,7 +138,7 @@
     padding: 0 10px;
 }
 
-.lobby .chat {
+.rooms .chat {
     display: grid;
     grid:
         "messages users" calc(100% - 32px)
