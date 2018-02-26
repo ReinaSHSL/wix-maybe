@@ -279,7 +279,13 @@ socket.on('newLeaveMessage', function (msg) {
 $roomsPanel.on('change', '.readyInput', function () {
     const $this = $(this)
     const roomId = $this.closest('.room').attr('data-room-id')
-    socket.emit('readyInRoom', roomId, $this.is(':checked'))
+    if ($this.is(':checked')) {
+        const deckId = $this.closest('.room').find('.deckSelect').val()
+        socket.emit('deckInRoom', roomId, deckId)
+    } else {
+        // TODO: you can't un-click the checkbox
+        $this.prop('checked', true)
+    }
 })
 
 //Leaving the room

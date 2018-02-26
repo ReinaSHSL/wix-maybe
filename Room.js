@@ -36,9 +36,9 @@ module.exports = class Room {
         console.log(this.members, this.membersList)
     }
 
-    memberReady (id, ready) {
+    memberDeck (id, deck) {
         const index = this.members.findIndex(u => u.id === id)
-        this.members[index].ready = ready
+        this.members[index].deck = deck
     }
 
     set owner (user) {

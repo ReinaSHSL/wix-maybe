@@ -115,13 +115,30 @@ module.exports = function (io, socket, r, conn) {
     })
     
     // User sends ready
-    socket.on('readyInRoom', function (roomId, ready) {
+    socket.on('deckInRoom', function (roomId, deckId) {
+        console.log('[deckInRoom', roomId, deckId)
         if (!socket.handshake.session) return
         const room = getRoom(roomId)
         if (!room) return
+        
+        const userId = socket.handshake.session.user.id
+        const userIndex = room.members.findIndex(u => u.id === userId)
 
-        room.memberReady(socket.handshake.session.user.id, ready)
-        io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
+        if (!deckId) {
+            room.memberDeck(userId, null)
+            io.sockets.in('roomId').emit('roomUsers', roomId, room.memberList)
+            return
+        }
+        r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
+            if (err) return console.log(err)
+            value.toArray(function (err, decks) {
+                if (err) return console.log(err)
+                if (!decks.length) return console.log('Deck not found')
+                console.log(decks[0])
+                room.memberDeck(userId, decks[0])
+                io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
+            })
+        })
     })
 
     // Record the user leaving a room
