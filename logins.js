@@ -108,4 +108,12 @@ module.exports = function (app, r, conn) {
             })
         })
     })
+
+     //Logout
+    app.post('/logout', function (req, res) {
+        if (!req.session.user) {
+            return
+        }
+        res.status(200).send('good fucking job')
+    })
 }

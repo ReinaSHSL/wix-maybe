@@ -14,9 +14,8 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
             // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
                 socket.emit('loadDecks')
-                const username = $('.login-form [name="username"]').val()
-                $('.current-user').text(username)
-                $('.current-user').attr('style', `color:${hashColor(username)}`)
+                $('.current-user').text()
+                $('.current-user').text($('.login-form [name="username"]').val())
                 // Hide this panel and show the main ones
                 $('.panel.login').hide()
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
@@ -24,8 +23,11 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
                 // Just alert, nothing fancy here
                 alert('signed up! please log in now')
             } else if ($this.is('.logout-form')) {
-                // it's just easier this way
-                window.location.reload() // TODO: do this more cleanly
+                // Tell the server we died
+                window.location.reload()
+                $('.current-user').text($('').val())
+                $('.panel.login').show()
+                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').hide()
             }
             $submitButton.attr('disabled', false)
         },
