@@ -7,7 +7,6 @@
     "extends": "eslint:recommended",
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],
-        "linebreak-style": ["error", "windows"],
         "quotes": ["warn", "single", {"avoidEscape": true}],
         "semi": ["error", "never"],
         "no-console": "off",
