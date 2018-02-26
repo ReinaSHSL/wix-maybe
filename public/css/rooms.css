@@ -1,10 +1,11 @@
 /* Panel styles */
-.rooms {
+.panel.rooms {
     display: grid;
     grid:
         "tabs" 33px
         "main" calc(100% - 33px)
         / 100%;
+    border-left: 0;
 }
 
 /* Tab bar */
@@ -47,6 +48,7 @@
     cursor: pointer;
     font-size: 0;
     width: 18px;
+    margin: 0 -5px 0 2px;
 }
 .rooms .tab-close:hover {
     background: #DDD;
@@ -54,22 +56,38 @@
 .rooms .tab-close::after {
     content: "\2716";
     font-size: small;
+    position: relative;
+    top: -0.75px;
 }
 
 /* Room list wrapper */
 .rooms-list {
     padding: 10px;
 }
+.rooms-list .roomsListUl:not(:empty) {
+    border: 1px solid #DDD;
+    padding: 0;
+    list-style: none;
+}
+.rooms-list .activeRoom + .activeRoom {
+    border-top: 1px solid #DDD;
+}
+.rooms-list .activeRoom a {
+    display: block;
+    padding: 5px 10px;
+}
+.rooms-list .activeRoom .info:before {content: "- "}
 
 /* Chat display wrapper */
-.rooms .chat {
+.rooms .room {
     grid-area: main;
     max-height: 100%;
     display: grid;
     grid:
-        "messages users" calc(100% - 32px)
-        "chatbar  users" 32px
-        / auto 150px;
+        "messages users" calc(100% - 64px)
+        "messages deck " 32px
+        "chatbar  ready " 32px
+        / calc(100% - 150px) 150px;
     font-family: monospace;
 }
 
@@ -127,24 +145,6 @@
 .user.owner:after {
     content: " *";
     color: red;
-}
-
-/* Message composition bar */
-.chatbar {
-    grid-area: chatbar;
-    border: 0;
-    border-top: 1px solid #DDD;
-    line-height: 32px;
-    padding: 0 10px;
-}
-
-.rooms .chat {
-    display: grid;
-    grid:
-        "messages users" calc(100% - 32px)
-        "chatbar  users" 32px
-        / auto 150px;
-    font-family: monospace;
 }
 
 /* Main message display area */
@@ -212,4 +212,27 @@
     border: 0;
     border-top: 1px solid #DDD;
     border-left: 1px solid #DDD;
+}
+
+.deckSelect {
+    display: block;
+    border: 0;
+    border-top: 1px solid #DDD;
+    border-left: 1px solid #DDD;
+    grid-area: deck;
+    height: 100%;
+    width: 100%;
+}
+
+.ready {
+    grid-area: ready;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid #DDD;
+    border-top: 1px solid #DDD;
+}
+
+.ready input {
+    margin: 0 5px 0 0;
 }

@@ -1,3 +1,5 @@
+const {escapeHTML} = require('./util.js')
+
 module.exports = class Room {
     constructor (name, password, id) {
         this.name = name
@@ -14,8 +16,8 @@ module.exports = class Room {
     }
 
     addMember (member) {
-        console.log('[addMember]', member)
-        console.log(this.members)
+        member = {id: member.id, username: member.username}
+        console.log('[addMember]', member, '->|', this.members)
         this.members.push(member)
         if (this.members.length === 1) {
             console.log('Making owner')
@@ -24,14 +26,14 @@ module.exports = class Room {
     }
 
     removeMember (id) {
-        console.log('[removeMember]')
+        console.log('[removeMember]', id)
         const index = this.members.findIndex(u => u.id === id)
         this.members.splice(index, 1)
 
         if (id === this.ownerId && this.members.length) {
             this.owner = this.members[0]
         }
-        console.log(this.members, this.membersSorted)
+        console.log(this.members, this.membersList)
     }
 
     set owner (user) {
@@ -42,28 +44,32 @@ module.exports = class Room {
         return this.members.find(u => u.id === this.ownerId)
     }
 
-    get hasPassword () {
-        return this.password ? true : false
-    }
-
-    get membersSorted () {
-        // Array.from() returns a new array so we don't modify this.members with
-        // the map function
-        return Array.from(this.members).map(u => {
+    get memberList () {
+        return this.members.map(u => {
             if (u.id === this.ownerId) u.owner = true
             return u
+        }).sort((u1, u2) => {
+            if (u1.owner && !u2.owner) return -1
+            if (u2.owner && !u1.owner) return 1
+            return u1.username.localeCompare(u2.username)
         })
     }
 
     toJSON () {
         return {
             name: this.name,
+            safeName: escapeHTML(this.name),
             id: this.id,
-            members: this.members,
+            members: this.memberList,
             owner: this.owner,
-            hasPassword: this.hasPassword,
-            messages: this.messages
+            hasPassword: this.password ? true : false,
         }
+    }
+
+    withMessages () {
+        let json = this.toJSON()
+        json.messages = this.messages
+        return json
     }
 
     inspect () {

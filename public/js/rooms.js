@@ -1,7 +1,7 @@
 /* globals $, socket, hashColor */
 
 const $roomsPanel = $('.rooms')
-const $roomsList = $roomsPanel.find('.roomsList')
+const $roomsList = $roomsPanel.find('.rooms-list')
 const $tabBar = $roomsPanel.find('.tabs')
 const $roomsListTab = $tabBar.find('.tab-rooms')
 
@@ -9,14 +9,14 @@ const $roomsListTab = $tabBar.find('.tab-rooms')
 function showRooms () {
     $tabBar.find('.tab').toggleClass('active', false)
     $roomsListTab.toggleClass('active', true)
-    $roomsPanel.find('.chat').hide()
+    $roomsPanel.find('.room').hide()
     $roomsList.show()
 }
 $roomsListTab.click(showRooms)
 function showChat (roomId, $tab = $tabBar.find(`[data-room-id="${roomId}"]`)) {
     $roomsList.hide()
-    $roomsPanel.find('.chat').hide()
-    $roomsPanel.find(`.chat[data-room-id="${roomId}"]`).show()
+    $roomsPanel.find('.room').hide()
+    $roomsPanel.find(`.room[data-room-id="${roomId}"]`).show()
     $tabBar.find('.tab').toggleClass('active', false)
     $tab.toggleClass('active', true)
 }
@@ -42,7 +42,11 @@ function usernameHTML (username) {
 function roomHTML (room) {
     return `
         <li id="${room.id}" class="activeRoom ${room.hasPassword ? 'has-password' : ''}">
-            <a href="#">${room.name}</a>
+            <a href="#">
+                <span class="name">${room.safeName}
+                ${room.hasPassword ? '<span class="info has-password">Has password</span>' : ''}
+                <span class="info members">${room.members.length} member${room.members.length === 1 ? '' : 's'}</span>
+            </a>
         </li>
     `
 }
@@ -99,51 +103,61 @@ function userHTML (user) {
     `
 }
 function roomTabHTML (room) {
-    console.log(room)
     return `
         <a href="#" class="tab tab-chat" data-room-id="${room.id}">
-            <span class="tab-title">${room.name}</span>
-            <button class="tab-close">Leave room</button>
+            <span class="tab-title">${room.safeName}</span>
+            <button class="tab-close" title="Leave room">Leave room</button>
         </a>
     `
 }
 function roomDisplayHTML (room) {
-    console.log(room)
     return `
-        <div class="chat" data-room-id="${room.id}">
+        <div class="room" data-room-id="${room.id}">
             <table class="messages"></table>
             <ul class="users"></ul>
             <input type="text" class="chatbar msgBox" placeholder="Type text here">
+            <select class="deckSelect">
+                <option disabled selected>Choose a deck...</option>
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+            <label class="ready" for="readyInput">
+                <input type="checkbox" id="readyInput" class="readyInput">
+                Ready?
+            </label>
         </div>
     `
 }
 
 //Creates room
 $('.rooms .create').click(function () {
-    console.log('test?')
     var roomName = $('#roomName').val()
     var roomPass = $('#roomPass').val()
     if (!roomName) {
         return alert('Please set a room name')
     } else {
-        var roomId = Math.random()*1000000000000000000
         const room = {
-            id: roomId,
             name: roomName,
             password: roomPass
         }
         socket.emit('createRoom', room)
-        // TODO: let activeRooms handle this
-        $('#roomList').append(roomHTML(room))
-        // Let's see the new room
-        $roomsList.hide()
-        $roomsPanel.find('.chat').hide()
-        $roomsPanel.append(roomDisplayHTML(room))
-        // Also tabs, right
-        $tabBar.find('.tab').toggleClass('active', false)
-        $tabBar.append(roomTabHTML(room))
-        $tabBar.find('.tab:last-child').toggleClass('active', true)
     }
+})
+
+socket.on('roomCreated', function (room) {
+    console.log('[roomCreated]', room)
+    // TODO: let activeRooms handle this
+    $('#roomList').append(roomHTML(room))
+    // Let's see the new room
+    $roomsList.hide()
+    $roomsPanel.find('.room').hide()
+    $roomsPanel.append(roomDisplayHTML(room))
+    // Also tabs, right
+    $tabBar.find('.tab').toggleClass('active', false)
+    $tabBar.append(roomTabHTML(room))
+    $tabBar.find('.tab:last-child').toggleClass('active', true)
+    // Since you own this room, replace the "Ready" button with a "Start" button
+    $('')
 })
 
 //On connection list all active rooms
@@ -161,7 +175,7 @@ socket.on('activeRooms', function (rooms) {
 })
 
 //Clicking on a room will make you join
-$('.rooms .roomList').on('click', '.activeRoom', function () {
+$('.rooms .roomsListUl').on('click', '.activeRoom', function () {
     var $this = $(this)
     var id = $this.attr('id')
     var hasPassword = $this.is('.has-password')
@@ -179,7 +193,7 @@ socket.on('joinRoomSuccess', function (room) {
     $tabBar.find('.tab:last-child').toggleClass('active', true)
     // Add a new room display for this room
     $roomsList.hide()
-    $roomsPanel.find('.chat').hide()
+    $roomsPanel.find('.room').hide()
     $roomsPanel.append(roomDisplayHTML(room))
     // Add the backlog messages to the interface
     for (let msg of room.messages) {
@@ -195,8 +209,8 @@ socket.on('joinRoomFail', function (reason) {
 // Delete empty rooms
 // socket.on('emptyRoom', function (emptyRoom) {
 //     $('#' + emptyRoom).remove()
-//     if (!$('.roomList').find('li').length) {
-//         $('.roomList').append('<li>There are no rooms!?</li>')
+//     if (!$('.roomsListUl').find('li').length) {
+//         $('.roomsListUl').append('<li>There are no rooms!?</li>')
 //     }
 // })
 
@@ -231,7 +245,7 @@ function processMessage (msg) {
         default:
             return console.log('Invalid message type')
     }
-    $(`.chat[data-room-id="${msg.roomId}"] .messages`).append(html)
+    $(`.room[data-room-id="${msg.roomId}"] .messages`).append(html)
 }
 
 //Display new msg
@@ -266,18 +280,18 @@ $tabBar.on('click', '.tab-close', function (e) {
     socket.emit('leaveRoom', roomId)
     showRooms()
     $tab.remove()
-    $roomsPanel.find(`.chat[data-room-id="${roomId}"]`).remove()
+    $roomsPanel.find(`.room[data-room-id="${roomId}"]`).remove()
 })
 
 //Display usernames on room creation
-socket.on('roomUsers', function (users) {
-    console.log('[roomUsers]', users)
-    users.sort((u1, u2) => {
+socket.on('roomUsers', function (roomId, users) {
+    console.log('[roomUsers]', roomId, users)
+    users = users.sort((u1, u2) => {
         if (u1.owner && !u2.owner) return -1
         if (u2.owner && !u1.owner) return 1
         return u1.username.localeCompare(u2.username)
     })
-    var $userList = $('.users')
+    var $userList = $(`.room[data-room-id="${roomId}"] .users`)
     $userList.empty()
     for (let user of users) {
         $userList.append(userHTML(user))

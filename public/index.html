@@ -3,7 +3,7 @@
     <title>Batoru</title>
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/builder.css">
-        <link rel="stylesheet" href="css/lobby.css">
+        <link rel="stylesheet" href="css/rooms.css">
         <link rel="stylesheet" href="css/login.css">
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
@@ -43,7 +43,7 @@
                 <div class="tabs">
                     <a href="#" class="tab tab-rooms active">Rooms</a>
                 </div>
-                <div class="roomsList">
+                <div class="rooms-list">
                     <h2>Create a room</h2>
                     <input type="text" id="roomName" placeholder="Room Name">
                     <input type="text" id="roomPass" placeholder="Password (optional)">
@@ -165,10 +165,10 @@
             </section>
         </main>
 
-        <!--Scripts-->
+        <!-- Scripts -->
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript">
-            const socket = io()
+            window.socket = io()
         </script>
 
         <!-- Login stuffs -->

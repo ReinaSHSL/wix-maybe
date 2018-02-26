@@ -108,19 +108,4 @@ module.exports = function (app, r, conn) {
             })
         })
     })
-
-    //Log Out
-    app.post('/logout', function (req, res) {
-        if (!req.session.user) {
-            return
-        }
-        console.log(req.session.user)
-        let userId = req.session.user.id
-        r.table('selectors').get(userId).update({loggedIn: false}).run(conn, function (err, out) {
-            if (err) return console.log(err)
-            if (out) {
-                res.status(200).send('Logged Out')
-            }
-        })
-    })
 }

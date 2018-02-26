@@ -33,17 +33,18 @@ module.exports = function (io, socket, r, conn) {
 
         if (!socket.handshake.session) return
 
-        const roomId = data.id
+        const roomId = `${Math.floor(Date.now())}-${Math.floor(Math.random()*1000)}`
         const roomName = data.name
         const roomPass = data.password
         const room = new Room(roomName, roomPass, roomId)
         rooms.push(room)
 
-        room.addMember({id: socket.handshake.session.id, username: socket.handshake.session.user.username})
+        room.addMember(socket.handshake.session.user)
         socket.join(roomId)
 
+        socket.emit('roomCreated', room)
         io.sockets.emit('activeRooms', rooms)
-        io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
+        io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 
         const msg = {
             type: 'join',
@@ -68,6 +69,9 @@ module.exports = function (io, socket, r, conn) {
         if (!room) {
             return socket.emit('joinRoomFail', 'Room does not exist')
         }
+        if (room.members.find(u => u.id === socket.handshake.session.user.id)) {
+            return socket.emit('joinRoomFail', 'You are already in this room')
+        }
         if (room.members.length > 1) {
             return socket.emit('joinRoomFail', 'Room full')
         }
@@ -76,13 +80,13 @@ module.exports = function (io, socket, r, conn) {
         }
 
         socket.join(id)
-        console.log('socket.rooms:', socket.rooms)
         room.addMember({
             id: socket.handshake.session.user.id,
             username: socket.handshake.session.user.username
         })
-        socket.emit('joinRoomSuccess', room)
-        io.sockets.in(id).emit('roomUsers', room.membersSorted)
+
+        socket.emit('joinRoomSuccess', room.withMessages())
+        io.sockets.in(id).emit('roomUsers', id, room.memberList)
         const msg = {
             type: 'join',
             username: socket.handshake.session.user.username,
@@ -105,6 +109,7 @@ module.exports = function (io, socket, r, conn) {
 
         // Remove the user from the room
         room.removeMember(socket.handshake.session.user.id)
+        socket.leave(roomId)
 
         // If the room is empty, remove it
         if (!room.members.length) {
@@ -112,7 +117,7 @@ module.exports = function (io, socket, r, conn) {
             return io.sockets.emit('activeRooms', rooms)
         }
 
-        io.sockets.in(roomId).emit('roomUsers', room.membersSorted)
+        io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
         const msg = {
             type: 'leave',
             username: socket.handshake.session.user.username,
@@ -131,35 +136,33 @@ module.exports = function (io, socket, r, conn) {
             room.messages.push(msg)
             io.sockets.in(roomId).emit('newMessage', msg2)
         }
-        socket.leave(roomId)
     }
 
     // Manually initiated room leave - i.e. closing room tab
     socket.on('leaveRoom', leaveRoom)
 
     // Clean up socket's data
-    socket.on('imDeadKthx', function () {
-        if (!socket.handshake.session.user) {
-            return
-        }
+    socket.on('disconnect', function () {
         let currentUser = socket.handshake.session.user
-        if (!currentUser) return
+        if (!currentUser) return // If they weren't logged in, nothing to do
+        console.log('[disconnection]', currentUser)
+
+        // Log user out
         r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
             if (err) return console.log(err)
             console.log('Log out')
         })
 
         // Leave all rooms
-        console.log('socket.rooms:', socket.rooms)
-        console.log('otherRooms ' + rooms.map(r => r.id))
-        for (let i in socket.rooms) {
-            leaveRoom(i)
+        const roomsUserWasIn = rooms.filter(r => r.members.find(m => m.id === currentUser.id))
+        for (let room of roomsUserWasIn) {
+            leaveRoom(room.id)
         }
     })
 
     // Room chatting
     socket.on('sendRoomMessage', function (data) {
-        console.log('[sendRoomMessage]', data.msg, data.roomId)
+        console.log('[sendRoomMessage]', data.roomId, data.msg)
 
         if (!socket.handshake.session) return
 

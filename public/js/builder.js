@@ -152,12 +152,11 @@ $('#deckList').change(function () {
 socket.on('unsavedDeck', function (deck) {
     if (!confirm('Are you sure you want to change your deck? It has not been saved. If you leave it will be lost.')) {
         $('#deckList').val(prevValue)
-        return
+        // return
         emptyEverything()
         let deckId = $('#deckList :selected').attr('value')
         socket.emit('deckChange', deckId)
     }
-
 })
 
 // When clicking on a card in the deck area, remove it from the deck
@@ -260,6 +259,7 @@ socket.on('updatedDeck', function () {
 })
 
 socket.on('loadDeck', function (data) {
+    console.log(data)
     $('#deckList').append('<option value="' + data.id + '">' + data.name + '</option>')
 })
 

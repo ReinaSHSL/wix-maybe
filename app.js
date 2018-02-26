@@ -67,7 +67,7 @@ r.connect(dbConfig, function (err, conn) {
     io.on('connection', function (socket) {
         require('./sockets/builder.js')(io, socket, r, conn)
         require('./sockets/rooms.js')(io, socket, r, conn)
-        require('./sockets/misc.js')(socket)
+        require('./sockets/misc.js')(io, socket, r, conn)
     })
 })
 
