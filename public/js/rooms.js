@@ -118,8 +118,6 @@ function roomDisplayHTML (room) {
             <input type="text" class="chatbar msgBox" placeholder="Type text here">
             <select class="deckSelect">
                 <option disabled selected>Choose a deck...</option>
-                <option>Yes</option>
-                <option>No</option>
             </select>
             <label class="ready" for="readyInput">
                 <input type="checkbox" id="readyInput" class="readyInput">
@@ -142,6 +140,7 @@ $('.rooms .create').click(function () {
         }
         socket.emit('createRoom', room)
     }
+    $('.deckSelect option').remove();
 })
 
 socket.on('roomCreated', function (room) {
@@ -158,6 +157,10 @@ socket.on('roomCreated', function (room) {
     $tabBar.find('.tab:last-child').toggleClass('active', true)
     // Since you own this room, replace the "Ready" button with a "Start" button
     $('')
+})
+
+socket.on('roomDecks', function(deck) {
+    $('.deckSelect').append('<option value="' + deck.id + '">' + deck.name + '</option>')
 })
 
 //On connection list all active rooms
@@ -185,6 +188,7 @@ $('.rooms .roomsListUl').on('click', '.activeRoom', function () {
     } else {
         socket.emit('joinRoom', {id: id})
     }
+    $('.deckSelect option').remove();
 })
 socket.on('joinRoomSuccess', function (room) {
     // Add a new tab for this room

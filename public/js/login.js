@@ -25,9 +25,6 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
             } else if ($this.is('.logout-form')) {
                 // Tell the server we died
                 window.location.reload()
-                $('.current-user').text($('').val())
-                $('.panel.login').show()
-                $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').hide()
             }
             $submitButton.attr('disabled', false)
         },

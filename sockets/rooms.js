@@ -41,7 +41,15 @@ module.exports = function (io, socket, r, conn) {
 
         room.addMember(socket.handshake.session.user)
         socket.join(roomId)
-
+        r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
+            if (err) return console.log (err)
+            cursor.toArray(function (err, result) {
+                if (err) return console.log(err)
+                for (let deck of result) {
+                    socket.emit('roomDecks', deck)
+                }
+            })
+        })
         socket.emit('roomCreated', room)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
@@ -78,7 +86,15 @@ module.exports = function (io, socket, r, conn) {
         if (room.password && password !== room.password) {
             return socket.emit('joinRoomFail', 'Missing or incorrect password')
         }
-
+        r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
+            if (err) return console.log (err)
+            cursor.toArray(function (err, result) {
+                if (err) return console.log(err)
+                for (let deck of result) {
+                    socket.emit('roomDecks', deck)
+                }
+            })
+        })
         socket.join(id)
         room.addMember({
             id: socket.handshake.session.user.id,

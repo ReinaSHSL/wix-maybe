@@ -207,7 +207,4 @@ module.exports = function (io, socket, r, conn) {
             }
         })
     })
-    socket.on('test', function() {
-        console.log('uwu')
-    })
 }
