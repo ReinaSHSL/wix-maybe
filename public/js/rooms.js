@@ -282,9 +282,10 @@ $roomsPanel.on('change', '.readyInput', function () {
     if ($this.is(':checked')) {
         const deckId = $this.closest('.room').find('.deckSelect').val()
         socket.emit('deckInRoom', roomId, deckId)
-    } else {
-        // TODO: you can't un-click the checkbox
-        $this.prop('checked', true)
+         $('.deckSelect').prop('disabled', true)
+    }
+    if (!$this.is(':checked')) {
+        $('.deckSelect').attr('disabled', false)
     }
 })
 
