@@ -1,7 +1,7 @@
 const allCards = require('../allCards.json')
 
 //Fucking murder me builder shit
-module.exports = function (socket, io, r, conn) {
+module.exports = function (io, socket, r, conn) {
 
     //Filters cards
     socket.on('cardSearch', function (cardSearch) {
@@ -206,5 +206,8 @@ module.exports = function (socket, io, r, conn) {
                 })
             }
         })
+    })
+    socket.on('test', function() {
+        console.log('uwu')
     })
 }
