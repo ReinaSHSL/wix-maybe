@@ -53,6 +53,7 @@ module.exports = class Room {
     get memberList () {
         return this.members.map(u => {
             if (u.id === this.ownerId) u.owner = true
+            u.deck = undefined
             return u
         }).sort((u1, u2) => {
             if (u1.owner && !u2.owner) return -1
