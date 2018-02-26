@@ -286,6 +286,7 @@ $roomsPanel.on('change', '.readyInput', function () {
     }
     if (!$this.is(':checked')) {
         $('.deckSelect').prop('disabled', false)
+        socket.emit('unReady', roomId)
     }
 })
 

@@ -140,6 +140,16 @@ module.exports = function (io, socket, r, conn) {
             })
         })
     })
+    //Unready
+    socket.on('unReady', function(roomId) {
+        if (!socket.handshake.session) return
+        const room = getRoom(roomId)  
+        if (!room) return
+        const userId = socket.handshake.session.user.id
+        const userIndex = room.members.findIndex(u => u.id === userId)
+        room.members[userIndex].ready = false
+        console.log(room.members[userIndex].ready)
+    })
 
     // Record the user leaving a room
     function leaveRoom (roomId) {
