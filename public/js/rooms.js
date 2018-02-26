@@ -188,10 +188,10 @@ $('.rooms .roomsListUl').on('click', '.activeRoom', function () {
     } else {
         socket.emit('joinRoom', {id: id})
     }
-    $('.deckSelect option').remove();
 })
 socket.on('joinRoomSuccess', function (room) {
     // Add a new tab for this room
+    $('.deckSelect option').remove();
     $tabBar.find('.tab').toggleClass('active', false)
     $tabBar.append(roomTabHTML(room))
     $tabBar.find('.tab:last-child').toggleClass('active', true)

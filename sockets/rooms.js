@@ -109,6 +109,7 @@ module.exports = function (io, socket, r, conn) {
             roomId: id,
             timestamp: Date.now()
         }
+        io.sockets.emit('activeRooms', rooms)
         room.messages.push(msg)
         io.sockets.in(id).emit('newMessage', msg)
     })
@@ -142,6 +143,7 @@ module.exports = function (io, socket, r, conn) {
         }
         room.messages.push(msg)
         io.sockets.in(roomId).emit('newMessage', msg)
+        io.sockets.emit('activeRooms', rooms)
         if (ownerChanged) {
             const msg2 = {
                 type: 'ownerChange',
