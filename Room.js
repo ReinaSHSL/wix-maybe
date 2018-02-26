@@ -16,7 +16,7 @@ module.exports = class Room {
     }
 
     addMember (member) {
-        member = {id: member.id, username: member.username}
+        member = {id: member.id, username: member.username, ready: member.ready || false}
         console.log('[addMember]', member, '->|', this.members)
         this.members.push(member)
         if (this.members.length === 1) {
@@ -34,6 +34,11 @@ module.exports = class Room {
             this.owner = this.members[0]
         }
         console.log(this.members, this.membersList)
+    }
+
+    memberReady (id, ready) {
+        const index = this.members.findIndex(u => u.id === id)
+        this.members[index].ready = ready
     }
 
     set owner (user) {

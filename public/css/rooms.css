@@ -216,6 +216,7 @@
 
 .deckSelect {
     display: block;
+    background: #FFF;
     border: 0;
     border-top: 1px solid #DDD;
     border-left: 1px solid #DDD;
@@ -224,7 +225,7 @@
     width: 100%;
 }
 
-.ready {
+.readyButton {
     grid-area: ready;
     display: flex;
     justify-content: center;
@@ -233,6 +234,6 @@
     border-top: 1px solid #DDD;
 }
 
-.ready input {
+.readyInput {
     margin: 0 5px 0 0;
 }

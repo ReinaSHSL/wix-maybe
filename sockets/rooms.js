@@ -113,15 +113,23 @@ module.exports = function (io, socket, r, conn) {
         room.messages.push(msg)
         io.sockets.in(id).emit('newMessage', msg)
     })
+    
+    // User sends ready
+    socket.on('readyInRoom', function (roomId, ready) {
+        if (!socket.handshake.session) return
+        const room = getRoom(roomId)
+        if (!room) return
+
+        room.memberReady(socket.handshake.session.user.id, ready)
+        io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
+    })
 
     // Record the user leaving a room
     function leaveRoom (roomId) {
         if (!socket.handshake.session) return
         const room = getRoom(roomId)
-        if (!room) {
-            console.log("Someone tried to leave a room that doesn't exist. Did the server just restart?")
-            return
-        }
+        if (!room) return
+
         const ownerChanged = socket.handshake.session.user.id === room.ownerId
 
         // Remove the user from the room

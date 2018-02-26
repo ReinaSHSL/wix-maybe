@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "rethinkdb": "rethinkdb --bind all --http-port \"${PORT-3000}\"",
-    "c9-start": "rethinkdb --bind all --http-port 9876 & node app.js"
+    "c9-start": "rethinkdb --bind all --driver-port 8082 --http-port 8081 & node app.js"
   },
   "author": "",
   "license": "ISC",

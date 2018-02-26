@@ -99,7 +99,7 @@ function ownerChangeMessageHTML (msg) {
 }
 function userHTML (user) {
     return `
-        <li class="user ${user.owner ? 'owner' : ''}">${usernameHTML(user.username)}</li>
+        <li class="user ${user.owner ? 'owner' : ''} ${user.ready ? 'ready' : ''}"> ${usernameHTML(user.username)} ${user.ready ? '^' : ''}</li>
     `
 }
 function roomTabHTML (room) {
@@ -119,7 +119,7 @@ function roomDisplayHTML (room) {
             <select class="deckSelect">
                 <option disabled selected>Choose a deck...</option>
             </select>
-            <label class="ready" for="readyInput">
+            <label class="readyButton" for="readyInput">
                 <input type="checkbox" id="readyInput" class="readyInput">
                 Ready?
             </label>
@@ -273,6 +273,13 @@ socket.on('newJoinMessage', function (msg) {
 socket.on('newLeaveMessage', function (msg) {
     console.log('[newLeaveMessage]', msg)
     $('.messages').append(leaveMessageHTML(msg))
+})
+
+// Ready on room
+$roomsPanel.on('change', '.readyInput', function () {
+    const $this = $(this)
+    const roomId = $this.closest('.room').attr('data-room-id')
+    socket.emit('readyInRoom', roomId, $this.is(':checked'))
 })
 
 //Leaving the room
