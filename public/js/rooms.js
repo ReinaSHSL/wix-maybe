@@ -285,7 +285,7 @@ $roomsPanel.on('change', '.readyInput', function () {
          $('.deckSelect').prop('disabled', true)
     }
     if (!$this.is(':checked')) {
-        $('.deckSelect').attr('disabled', false)
+        $('.deckSelect').prop('disabled', false)
     }
 })
 
