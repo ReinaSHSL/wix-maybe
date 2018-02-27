@@ -99,7 +99,11 @@ function ownerChangeMessageHTML (msg) {
 }
 function userHTML (user) {
     return `
-        <li class="user ${user.owner ? 'owner' : ''} ${user.ready ? 'ready' : ''}"> ${usernameHTML(user.username)} ${user.ready ? '^' : ''}</li>
+        <li class="user ${user.owner ? 'owner' : ''} ${user.ready ? 'ready' : ''}">
+            ${usernameHTML(user.username)}
+            ${user.ready ? '<span class="ready-icon" title="This user is ready to play">*</span>' : ''}
+            ${user.owner ? '<span class="owner-icon" title="This user owns the room and will play">@</span>' : ''}
+        </li>
     `
 }
 function roomTabHTML (room) {
@@ -119,11 +123,23 @@ function roomDisplayHTML (room) {
             <select class="deckSelect">
                 <option disabled selected>Choose a deck...</option>
             </select>
-            <label class="readyButton" for="readyInput">
-                <input type="checkbox" id="readyInput" class="readyInput">
-                Ready?
-            </label>
+            ${readyButtonHTML([])}
         </div>
+    `
+}
+function readyButtonHTML (users = []) {
+    return `
+        <label class="readyButton" for="readyInput" ${users.some(u => u.ready) ? 'title="Another player readied first!"' : ''}>
+            <input type="checkbox" id="readyInput" class="readyInput" ${users.some(u => u.ready) ? 'disabled' : ''}>
+            Ready?
+        </label>
+    `
+}
+function startButtonHTML (users) {
+    return `
+        <span class="startButton">
+            <button class="startButtonInner" ${users.some(u => u.ready) ? '' : 'disabled title="Need another player"'}>Start</button>
+        </span>
     `
 }
 
@@ -155,8 +171,6 @@ socket.on('roomCreated', function (room) {
     $tabBar.find('.tab').toggleClass('active', false)
     $tabBar.append(roomTabHTML(room))
     $tabBar.find('.tab:last-child').toggleClass('active', true)
-    // Since you own this room, replace the "Ready" button with a "Start" button
-    $('')
 })
 
 socket.on('roomDecks', function(deck) {
@@ -281,8 +295,8 @@ $roomsPanel.on('change', '.readyInput', function () {
     const roomId = $this.closest('.room').attr('data-room-id')
     if ($this.is(':checked')) {
         const deckId = $this.closest('.room').find('.deckSelect').val()
-        socket.emit('deckInRoom', roomId, deckId)
         $('.deckSelect').prop('disabled', true)
+        socket.emit('deckInRoom', roomId, deckId)
     } else {
         $('.deckSelect').prop('disabled', false)
         socket.emit('unReady', roomId)
@@ -313,6 +327,18 @@ socket.on('roomUsers', function (roomId, users) {
     $userList.empty()
     for (let user of users) {
         $userList.append(userHTML(user))
+    }
+    const myId = $('.current-user').attr('data-user-id')
+    console.log('Me:', myId)
+    const me = users.find(u => {
+        console.log('' + u.id)
+        return '' + u.id === myId
+    })
+    if (!me) return console.log("I shouldn't be here...", roomId)
+    if (me.owner) {
+        $('.readyButton').replaceWith(startButtonHTML(users))
+    } else {
+        $('.startButton').replaceWith(readyButtonHTML(users))
     }
 })
 
