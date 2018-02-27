@@ -88,7 +88,6 @@ let delay = 50
 $('.cardList').on('mouseenter', '.card', function () {
     var $this = $(this)
     timer = setTimeout(function () {
-        console.log('owo')
         $('#previewCard').attr('src', $this.find('.card-preview').attr('src'))
         $('#cardsName').text($this.attr('dataName'))
         $('#cardsType').text($this.attr('dataType'))
@@ -102,7 +101,6 @@ $('.cardList').on('mouseenter', '.card', function () {
         $('#cardsText').text($this.attr('dataText'))
     }, delay)
     $('.cardList').on('mouseout', function () {
-        console.log('uwu')
         clearTimeout(timer)
     })
 })
