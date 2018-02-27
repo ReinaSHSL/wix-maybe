@@ -282,9 +282,8 @@ $roomsPanel.on('change', '.readyInput', function () {
     if ($this.is(':checked')) {
         const deckId = $this.closest('.room').find('.deckSelect').val()
         socket.emit('deckInRoom', roomId, deckId)
-         $('.deckSelect').prop('disabled', true)
-    }
-    if (!$this.is(':checked')) {
+        $('.deckSelect').prop('disabled', true)
+    } else {
         $('.deckSelect').prop('disabled', false)
         socket.emit('unReady', roomId)
     }

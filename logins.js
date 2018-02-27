@@ -102,14 +102,18 @@ module.exports = function (app, r, conn) {
                     if (err) console.log(err)
                     if (logIn) {
                         req.session.user = user // This stores the user's session for later
-                        return res.status(200).send('Logged in')
+                        res.setHeader('Content-Type', 'application/json')
+                        return res.status(200).send(JSON.stringify({
+                            id: user.id,
+                            username: user.username
+                        }))
                     }
                 })
             })
         })
     })
 
-     //Logout
+    //Logout
     app.post('/logout', function (req, res) {
         if (!req.session.user) {
             return

@@ -11,11 +11,11 @@ $('.login-form, .signup-form, .logout-form').on('submit', function (e) {
         type: $this.attr('method'),
         data: $this.serialize(),
         success: function (response) { // eslint-disable-line no-unused-vars
-            // const data = JSON.parse(response)
             if ($this.is('.login-form')) {
                 socket.emit('loadDecks')
                 $('.current-user').text()
-                $('.current-user').text($('.login-form [name="username"]').val())
+                $('.current-user').text(response.username)
+                $('.current-user').attr('data-user-id', response.id)
                 // Hide this panel and show the main ones
                 $('.panel.login').hide()
                 $('.panel.lobby, .panel.rooms, .builder-button, .logout-button').show()
