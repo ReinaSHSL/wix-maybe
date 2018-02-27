@@ -83,19 +83,28 @@ socket.on('cardMatches', function (cardMatches) {
 // Some event listeners for cards now
 
 // When hovering over any card preview, show it in the left column
+let timer
+let delay = 50
 $('.cardList').on('mouseenter', '.card', function () {
     var $this = $(this)
-    $('#previewCard').attr('src', $this.find('.card-preview').attr('src'))
-    $('#cardsName').text($this.attr('dataName'))
-    $('#cardsType').text($this.attr('dataType'))
-    $('#cardsColor').text($this.attr('dataColor'))
-    $('#cardsLevel').text($this.attr('dataLevel'))
-    $('#cardsCost').text($this.attr('dataCost'))
-    $('#cardsAttack').text($this.attr('dataAttack'))
-    $('#cardsClass').text($this.attr('dataClass'))
-    $('#cardsLrigType').text($this.attr('dataLrigType'))
-    $('#cardsLimit').text($this.attr('dataLimit'))
-    $('#cardsText').text($this.attr('dataText'))
+    timer = setTimeout(function () {
+        console.log('owo')
+        $('#previewCard').attr('src', $this.find('.card-preview').attr('src'))
+        $('#cardsName').text($this.attr('dataName'))
+        $('#cardsType').text($this.attr('dataType'))
+        $('#cardsColor').text($this.attr('dataColor'))
+        $('#cardsLevel').text($this.attr('dataLevel'))
+        $('#cardsCost').text($this.attr('dataCost'))
+        $('#cardsAttack').text($this.attr('dataAttack'))
+        $('#cardsClass').text($this.attr('dataClass'))
+        $('#cardsLrigType').text($this.attr('dataLrigType'))
+        $('#cardsLimit').text($this.attr('dataLimit'))
+        $('#cardsText').text($this.attr('dataText'))
+    }, delay)
+    $('.cardList').on('mouseout', function () {
+        console.log('uwu')
+        clearTimeout(timer)
+    })
 })
 
 // When clicking on a card in the right sidebar, add it to the deck
