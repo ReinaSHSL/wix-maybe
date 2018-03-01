@@ -148,6 +148,7 @@ module.exports = function (io, socket, r, conn) {
         const userId = socket.handshake.session.user.id
         const userIndex = room.members.findIndex(u => u.id === userId)
         room.members[userIndex].ready = false
+        io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
         console.log(room.members[userIndex].ready)
     })
 
