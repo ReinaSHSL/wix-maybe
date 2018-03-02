@@ -1,3 +1,14 @@
+# dependencies
 node_modules
+
+# logs
 npm-debug.log
+
+# RethinkDB stuff
 rethinkdb*
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist

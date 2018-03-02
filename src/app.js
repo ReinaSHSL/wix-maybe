@@ -6,6 +6,7 @@ const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
+const nuxt = require('./nuxt.js')
 
 // Sockets
 const socketio = require('socket.io')
@@ -29,10 +30,8 @@ const session = new expressSession({
     // saveUninitialized: true
 })
 app.use(session)
-// Static directory for web siles
-app.use(express.static(path.join(__dirname, 'public')))
-// Favicon
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+// Nuxt stuff
+app.use(nuxt)
 // Cookies and parsers
 app.use(bodyParser())
 app.use(cookieParser())
@@ -69,6 +68,14 @@ r.connect(dbConfig, function (err, conn) {
         require('./sockets/rooms.js')(io, socket, r, conn)
         require('./sockets/misc.js')(io, socket, r, conn)
     })
+})
+
+// Nuxt event handling
+process.on('nuxt:build:done', err => {
+	if (err) {
+		console.log(err)
+		process.exit(1)
+	}
 })
 
 // TODO: User class, have the rooms only store the ID, this will let us do
