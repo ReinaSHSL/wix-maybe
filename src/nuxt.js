@@ -19,6 +19,12 @@ if (config.dev) {
 }
 
 // Add nuxt.js middleware
-module.exports = function (req, res) {
-	nuxt.render(req, res)
+module.exports = function (req, res, next) {
+	const url = require('url').parse(req.url)
+	console.log(url.pathname)
+	if (['/'].includes(url.pathname)) { //
+		nuxt.render(req, res)
+	} else {
+		next()
+	}
 }

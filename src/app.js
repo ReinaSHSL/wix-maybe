@@ -30,11 +30,14 @@ const session = new expressSession({
     // saveUninitialized: true
 })
 app.use(session)
-// Nuxt stuff
-app.use(nuxt)
+// public stuff temp TODO
+app.use(express.static(path.resolve(__dirname, '..', 'static')))
 // Cookies and parsers
 app.use(bodyParser())
 app.use(cookieParser())
+
+// Nuxt stuff
+app.use(nuxt)
 
 // Initialize the HTTP web server
 const port = process.env.PORT || 3000
