@@ -21,8 +21,8 @@ if (config.dev) {
 // Add nuxt.js middleware
 module.exports = function (req, res, next) {
 	const url = require('url').parse(req.url)
-	console.log(url.pathname)
-	if (['/'].includes(url.pathname)) { //
+	console.log(req.method, url.pathname)
+	if (req.method === 'GET') {
 		nuxt.render(req, res)
 	} else {
 		next()

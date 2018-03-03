@@ -1,8 +1,8 @@
 module.exports = function (app, r, conn) {
 
-//Register
+    //Register
     app.post('/signup', function (req, res) {
-    // If they left off information, error back
+        // If they left off information, error back
         if (!req.body.username || !req.body.password) {
             return res.status(400).send('Invalid details!')
         }
@@ -31,14 +31,14 @@ module.exports = function (app, r, conn) {
                 // Get the highest ID
                 r.table('selectors').max('id').getField('id').run(conn, function (err, id) {
                     if (err && err.name === 'ReqlNonExistenceError') {
-                    // There are no users yet, so we'll start at 0
+                        // There are no users yet, so we'll start at 0
                         id = 0
                     } else if (err) {
-                    // We actually fucked something up
+                        // We actually fucked something up
                         console.log(err)
                         return res.status(500).send('Server error; check the console')
                     } else {
-                    // Increment the alst user's ID to get the next one
+                        // Increment the alst user's ID to get the next one
                         id++
                     }
                     const user = {
@@ -63,6 +63,7 @@ module.exports = function (app, r, conn) {
 
     //Login
     app.post('/login', function (req, res) {
+        console.log('[/login]', req.body)
         if (!req.body.username || !req.body.password) {
             return res.status(400).send('Insert username and password')
         }

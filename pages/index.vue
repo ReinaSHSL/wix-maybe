@@ -1,20 +1,29 @@
 <template>
 	<div class="app">
-		<app-header :user="user"/>
+		<app-header
+			:user="user"
+		/>
 
 		<main class="panels">
 			<!-- Initial screen - login/sighup stuff -->
 			<section class="panel login">
-				<form action="/signup" method="POST" class="signup-form">
-					<input name="username" type="text" required placeholder = 'Username'>
-					<input name="password" type="password" required placeholder = 'Password'>
-					<input type="Submit" value="Create Account">
-				</form>
-				<form action="/login" method="POST" class="login-form">
-					<input name="username" type="text" required placeholder = 'Username'>
-					<input name="password" type="password" required placeholder = 'Password'>
-					<input type="Submit" value="Login">
-				</form>
+				<input
+					v-model="loginForm.username"
+					type="text"
+					placeholder="Username"
+				/>
+				<input
+					v-model="loginForm.password"
+					type="password"
+					placeholder="Password"
+				/>
+				<button
+					@click="login"
+					type="submit"
+					value="Login"
+				>
+					Log in
+				</button>
 			</section>
 
 			<section class="panel rooms" style="display:none">
@@ -145,20 +154,6 @@
 
 		<!-- Scripts -->
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-		<script src="/socket.io/socket.io.js"></script>
-		<script type="text/javascript">
-			window.socket = io()
-		</script>
-
-		<!-- Login stuffs -->
-		<script src="js/login.js"></script>
-		<!-- Game chats -->
-		<script src="js/rooms.js"></script>
-		<!-- Builder stuff -->
-		<script src="js/builder.js"></script>
-
-		<!-- Stuff that got gutted from somewhere and hasn't found a home -->
-		<script src="js/misc.js"></script>
 
 		<link rel="stylesheet" href="css/style.css">
 		<link rel="stylesheet" href="css/builder.css">
@@ -169,7 +164,7 @@
 
 <script>
 import AppHeader from '~/components/AppHeader.vue'
-// import axios from 'axios' // TODO
+import axios from 'axios'
 
 export default {
 	data () {
@@ -177,11 +172,39 @@ export default {
 			user: {
 				username: 'yes',
 				id: 0
+			},
+			loginForm: {
+				username: '',
+				password: ''
+			},
+			signupForm: {
+				username: '',
+				password: ''
 			}
 		}
 	},
 	components: {
 		AppHeader
+	},
+	methods: {
+		login () {
+			console.log('[login]', this.loginForm)
+			console.log(this.$socket)
+			axios.post('/login', {
+				username: this.loginForm.username,
+				password: this.loginForm.password
+			}).then(res => {
+				console.log(res)
+			})
+		},
+		signup () {
+			axios.post('/signup', {
+				username: this.signupForm.username,
+				password: this.signupForm.password
+			}).then(res => {
+				console.log(res)
+			}).catch(console.log)
+		}
 	}
 }
 </script>
