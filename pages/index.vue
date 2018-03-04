@@ -6,25 +6,9 @@
 
 		<main class="panels">
 			<!-- Initial screen - login/sighup stuff -->
-			<section class="panel login">
-				<input
-					v-model="loginForm.username"
-					type="text"
-					placeholder="Username"
-				/>
-				<input
-					v-model="loginForm.password"
-					type="password"
-					placeholder="Password"
-				/>
-				<button
-					@click="login"
-					type="submit"
-					value="Login"
-				>
-					Log in
-				</button>
-			</section>
+			<login-panel
+				v-if="!user"
+			/>
 
 			<section class="panel rooms" style="display:none">
 				<div class="tabs">
@@ -164,15 +148,13 @@
 
 <script>
 import AppHeader from '~/components/AppHeader.vue'
+import LoginPanel from '~/components/LoginPanel.vue'
 import axios from 'axios'
 
 export default {
 	data () {
 		return {
-			user: {
-				username: 'yes',
-				id: 0
-			},
+			user: null,
 			loginForm: {
 				username: '',
 				password: ''
@@ -184,26 +166,27 @@ export default {
 		}
 	},
 	components: {
-		AppHeader
+		AppHeader,
+		LoginPanel,
 	},
 	methods: {
-		login () {
-			console.log('[login]', this.loginForm)
-			console.log(this.$socket)
-			axios.post('/login', {
-				username: this.loginForm.username,
-				password: this.loginForm.password
-			}).then(res => {
-				console.log(res)
+		login (username, password) {
+			axios.post('/login', {username, password}).then(response => {
+				this.user = response.data
+			}).catch(err => {
+				if (err.response) {
+					window.alert(err.response.data)
+				} else {
+					console.log(err, Object.keys(err))
+				}
 			})
 		},
-		signup () {
-			axios.post('/signup', {
-				username: this.signupForm.username,
-				password: this.signupForm.password
-			}).then(res => {
-				console.log(res)
-			}).catch(console.log)
+		signup (username, password) {
+			axios.post('/signup', {username, password}).then(response => {
+				window.alert(response.data)
+			}).catch(err => {
+				window.alert(err.response.data)
+			})
 		}
 	}
 }
