@@ -1,0 +1,52 @@
+
+
+/* Room list wrapper */
+.rooms-list {
+    padding: 10px;
+}
+.rooms-list .roomsListUl:not(:empty) {
+    border: 1px solid #DDD;
+    padding: 0;
+    list-style: none;
+}
+.rooms-list .activeRoom + .activeRoom {
+    border-top: 1px solid #DDD;
+}
+.rooms-list .activeRoom a {
+    display: block;
+    padding: 5px 10px;
+}
+.rooms-list .activeRoom .info:before {content: "- "}
+
+
+
+/* User list */
+
+/* Message composition bar */
+
+/* Ready/start game buttons */
+.readyButton, .startButton {
+    grid-area: ready;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid #DDD;
+    border-top: 1px solid #DDD;
+}
+.user {
+    padding: 1px 5px;
+    border-bottom: 1px dotted #DDD;
+}
+.user .owner-icon {
+    color: red;
+}
+.user .ready-icon {
+    color: blue;
+}.readyInput {
+    margin: 0 5px 0 0;
+}
+.startButtonInner {
+    flex: 1 1 100%;
+    display: block;
+    margin: 0 5px;
+}

@@ -35,9 +35,11 @@ module.exports = function (io, socket, r, conn) {
 
         const roomId = `${Math.floor(Date.now())}-${Math.floor(Math.random()*1000)}`
         const roomName = data.name
+        console.log(data.name)
         const roomPass = data.password
         const room = new Room(roomName, roomPass, roomId)
         rooms.push(room)
+        console.log(room.name)
 
         room.addMember(socket.handshake.session.user)
         socket.join(roomId)
@@ -50,7 +52,7 @@ module.exports = function (io, socket, r, conn) {
                 }
             })
         })
-        socket.emit('roomCreated', room)
+        socket.emit('joinRoomSuccess', room)
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 
@@ -113,14 +115,14 @@ module.exports = function (io, socket, r, conn) {
         room.messages.push(msg)
         io.sockets.in(id).emit('newMessage', msg)
     })
-    
+
     // User sends ready
     socket.on('deckInRoom', function (roomId, deckId) {
         console.log('[deckInRoom', roomId, deckId)
         if (!socket.handshake.session) return
         const room = getRoom(roomId)
         if (!room) return
-        
+
         const userId = socket.handshake.session.user.id
         const userIndex = room.members.findIndex(u => u.id === userId)
 
@@ -143,7 +145,7 @@ module.exports = function (io, socket, r, conn) {
     //Unready
     socket.on('unReady', function(roomId) {
         if (!socket.handshake.session) return
-        const room = getRoom(roomId)  
+        const room = getRoom(roomId)
         if (!room) return
         const userId = socket.handshake.session.user.id
         const userIndex = room.members.findIndex(u => u.id === userId)

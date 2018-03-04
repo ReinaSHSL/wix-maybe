@@ -10,19 +10,9 @@
 				v-if="!user"
 			/>
 
-			<section class="panel rooms" style="display:none">
-				<div class="tabs">
-					<a href="#" class="tab tab-rooms active">Rooms</a>
-				</div>
-				<div class="rooms-list">
-					<h2>Create a room</h2>
-					<input type="text" id="roomName" placeholder="Room Name">
-					<input type="text" id="roomPass" placeholder="Password (optional)">
-					<button class="create">Create Room</button>
-					<h2>Rooms</h2>
-					<ul class="roomsListUl"></ul>
-				</div>
-			</section>
+			<rooms-panel
+				v-if="user"
+			/>
 
 			<section class="panel lobby" style="display:none">
 				<p>This will be a public chatroom</p>
@@ -135,20 +125,13 @@
 
 			</section>
 		</main>
-
-		<!-- Scripts -->
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-
-		<link rel="stylesheet" href="css/style.css">
-		<link rel="stylesheet" href="css/builder.css">
-		<link rel="stylesheet" href="css/rooms.css">
-		<link rel="stylesheet" href="css/login.css">
 	</div>
 </template>
 
 <script>
 import AppHeader from '~/components/AppHeader.vue'
 import LoginPanel from '~/components/LoginPanel.vue'
+import RoomsPanel from '~/components/RoomsPanel.vue'
 import axios from 'axios'
 
 export default {
@@ -168,6 +151,7 @@ export default {
 	components: {
 		AppHeader,
 		LoginPanel,
+		RoomsPanel,
 	},
 	methods: {
 		login (username, password) {
@@ -193,5 +177,23 @@ export default {
 </script>
 
 <style>
+.app {
+	margin: 0;
+	font-family: sans-serif;
+	height: 100vh;
+	overflow: hidden;
+	display: grid;
+	grid:
+		"header" 33px
+		"content" calc(100% - 33px)
+		/ 100%;
+}
 
+.panels {
+	grid-area: content;
+	display: flex;
+	justify-content: center;
+}
+.panel { flex: 1 1 100%; }
+.panel + .panel { border-left: 1px solid #BBB }
 </style>

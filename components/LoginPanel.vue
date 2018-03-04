@@ -1,5 +1,5 @@
 <template>
-	<section class="panel login">
+	<section class="login-panel">
 		<form @submit.prevent="login">
 			<input
 				v-model="loginForm.username"
@@ -45,5 +45,8 @@ export default {
 </script>
 
 <style>
-
+.login-panel {
+	align-self: center;
+	flex: 0 0 auto;
+}
 </style>
