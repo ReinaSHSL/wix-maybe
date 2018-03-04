@@ -78,7 +78,7 @@ export default {
 			this.$socket.emit('leaveRoom', id)
 			const index = this.joinedRooms.findIndex(room => room.id === id)
 			if (index === -1) {
-				console.warn(new TypeError('leaveRoom: index of room is -1'))
+				console.warn(new TypeError('leaveRoom: room not found'))
 				return
 			}
 			this.joinedRooms.splice(index, 1)
@@ -104,6 +104,9 @@ export default {
 	},
 	socket: {
 		events: {
+			connect () {
+				console.log('[connection]')
+			},
 			// There are changes to the list of existing rooms
 			activeRooms (rooms) {
 				console.log('[activeRooms]', rooms)
@@ -119,6 +122,12 @@ export default {
 			joinRoomFail (reason) {
 				console.log('[joinRoomFail]', reason)
 				window.alert(`Failed to join room: ${reason}`)
+			},
+
+			newMessage (message) {
+				const room = this.joinedRooms.find(room => room.id === message.roomId)
+				if (!room) return console.warn(new TypeError('newMessage: room not found'))
+				room.messages.push(message)
 			}
 		}
 	}

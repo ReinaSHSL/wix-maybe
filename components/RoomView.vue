@@ -7,7 +7,13 @@
 			/>
 		</table>
 		<ul class="room-users"></ul>
-		<input type="text" class="room-chatbar" placeholder="Type text here">
+		<input
+			class="room-chatbar"
+			type="text"
+			placeholder="Write a message, and send with [Enter]"
+			v-model="draftedMessage"
+			@keydown.enter="sendMessage"
+		/>
 		<select class="room-deck-select">
 			<option disabled selected>Choose a deck...</option>
 		</select>
@@ -20,6 +26,20 @@ import RoomMessage from '~/components/RoomMessage.vue'
 
 export default {
 	props: ['room'],
+	data () {
+		return {
+			draftedMessage: ''
+		}
+	},
+	methods: {
+		sendMessage () {
+			this.$socket.emit('sendRoomMessage', {
+				roomId: this.room.id,
+				msg: this.draftedMessage
+			})
+			this.draftedMessage = ''
+		}
+	},
 	components: {
 		RoomMessage
 	}

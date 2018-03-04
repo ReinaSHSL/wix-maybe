@@ -6,7 +6,7 @@
 		<td class="timestamp">{{time}}</td>
 		<td v-if="message.type === 'normal'" class="author">
 			<colored-username
-				:user="{username: message.author}"
+				:user="message.author"
 			/>
 		</td>
 		<td v-if="message.type === 'normal'" class="content">{{message.content}}</td>

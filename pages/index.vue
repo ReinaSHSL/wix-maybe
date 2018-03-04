@@ -196,4 +196,22 @@ export default {
 }
 .panel { flex: 1 1 100%; }
 .panel + .panel { border-left: 1px solid #BBB }
+
+/* Generics */
+input[type="submit"],
+button {
+	border: 1px solid #939393;
+	background: linear-gradient(to bottom, #F6F6F6, #DEDEDE);
+	font-size: 13px;
+	line-height: 15px;
+	padding: 2px 5px;
+	border-radius: 2px;
+}
+input[type="text"],
+input[type="password"] {
+	border: 1px solid #A9A9A9;
+	font-size: 13px;
+	line-height: 15px;
+	padding: 2px 5px;
+}
 </style>

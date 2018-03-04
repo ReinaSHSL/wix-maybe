@@ -52,7 +52,7 @@ module.exports = function (io, socket, r, conn) {
                 }
             })
         })
-        socket.emit('joinRoomSuccess', room)
+        socket.emit('joinRoomSuccess', room.withMessages())
         io.sockets.emit('activeRooms', rooms)
         io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 
@@ -229,10 +229,11 @@ module.exports = function (io, socket, r, conn) {
                 id: socket.handshake.session.user.id,
                 username: socket.handshake.session.user.username
             },
-            content: escapeHTML(data.msg),
+            content: data.msg.replace(/^\s+|\s+$/g, ''),
             roomId: data.roomId,
             timestamp: Date.now()
         }
+        if (!_msg.content) return // No empty messages
         room.messages.push(_msg)
         io.sockets.in(data.roomId).emit('newMessage', _msg)
     })
