@@ -2,15 +2,20 @@
 	<section class="panel rooms-panel">
 		<div class="rooms-tabs">
 			<room-tab
-				:room="{name: 'rooms', id: null}"
+				:room="null"
+				:hide-button="true"
 				:active="activeRoomId == null"
-			/>
+			>
+				<i class="fas fa-home" title="All Rooms"></i>
+			</room-tab>
 			<room-tab
 				v-for="room in joinedRooms"
 				:room="room"
 				:active="activeRoomId === room.id"
 				:key="room.id"
-			/>
+			>
+				{{room.name}}
+			</room-tab>
 		</div>
 		<div v-if="activeRoomId == null" class="rooms-list-view">
 			<h2>Create a room</h2>

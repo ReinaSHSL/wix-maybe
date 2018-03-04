@@ -3,16 +3,17 @@
 		href="#"
 		class="rooms-tab"
 		:class="cssClass"
-		@click="$parent.selectRoom(room.id)"
+		@click="$parent.selectRoom((room || {}).id)"
 	>
-		<span class="tab-title">{{room.name}}</span>
+		<span class="tab-title">
+			<slot/>
+		</span>
 		<button
-			v-if="room.id != null"
+			v-if="room"
 			@click.stop="$parent.leaveRoom(room.id)"
 			class="rooms-tab-close"
-			title="Leave room"
 		>
-			Leave room
+			<i class="fas fa-times" title="Leave room"></i>
 		</button>
 	</a>
 </template>
@@ -30,46 +31,47 @@ export default {
 
 <style>
 .rooms-tab {
-    flex: 0 0 auto;
-    margin-top: 4px;
-    line-height: 27px;
-    padding: 0 10px;
-    text-align: center;
-    text-decoration: none;
-    color: #666;
-    border: 1px solid #DDD;
-    border-bottom: 0;
-    background: #FFF;
-    margin-right: 4px;
-    cursor: default;
+	flex: 0 0 auto;
+	margin-top: 4px;
+	line-height: 27px;
+	padding: 0 10px;
+	text-align: center;
+	text-decoration: none;
+	color: #666;
+	border: 1px solid #DDD;
+	border-bottom: 0;
+	background: #FFF;
+	margin-right: 4px;
+	cursor: default;
+	display: flex;
+	align-items: center;
 }
 .rooms-tab.active,
 .rooms-tab:hover {
-    border-color: #BBB;
-    color: inherit;
+	border-color: #BBB;
+	color: inherit;
 }
 .rooms-tab.active {
-    box-shadow: 0 2px 0 -1px #FFF;
+	box-shadow: 0 2px 0 -1px #FFF;
 }
 .rooms-tab-close {
-    background: none;
-    border: 0;
-    border-radius: 50%;
-    color: #333;
-    padding: 0;
-    text-align: center;
-    cursor: pointer;
-    font-size: 0;
-    width: 18px;
-    margin: 0 -5px 0 2px;
+	background: none;
+	border: 0;
+	border-radius: 50%;
+	color: #777;
+	padding: 0;
+	text-align: center;
+	cursor: pointer;
+	font-size: smaller;
+	width: 18px;
+	height: 18px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 -5px 0 5px;
 }
 .rooms-tab-close:hover {
-    background: #DDD;
-}
-.rooms-tab-close::after {
-    content: "\2716";
-    font-size: small;
-    position: relative;
-    top: -0.75px;
+	background: #DDD;
+	color: #C66;
 }
 </style>
