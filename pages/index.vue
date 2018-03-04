@@ -5,18 +5,15 @@
 		/>
 
 		<main class="panels">
-			<!-- Initial screen - login/sighup stuff -->
 			<login-panel
 				v-if="!user"
 			/>
-
 			<rooms-panel
 				v-if="user"
 			/>
-
-			<section class="panel lobby" style="display:none">
-				<p>This will be a public chatroom</p>
-			</section>
+			<global-chat-panel
+				v-if="user"
+			/>
 
 			<section class="panel builder" style="display:none"><!-- The deck builder woo -->
 				<!-- Preview column -->
@@ -129,10 +126,12 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import AppHeader from '~/components/AppHeader.vue'
 import LoginPanel from '~/components/LoginPanel.vue'
 import RoomsPanel from '~/components/RoomsPanel.vue'
-import axios from 'axios'
+import GlobalChatPanel from '~/components/GlobalChatPanel.vue'
 
 export default {
 	data () {
@@ -152,6 +151,7 @@ export default {
 		AppHeader,
 		LoginPanel,
 		RoomsPanel,
+		GlobalChatPanel,
 	},
 	methods: {
 		login (username, password) {

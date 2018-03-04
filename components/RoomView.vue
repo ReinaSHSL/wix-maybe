@@ -47,6 +47,7 @@ export default {
 	max-height: 100%;
 	border-spacing: 0;
 	overflow-y: scroll;
+	font-size: 14px;
 }
 
 .room-users {

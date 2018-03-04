@@ -1,7 +1,5 @@
 <template>
-	<span class="username" :style="cssStyle">
-		{{user.username}}
-	</span>
+	<span class="username" :style="cssStyle">{{user.username}}</span>
 </template>
 
 <script>

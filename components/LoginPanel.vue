@@ -1,5 +1,5 @@
 <template>
-	<section class="login-panel">
+	<section class="panel login-panel">
 		<form @submit.prevent="login">
 			<input
 				v-model="loginForm.username"

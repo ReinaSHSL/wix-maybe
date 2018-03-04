@@ -1,5 +1,5 @@
 <template>
-	<section class="rooms-panel">
+	<section class="panel rooms-panel">
 		<div class="rooms-tabs">
 			<room-tab
 				:room="{name: 'rooms', id: null}"
@@ -102,27 +102,25 @@ export default {
 		RoomTab,
 		RoomView,
 	},
-	created () {
-		// There are changes to the list of existing rooms
-		this.$socket.on('activeRooms', rooms => {
-			console.log('[activeRooms]', rooms)
-			this.allRooms = rooms
-		})
-
-		// We joined a room
-		this.$socket.on('joinRoomSuccess', room => {
-			console.log('[joinRoomSuccess]', room)
-			this.joinedRooms.push(room)
-			this.selectRoom(room.id)
-		})
-
-		// We couldn't join a room
-		this.$socket.on('joinRoomFail', reason => {
-			console.log('[joinRoomFail]', reason)
-			window.alert(`Failed to join room: ${reason}`)
-		})
-
-		//
+	socket: {
+		events: {
+			// There are changes to the list of existing rooms
+			activeRooms (rooms) {
+				console.log('[activeRooms]', rooms)
+				this.allRooms = rooms
+			},
+			// We joined a room
+			joinRoomSuccess (room) {
+				console.log('[joinRoomSuccess]', room)
+				this.joinedRooms.push(room)
+				this.selectRoom(room.id)
+			},
+			// We couldn't join a room
+			joinRoomFail (reason) {
+				console.log('[joinRoomFail]', reason)
+				window.alert(`Failed to join room: ${reason}`)
+			}
+		}
 	}
 }
 </script>

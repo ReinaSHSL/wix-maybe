@@ -1,13 +1,36 @@
 <template>
-	<tr class="message">
+	<tr
+		class="message"
+		:class="cssClass"
+	>
 		<td class="timestamp">{{time}}</td>
-		<td class="author">
+		<td v-if="message.type === 'normal'" class="author">
 			<colored-username
-				v-if="message.type === 'normal'"
 				:user="{username: message.author}"
 			/>
 		</td>
-		<td class="content">{{message.content}}</td>
+		<td v-if="message.type === 'normal'" class="content">{{message.content}}</td>
+		<td v-if="message.type === 'join'" class="decoration">--&gt;</td>
+		<td v-if="message.type === 'join'" class="content">
+			<colored-username
+				:user="{username: message.username}"
+			/>
+			has joined.
+		</td>
+		<td v-if="message.type === 'leave'" class="decoration">&lt;--</td>
+		<td v-if="message.type === 'leave'" class="content">
+			<colored-username
+				:user="{username: message.username}"
+			/>
+			has left.
+		</td>
+		<td v-if="message.type === 'ownerChange'" class="decoration">---</td>
+		<td v-if="message.type === 'ownerChange'" class="content">
+			<colored-username
+				:user="{username: message.username}"
+			/>
+			is now the owner.
+		</td>
 	</tr>
 </template>
 
@@ -19,6 +42,18 @@ export default {
 	computed: {
 		time () {
 			return new Date(this.message.timestamp).toTimeString().substr(0, 5)
+		},
+		cssClass () {
+			switch (this.message.type) {
+				case 'normal':
+					return 'user-message'
+				case 'join':
+					return 'join-message'
+				case 'leave':
+					return 'leave-message'
+				case 'ownerChange':
+					return 'owner-change-message'
+			}
 		}
 	},
 	components: {
@@ -31,7 +66,10 @@ export default {
 .message:hover {
 	background: #F7F7F7;
 }
-.message .timestamp, .message .author, .message .content {
+.message .timestamp,
+.message .author,
+.message .decoration,
+.message .content {
 	padding: 1px 5px;
 	display: table-cell;
 	vertical-align: top;
@@ -41,7 +79,8 @@ export default {
 	opacity: .7;
 	padding-right: 0;
 }
-.message .author {
+.message .author,
+.message .decoration {
 	white-space: nowrap;
 	border-right: 1px solid #DDD;
 	text-align: right;
@@ -49,9 +88,9 @@ export default {
 .message .content {
 	width: 100%;
 }
-.message.system .content { color: #666 }
-.message.join .author { color: green }
-.message.leave .author { color: red }
+.message:not(.user-message) .content { color: #666 }
+.join-message .decoration { color: green }
+.leave-message .decoration { color: red }
 
 </style>
 
