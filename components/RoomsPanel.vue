@@ -36,6 +36,7 @@
 			<ul class="rooms-list">
 				<li
 					v-for="room in allRooms"
+					:key="room.id"
 					class="rooms-list-item"
 				>
 					<a

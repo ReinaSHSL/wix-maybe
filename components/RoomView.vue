@@ -9,6 +9,7 @@
 		<ul class="room-users-list">
 			<room-users-list-item
 				v-for="user in room.members"
+				:key="user.id"
 				:user="user"
 			/>
 		</ul>
