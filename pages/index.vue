@@ -177,6 +177,11 @@ export default {
 </script>
 
 <style>
+body {
+	margin: 0;
+	font-family: sans-serif;
+}
+
 .app {
 	margin: 0;
 	font-family: sans-serif;

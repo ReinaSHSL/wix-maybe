@@ -93,11 +93,11 @@ export default {
 			console.log('@joinRoom', id)
 			const room = this.allRooms.find(room => room.id === id)
 			if (room.hasPassword) {
-        var password = window.prompt('Room password?')
-        this.$socket.emit('joinRoom', {id, password})
-	    } else {
-        this.$socket.emit('joinRoom', {id})
-  	  }
+				var password = window.prompt('Room password?')
+				this.$socket.emit('joinRoom', {id, password})
+			} else {
+				this.$socket.emit('joinRoom', {id})
+			}
 		},
 		createRoom () {
 			this.$socket.emit('createRoom', this.createRoomForm)
