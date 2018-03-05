@@ -6,7 +6,12 @@
 				:message="message"
 			/>
 		</table>
-		<ul class="room-users"></ul>
+		<ul class="room-users-list">
+			<room-users-list-item
+				v-for="user in room.members"
+				:user="user"
+			/>
+		</ul>
 		<input
 			class="room-chatbar"
 			type="text"
@@ -14,21 +19,63 @@
 			v-model="draftedMessage"
 			@keydown.enter="sendMessage"
 		/>
-		<select class="room-deck-select">
+		<select
+			class="room-deck-select"
+			:disabled="ready"
+		>
 			<option disabled selected>Choose a deck...</option>
 		</select>
-		todo readybutton
+		<label
+			v-if="roomOwner.id !== user.id"
+			class="ready-button"
+		>
+			<input
+				type="checkbox"
+				class="ready-input"
+				v-model="ready"
+				@change="readyChange"
+			/>
+			Ready?
+		</label>
+		<div
+			v-if="roomOwner.id === user.id"
+			class="start-button"
+		>
+			<button
+				class="start-button-inner"
+				@click="start"
+				:disabled="!canStart"
+			>
+				Start!
+			</button>
+		</div>
 	</div>
 </template>
 
 <script>
 import RoomMessage from '~/components/RoomMessage.vue'
+import RoomUsersListItem from '~/components/RoomUsersListItem.vue'
 
 export default {
 	props: ['room'],
 	data () {
 		return {
-			draftedMessage: ''
+			draftedMessage: '',
+			ready: false,
+			selectedDeck: null
+		}
+	},
+	computed: {
+		user () {
+			return this.room.members.find(user => user.id === this.$parent.$parent.user.id)
+		},
+		roomOwner () {
+			return this.room.members.find(user => user.owner)
+		},
+		canStart () {
+			// The owner isn't labeled as ready, but one other user must have a deck
+			// the game to start
+			return this.room.members.some(user => user.ready)
 		}
 	},
 	methods: {
@@ -38,10 +85,25 @@ export default {
 				msg: this.draftedMessage
 			})
 			this.draftedMessage = ''
-		}
+		},
+		start () {
+			// if (this.canStart)
+			console.log('hi your shits broken')
+		},
+		readyChange () {
+			if (this.ready) {
+				// TODO: once we have the deck things built out, send the deck ID here
+				// FIXME: trying to send a deck that doesn't exist breaks the UI
+				// this.$socket.emit('deckInRoom', this.room.id, 'uwu')
+				console.log('soon:tm:')
+			} else {
+				this.$socket.emit('unReady', this.room.id)
+			}
+		},
 	},
 	components: {
-		RoomMessage
+		RoomMessage,
+		RoomUsersListItem,
 	}
 }
 </script>
@@ -70,7 +132,8 @@ export default {
 	font-size: 14px;
 }
 
-.room-users {
+/* User list */
+.room-users-list {
 	grid-area: users;
 	border-left: 1px solid #DDD;
 	background: #F7F7F7;
@@ -78,6 +141,7 @@ export default {
 	padding: 0;
 	list-style: none;
 	overflow-y: scroll;
+	font-size: 14px;
 }
 
 .room-chatbar {
@@ -97,5 +161,23 @@ export default {
 	grid-area: deck;
 	height: 100%;
 	width: 100%;
+}
+
+/* Ready/start game buttons */
+.ready-button, .start-button {
+	grid-area: ready;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-left: 1px solid #DDD;
+	border-top: 1px solid #DDD;
+}
+.ready-input {
+	margin: 0 5px 0 0;
+}
+.start-button-inner {
+	flex: 1 1 100%;
+	display: block;
+	margin: 0 5px;
 }
 </style>

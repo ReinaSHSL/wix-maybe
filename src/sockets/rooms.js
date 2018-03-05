@@ -16,7 +16,14 @@ function deleteRoom (id) {
 module.exports = function (io, socket, r, conn) {
     console.log('[connection]')
     // Send the list of active rooms to the client
-    socket.emit('activeRooms', rooms)
+    // HACK: This delays because apparently it takes a while for Nuxt to init
+    // the frontend after the page loads, which means without the delay the
+    // client never actually gets this signal.
+    // TODO: Make a new event that the client will send to request the room list
+    // once on connection.
+    setTimeout(() => {
+        socket.emit('activeRooms', rooms)
+    }, 1000)
 
     socket.use(function (packet, next) {
         socket.handshake.session.reload(function (err) {

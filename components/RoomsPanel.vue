@@ -129,11 +129,19 @@ export default {
 				window.alert(`Failed to join room: ${reason}`)
 			},
 
+			// Someone sent a message
 			newMessage (message) {
 				const room = this.joinedRooms.find(room => room.id === message.roomId)
 				if (!room) return console.warn(new TypeError('newMessage: room not found'))
 				room.messages.push(message)
-			}
+			},
+
+			// Someone joined or left a room
+			roomUsers (roomId, users) {
+				const room = this.joinedRooms.find(room => room.id === roomId)
+				if (!room) return console.warn(new TypeError('roomUsers: room not found'))
+				room.members = users
+			},
 		}
 	}
 }
