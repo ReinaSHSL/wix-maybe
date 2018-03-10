@@ -6,7 +6,7 @@ const { Nuxt, Builder } = require('nuxt')
 let config = {}
 try {
 	config = require('../nuxt.config.js')
-} catch (e) {}
+} catch (e) {} // eslint-disable-line no-empty
 config.rootDir = resolve(__dirname, '..')
 config.dev = process.env.NODE_ENV !== 'production'
 
