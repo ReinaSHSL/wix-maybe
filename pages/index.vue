@@ -8,11 +8,12 @@
 			<login-panel
 				v-if="!user"
 			/>
+			<builder-panel v-if="user && builderShown"/>
 			<rooms-panel
-				v-if="user"
+				v-if="user && !builderShown"
 			/>
 			<global-chat-panel
-				v-if="user"
+				v-if="user && !builderShown"
 			/>
 
 			<section class="panel builder" style="display:none"><!-- The deck builder woo -->
@@ -132,10 +133,12 @@ import AppHeader from '~/components/AppHeader.vue'
 import LoginPanel from '~/components/LoginPanel.vue'
 import RoomsPanel from '~/components/RoomsPanel.vue'
 import GlobalChatPanel from '~/components/GlobalChatPanel.vue'
+import BuilderPanel from '~/components/BuilderPanel.vue'
 
 export default {
 	data () {
 		return {
+			builderShown: false,
 			user: null,
 			loginForm: {
 				username: '',
@@ -152,6 +155,7 @@ export default {
 		LoginPanel,
 		RoomsPanel,
 		GlobalChatPanel,
+		BuilderPanel,
 	},
 	methods: {
 		login (username, password) {

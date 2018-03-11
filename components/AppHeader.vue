@@ -4,6 +4,13 @@
 			<h1 class="title"><a href="#">Batoru</a></h1>
 			<button class="builder-button" style='display:none'>Open Deck Builder</button>
 		</div>
+		<button
+    class="builder-toggle-button"
+    v-if="user"
+    @click="$parent.builderShown = !$parent.builderShown"
+>
+    Toggle Builder
+</button>
 		<div v-if="user" class="current-user">
 			<colored-username
 				:user="user"
