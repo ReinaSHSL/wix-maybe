@@ -74,6 +74,9 @@ export default {
 	flex: 0 0 auto;
 	display: flex;
 }
+.login-panel h1 {
+	margin: 0;
+}
 .login-panel .form {
 	width: 200px;
 	margin: 10px;
@@ -87,6 +90,6 @@ export default {
 	border-top: 0;
 }
 .login-panel .form input[type="submit"] {
-	margin-top: 3px;
+	margin-top: 5px;
 }
 </style>
