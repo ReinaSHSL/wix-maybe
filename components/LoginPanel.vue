@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
 	data () {
 		return {
@@ -59,10 +61,22 @@ export default {
 	},
 	methods: {
 		login () {
-			this.$parent.login(this.loginForm.username, this.loginForm.password)
+			axios.post('/login', this.loginForm).then(response => {
+				this.$emit('login', response.data)
+			}).catch(err => {
+				if (err.response) {
+					window.alert(err.response.data)
+				} else {
+					console.log(err, Object.keys(err))
+				}
+			})
 		},
 		signup () {
-			this.$parent.signup(this.signupForm.username, this.signupForm.password)
+			axios.post('/signup', this.signupForm).then(response => {
+				window.alert(response.data)
+			}).catch(err => {
+				window.alert(err.response.data)
+			})
 		}
 	}
 }
@@ -70,9 +84,10 @@ export default {
 
 <style>
 .login-panel {
-	align-self: center;
 	flex: 0 0 auto;
 	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .login-panel h1 {
 	margin: 0;

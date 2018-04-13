@@ -1,14 +1,27 @@
 <template>
 	<header class="header">
-		<div class="title-area">
+		<div class="left">
 			<h1 class="title"><a href="#">Batoru</a></h1>
-			<button
-				class="builder-toggle-button"
-				v-if="user"
-				@click="$parent.builderShown = !$parent.builderShown"
-			>
-				{{$parent.builderShown ? 'Close' : 'Open'}} Deck Builder
-			</button>
+			<div class="tabs" v-if="$parent.user">
+				<generic-tab
+					hide-close="true"
+					tab-title="Home"
+					@click="$parent.currentPanel = 'HomePanel'"
+					:active="$parent.currentPanel === 'HomePanel'"
+				>
+					<i class="fas fa-home"></i>
+					Home
+				</generic-tab>
+				<generic-tab
+					hide-close="true"
+					tab-title="Deck Builder"
+					@click="$parent.currentPanel = 'BuilderPanel'"
+					:active="$parent.currentPanel === 'BuilderPanel'"
+				>
+					<i class="fas fa-clone"></i>
+					Decks
+				</generic-tab>
+			</div>
 		</div>
 		<div v-if="user" class="current-user">
 			Logged in as:&nbsp;
@@ -28,11 +41,24 @@
 
 <script>
 import ColoredUsername from '~/components/ColoredUsername.vue'
+import GenericTab from '~/components/GenericTab.vue'
 
 export default {
 	props: ['user'],
 	components: {
-		ColoredUsername
+		ColoredUsername,
+		GenericTab
+	},
+	data () { return {
+		joinedRooms: [{
+			name: 'yes',
+			id: 893
+		}]
+	}},
+	methods: {
+		hi () {
+			window.alert('i')
+		}
 	}
 }
 </script>
@@ -48,16 +74,23 @@ export default {
 	display: flex;
 	justify-content: space-between;
 }
-.header .title-area {
+.header .left {
 	display: flex;
 }
 .header .title {
-	margin: 0 10px 0 0;
+	margin: 0;
 	font-size: inherit;
 }
 .header .title a {
 	color: inherit;
 	text-decoration: inherit;
+}
+
+.header .tabs {
+	margin-left: 10px;
+	display: flex;
+	align-items: stretch;
+	padding: 0 5px;
 }
 
 .header .builder-toggle-button {

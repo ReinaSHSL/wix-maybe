@@ -1,23 +1,6 @@
 <template>
-	<section class="panel rooms-panel">
-		<div class="rooms-tabs">
-			<room-tab
-				:room="null"
-				:hide-button="true"
-				:active="activeRoomId == null"
-			>
-				<i class="fas fa-home" title="All Rooms"></i>
-			</room-tab>
-			<room-tab
-				v-for="room in joinedRooms"
-				:room="room"
-				:active="activeRoomId === room.id"
-				:key="room.id"
-			>
-				{{room.name}}
-			</room-tab>
-		</div>
-		<div v-if="activeRoomId == null" class="rooms-list-view">
+	<section v-if="activeRoomId == null" class="panel home-panel">
+		<div class="battle-actions">
 			<h2>Create a room</h2>
 			<form @submit.prevent="createRoom">
 				<input
@@ -47,20 +30,24 @@
 						<span v-if="room.hasPassword" class="info has-password">Has password</span>
 						<span class="info members">{{room.members.length}} member{{room.members.length === 1 ? '' : 's'}}</span>
 					</a>
-        </li>
+				</li>
 			</ul>
 		</div>
-		<room-view
-			v-for="room in joinedRooms"
-			v-if="activeRoomId === room.id"
-			:room="room"
-			:key="room.id"
-		/>
+		<div class="related-actions">
+			More things will go here
+		</div>
+		<!--<room-view-->
+		<!--	v-for="room in joinedRooms"-->
+		<!--	v-if="activeRoomId === room.id"-->
+		<!--	:room="room"-->
+		<!--	:key="room.id"-->
+		<!--/>-->
+
 	</section>
 </template>
 
 <script>
-import RoomTab from '~/components/RoomTab.vue'
+import GenericTab from '~/components/GenericTab.vue'
 import RoomView from '~/components/RoomView.vue'
 
 export default {
@@ -105,7 +92,7 @@ export default {
 		}
 	},
 	components: {
-		RoomTab,
+		GenericTab,
 		RoomView,
 	},
 	socket: {

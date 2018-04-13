@@ -1,26 +1,27 @@
 <template>
 	<a
 		href="#"
-		class="rooms-tab"
+		class="tab"
 		:class="cssClass"
-		@click="$parent.selectRoom((room || {}).id)"
+		:title="tabTitle"
+		@click="$emit('click')"
 	>
-		<span class="tab-title">
+		<span class="tab-content">
 			<slot/>
 		</span>
 		<button
-			v-if="room"
-			@click.stop="$parent.leaveRoom(room.id)"
-			class="rooms-tab-close"
+			v-if="!hideClose"
+			@click.stop="$emit('close')"
+			class="tab-close"
 		>
-			<i class="fas fa-times" title="Leave room"></i>
+			<i class="fas fa-times" :title="closeTitle"></i>
 		</button>
 	</a>
 </template>
 
 <script>
 export default {
-	props: ['room', 'active'],
+	props: ['active', 'hideClose', 'tabTitle', 'closeTitle'],
 	computed: {
 		cssClass () {
 			return this.active ? 'active' : ''
@@ -30,7 +31,7 @@ export default {
 </script>
 
 <style>
-.rooms-tab {
+.tab {
 	flex: 0 0 auto;
 	margin-top: 4px;
 	line-height: 27px;
@@ -46,15 +47,15 @@ export default {
 	display: flex;
 	align-items: center;
 }
-.rooms-tab.active,
-.rooms-tab:hover {
+.tab.active,
+.tab:hover {
 	border-color: #BBB;
 	color: inherit;
 }
-.rooms-tab.active {
+.tab.active {
 	box-shadow: 0 2px 0 -1px #FFF;
 }
-.rooms-tab-close {
+.tab-close {
 	background: none;
 	border: 0;
 	border-radius: 50%;
@@ -70,7 +71,7 @@ export default {
 	justify-content: center;
 	margin: 0 -5px 0 5px;
 }
-.rooms-tab-close:hover {
+.tab-close:hover {
 	background: #DDD;
 	color: #C66;
 }
