@@ -1,7 +1,9 @@
 <template>
 	<header class="header">
 		<div class="left">
-			<h1 class="title"><a href="#">Batoru</a></h1>
+			<h1 class="title">
+				<a href="#">Batoru</a>
+			</h1>
 			<div class="tabs" v-if="$parent.user">
 				<generic-tab
 					hide-close="true"
@@ -20,6 +22,16 @@
 				>
 					<i class="fas fa-clone"></i>
 					Decks
+				</generic-tab>
+				<generic-tab
+					v-for="room in rooms"
+					:key="room.id"
+					:tab-title="'Battle room: ' + room.name"
+					@click="$parent.showRoom(room.id)"
+					@close="$parent.leaveRoom(room.id)"
+					:active="$parent.currentPanel === 'RoomPanel' && $parent.activeRoomId === room.id"
+				>
+					{{room.name}}
 				</generic-tab>
 			</div>
 		</div>
@@ -44,7 +56,7 @@ import ColoredUsername from '~/components/ColoredUsername.vue'
 import GenericTab from '~/components/GenericTab.vue'
 
 export default {
-	props: ['user'],
+	props: ['user', 'rooms'],
 	components: {
 		ColoredUsername,
 		GenericTab

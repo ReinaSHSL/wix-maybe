@@ -1,5 +1,6 @@
 <template>
-	<div class="room-view">
+	<div class="room-panel">
+		<!--hi there-->
 		<table class="room-messages">
 			<room-message
 				v-for="message in room.messages"
@@ -27,7 +28,7 @@
 			<option disabled selected>Choose a deck...</option>
 		</select>
 		<label
-			v-if="roomOwner.id !== user.id"
+			v-if="room.owner.id !== user.id"
 			class="ready-button"
 		>
 			<input
@@ -39,7 +40,7 @@
 			Ready?
 		</label>
 		<div
-			v-if="roomOwner.id === user.id"
+			v-if="room.owner.id === user.id"
 			class="start-button"
 		>
 			<button
@@ -68,15 +69,13 @@ export default {
 	},
 	computed: {
 		user () {
-			return this.room.members.find(user => user.id === this.$parent.$parent.user.id)
-		},
-		roomOwner () {
-			return this.room.members.find(user => user.owner)
+			return this.room.members.find(user => user.id === this.$parent.user.id) || {}
 		},
 		canStart () {
 			// The owner isn't labeled as ready, but one other user must have a deck
 			// the game to start
 			return this.room.members.some(user => user.ready)
+			// return true
 		}
 	},
 	methods: {
@@ -110,10 +109,9 @@ export default {
 </script>
 
 <style>
-.room-view {
-	grid-area: main;
-	max-height: 100%;
+.room-panel {
 	display: grid;
+	display: --webkit-grid;
 	grid:
 		"messages users" calc(100% - 64px)
 		"messages deck " 32px

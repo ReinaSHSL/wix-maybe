@@ -21,7 +21,7 @@ const app = express()
 const server = require('http').createServer(app)
 
 // Add session storage
-const sessionStore = new expressSession.MemoryStore()
+const sessionStore = new expressSession.MemoryStore() // TODO
 const session = new expressSession({
 	store: sessionStore,
 	secret: 'this is hell'

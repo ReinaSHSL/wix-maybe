@@ -2,14 +2,27 @@
 	<div class="app">
 		<app-header
 			:user="user"
+			:rooms="joinedRooms"
 		/>
-		<keep-alive v-if="user">
-			<component :is="currentPanel" v-bind="currentProps"/>
-		</keep-alive>
 		<login-panel
 			v-if="!user"
 			@login="user = $event"
 		/>
+		<template v-else>
+			<home-panel
+				v-show="currentPanel === 'HomePanel'"
+				:allRooms="allRooms"
+			/>
+			<builder-panel
+				v-show="currentPanel === 'BuilderPanel'"
+			/>
+			<room-panel
+				v-for="room in joinedRooms"
+				:key="room.id"
+				v-if="room && currentPanel === 'RoomPanel' && activeRoomId === room.id"
+				:room="room"
+			/>
+		</template>
 		<!--<login-panel-->
 		<!--	v-if="!user"-->
 		<!--/>-->
@@ -29,8 +42,9 @@ import axios from 'axios'
 import AppHeader from '~/components/AppHeader.vue'
 import LoginPanel from '~/components/LoginPanel.vue'
 import HomePanel from '~/components/HomePanel.vue'
-import GlobalChatPanel from '~/components/GlobalChatPanel.vue'
+// import GlobalChatPanel from '~/components/GlobalChatPanel.vue'
 import BuilderPanel from '~/components/BuilderPanel.vue'
+import RoomPanel from '~/components/RoomPanel.vue'
 
 export default {
 	data () {
@@ -39,6 +53,8 @@ export default {
 			builderShown: false,
 			user: null,
 			joinedRooms: [],
+			activeRooms: [],
+			activeRoomId: null,
 			loginForm: {
 				username: '',
 				password: ''
@@ -50,24 +66,82 @@ export default {
 		}
 	},
 	computed: {
+		activeRoom () {
+			return this.joinedRooms.find(room => room.id === this.activeRoomId)
+		},
 		currentProps () {
-			
+			if (this.currentPanel === 'RoomPanel') {
+				return {
+					room: this.activeRoom
+				}
+			} else {
+				return {}
+			}
+		}
+	},
+	methods: {
+		leaveRoom (id) {
+			this.$socket.emit('leaveRoom', id)
+			const index = this.joinedRooms.findIndex(room => room.id === id)
+			if (index === -1) {
+				console.warn(new TypeError('leaveRoom: room not found'))
+				return
+			}
+			this.joinedRooms.splice(index, 1)
+			this.currentPanel = 'HomePanel'
+		},
+		showRoom (id) {
+			this.activeRoomId = id
+			this.currentPanel = 'RoomPanel'
+			this.currentProps = {room: this.activeRoom}
 		}
 	},
 	components: {
 		AppHeader,
 		LoginPanel,
 		HomePanel,
-		GlobalChatPanel,
+		// GlobalChatPanel,
 		BuilderPanel,
+		RoomPanel,
 	},
 	socket: {
 		events: {
+			connect () {
+				console.log('[connection]')
+			},
+
+			// There are changes to the list of existing rooms
+			activeRooms (rooms) {
+				console.log('[activeRooms]', rooms)
+				this.allRooms = rooms
+			},
+
 			// We joined a room
 			joinRoomSuccess (room) {
 				console.log('[joinRoomSuccess]', room)
 				this.joinedRooms.push(room)
-			}
+				this.showRoom(room.id)
+			},
+
+			// We couldn't join a room
+			joinRoomFail (reason) {
+				console.log('[joinRoomFail]', reason)
+				window.alert(`Failed to join room: ${reason}`)
+			},
+
+			// Someone sent a message
+			newMessage (message) {
+				const room = this.joinedRooms.find(room => room.id === message.roomId)
+				if (!room) return console.warn(new TypeError('newMessage: room not found'))
+				room.messages.push(message)
+			},
+
+			// Someone joined or left a room
+			roomUsers (roomId, users) {
+				const room = this.joinedRooms.find(room => room.id === roomId)
+				if (!room) return console.warn(new TypeError('roomUsers: room not found'))
+				room.members = users
+			},
 		}
 	}
 }

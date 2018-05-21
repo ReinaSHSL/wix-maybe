@@ -36,46 +36,24 @@
 		<div class="related-actions">
 			More things will go here
 		</div>
-		<!--<room-view-->
-		<!--	v-for="room in joinedRooms"-->
-		<!--	v-if="activeRoomId === room.id"-->
-		<!--	:room="room"-->
-		<!--	:key="room.id"-->
-		<!--/>-->
-
 	</section>
 </template>
 
 <script>
-import GenericTab from '~/components/GenericTab.vue'
-import RoomView from '~/components/RoomView.vue'
-
 export default {
+	props: ['allRooms'],
 	data () {
 		return {
 			createRoomForm: {
 				name: '',
 				password: ''
-			},
-			joinedRooms: [],
-			allRooms: [],
-			activeRoomId: null
+			}
 		}
 	},
 	methods: {
 		selectRoom (id) {
 			console.log(id)
 			this.activeRoomId = id
-		},
-		leaveRoom (id) {
-			this.$socket.emit('leaveRoom', id)
-			const index = this.joinedRooms.findIndex(room => room.id === id)
-			if (index === -1) {
-				console.warn(new TypeError('leaveRoom: room not found'))
-				return
-			}
-			this.joinedRooms.splice(index, 1)
-			this.selectRoom(null)
 		},
 		joinRoom (id) {
 			console.log('@joinRoom', id)
@@ -89,47 +67,6 @@ export default {
 		},
 		createRoom () {
 			this.$socket.emit('createRoom', this.createRoomForm)
-		}
-	},
-	components: {
-		GenericTab,
-		RoomView,
-	},
-	socket: {
-		events: {
-			connect () {
-				console.log('[connection]')
-			},
-			// There are changes to the list of existing rooms
-			activeRooms (rooms) {
-				console.log('[activeRooms]', rooms)
-				this.allRooms = rooms
-			},
-			// We joined a room
-			joinRoomSuccess (room) {
-				console.log('[joinRoomSuccess]', room)
-				this.joinedRooms.push(room)
-				this.selectRoom(room.id)
-			},
-			// We couldn't join a room
-			joinRoomFail (reason) {
-				console.log('[joinRoomFail]', reason)
-				window.alert(`Failed to join room: ${reason}`)
-			},
-
-			// Someone sent a message
-			newMessage (message) {
-				const room = this.joinedRooms.find(room => room.id === message.roomId)
-				if (!room) return console.warn(new TypeError('newMessage: room not found'))
-				room.messages.push(message)
-			},
-
-			// Someone joined or left a room
-			roomUsers (roomId, users) {
-				const room = this.joinedRooms.find(room => room.id === roomId)
-				if (!room) return console.warn(new TypeError('roomUsers: room not found'))
-				room.members = users
-			},
 		}
 	}
 }
