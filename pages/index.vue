@@ -53,7 +53,7 @@ export default {
 			builderShown: false,
 			user: null,
 			joinedRooms: [],
-			activeRooms: [],
+			allRooms: [],
 			activeRoomId: null,
 			loginForm: {
 				username: '',
@@ -81,12 +81,12 @@ export default {
 	},
 	methods: {
 		leaveRoom (id) {
-			this.$socket.emit('leaveRoom', id)
 			const index = this.joinedRooms.findIndex(room => room.id === id)
 			if (index === -1) {
-				console.warn(new TypeError('leaveRoom: room not found'))
+				console.warn(new TypeError('leaveRoom: room not found (this is where, in the future, we want to get a list of rooms the user is in from the server)'))
 				return
 			}
+			this.$socket.emit('leaveRoom', id)
 			this.joinedRooms.splice(index, 1)
 			this.currentPanel = 'HomePanel'
 		},

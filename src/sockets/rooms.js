@@ -178,6 +178,8 @@ module.exports = function (io, socket, r, conn) {
 			deleteRoom(roomId)
 			return io.sockets.emit('activeRooms', rooms)
 		}
+		
+		io.sockets.emit('activeRooms', rooms)
 
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 		const msg = {
@@ -188,7 +190,6 @@ module.exports = function (io, socket, r, conn) {
 		}
 		room.messages.push(msg)
 		io.sockets.in(roomId).emit('newMessage', msg)
-		io.sockets.emit('activeRooms', rooms)
 		if (ownerChanged) {
 			const msg2 = {
 				type: 'ownerChange',
