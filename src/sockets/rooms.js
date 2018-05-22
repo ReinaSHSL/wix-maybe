@@ -89,9 +89,9 @@ module.exports = function (io, socket, r, conn) {
 		if (room.members.find(u => u.id === socket.handshake.session.user.id)) {
 			return socket.emit('joinRoomFail', 'You are already in this room')
 		}
-		if (room.members.length > 1) {
-			return socket.emit('joinRoomFail', 'Room full')
-		}
+		// if (room.members.length > 1) {
+		// 	return socket.emit('joinRoomFail', 'Room full')
+		// }
 		if (room.password && password !== room.password) {
 			return socket.emit('joinRoomFail', 'Missing or incorrect password')
 		}
@@ -135,19 +135,20 @@ module.exports = function (io, socket, r, conn) {
 
 		if (!deckId) {
 			room.memberDeck(userId, null)
-			io.sockets.in('roomId').emit('roomUsers', roomId, room.memberList)
-			return
+		} else {
+			room.memberDeck(userId, 'YES THIS IS A DECK')
 		}
-		r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
-			if (err) return console.log(err)
-			value.toArray(function (err, decks) {
-				if (err) return console.log(err)
-				if (!decks.length) return console.log('Deck not found')
-				console.log(decks[0])
-				room.memberDeck(userId, decks[0])
-				io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
-			})
-		})
+		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
+		// r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
+		// 	if (err) return console.log(err)
+		// 	value.toArray(function (err, decks) {
+		// 		if (err) return console.log(err)
+		// 		if (!decks.length) return console.log('Deck not found')
+		// 		console.log(decks[0])
+		// 		room.memberDeck(userId, decks[0])
+		// 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
+		// 	})
+		// })
 	})
 	//Unready
 	socket.on('unReady', function (roomId) {

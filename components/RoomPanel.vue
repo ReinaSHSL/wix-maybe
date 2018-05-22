@@ -34,6 +34,7 @@
 				type="checkbox"
 				class="ready-input"
 				v-model="ready"
+				:disabled="room.members.find(u => u.ready && u.id !== user.id)"
 				@change="readyChange"
 			/>
 			Ready?
@@ -92,8 +93,7 @@ export default {
 			if (this.ready) {
 				// TODO: once we have the deck things built out, send the deck ID here
 				// FIXME: trying to send a deck that doesn't exist breaks the UI
-				// this.$socket.emit('deckInRoom', this.room.id, 'uwu')
-				console.log('soon:tm:')
+				this.$socket.emit('deckInRoom', this.room.id, 'uwu')
 			} else {
 				this.$socket.emit('unReady', this.room.id)
 			}
