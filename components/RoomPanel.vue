@@ -1,6 +1,5 @@
 <template>
 	<div class="room-panel">
-		<!--hi there-->
 		<table class="room-messages">
 			<room-message
 				v-for="message in room.messages"
@@ -75,7 +74,6 @@ export default {
 			// The owner isn't labeled as ready, but one other user must have a deck
 			// the game to start
 			return this.room.members.some(user => user.ready)
-			// return true
 		}
 	},
 	methods: {
@@ -111,7 +109,6 @@ export default {
 <style>
 .room-panel {
 	display: grid;
-	display: --webkit-grid;
 	grid:
 		"messages users" calc(100% - 64px)
 		"messages deck " 32px

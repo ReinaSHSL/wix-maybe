@@ -24,9 +24,9 @@
 				>
 					<a
 						href="#"
-						@click="joinRoom(room.id)"
+						@click="isInRoom(room.id) ? $parent.showRoom(room.id) : joinRoom(room.id)"
 					>
-						<span class="name">{{room.name}}</span>
+						<span class="name">{{room.name}} {{isInRoom(room.id) ? '(Joined)' : ''}}</span>
 						<span v-if="room.hasPassword" class="info has-password">Has password</span>
 						<span class="info members">{{room.members.length}} member{{room.members.length === 1 ? '' : 's'}}</span>
 					</a>
@@ -41,7 +41,7 @@
 
 <script>
 export default {
-	props: ['allRooms'],
+	props: ['allRooms', 'joinedRooms'],
 	data () {
 		return {
 			createRoomForm: {
@@ -67,6 +67,9 @@ export default {
 		},
 		createRoom () {
 			this.$socket.emit('createRoom', this.createRoomForm)
+		},
+		isInRoom (roomId) {
+			return this.joinedRooms.find(r => r.id === roomId)
 		}
 	}
 }

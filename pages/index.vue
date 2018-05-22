@@ -12,6 +12,7 @@
 			<home-panel
 				v-show="currentPanel === 'HomePanel'"
 				:allRooms="allRooms"
+				:joinedRooms="joinedRooms"
 			/>
 			<builder-panel
 				v-show="currentPanel === 'BuilderPanel'"
@@ -23,16 +24,6 @@
 				:room="room"
 			/>
 		</template>
-		<!--<login-panel-->
-		<!--	v-if="!user"-->
-		<!--/>-->
-		<!--<builder-panel v-if="user && builderShown"/>-->
-		<!--<home-panel-->
-		<!--	v-if="user && !builderShown"-->
-		<!--/>-->
-		<!--<global-chat-panel-->
-		<!--	v-if="user && !builderShown"-->
-		<!--/>-->
 	</div>
 </template>
 
