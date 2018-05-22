@@ -2,9 +2,9 @@
     <div class="search-sidebar">
 		<!-- this shit searches out cards -->
 		<div id="search">
-			<input type="text" id="cardName" onkeyup="search()" placeholder="Card name">
-			<input type="text" id="cardLevel" onkeyup="search()" placeholder="Level">
-			<select id='cardColor' onchange="search()">
+			<input type="text" id="cardName" @keyup="search()" placeholder="Card name" v-model='inputName'>
+			<input type="text" id="cardLevel" @keyup="search()" placeholder="Level" v-model='inputLevel'>
+			<select id='cardColor' @change="search()" v-model='inputColor'>
 				<option value=''>Color</option>
 				<option value='Red'>Red</option>
 				<option value='Blue'>Blue</option>
@@ -13,7 +13,7 @@
 				<option value='White'>White</option>
 				<option value='Colorless'>Colorless</option>
 			</select>
-			<select id='cardType' onchange="search()">
+			<select id='cardType' @change="search()" v-model='inputType'>
 				<option value=''>Type</option>
 				<option value='SIGNI'>SIGNI</option>
 				<option value='LRIG'>LRIG</option>
@@ -21,7 +21,7 @@
 				<option value='spell'>SPELL</option>
 				<option value='RESONA'>RESONA</option>
 			</select>
-			<select id='cardClass' onchange="search()">
+			<select id='cardClass' @change="search()" v-model='inputClass'>
 				<option value=''>Class</option>
 				<option value='Angel'>Angel</option>
 				<option value='Apparition'>Apparition</option>
@@ -52,19 +52,58 @@
 				<option value='Poison Fang'>Poison Fang</option>
 				<option value='Origin Spirit'>Origin Spirit</option>
 			</select>
-			<input type="checkbox" id='burst' value='burst' onclick="search()">Burst<br>
-			<input type="checkbox" id='noBurst' value='noburst' onclick="search()">No Burst<br>
+			<input type="checkbox" id='burst' value='burst' @click="search()" v-model='checkBurst'>Burst<br>
+			<input type="checkbox" id='noBurst' value='noburst' @click="search()" v-model='checkNoBurst'>No Burst<br>
 		</div>
 			<!-- List that will contain card placeholders - children are added dynamically -->
 		<div>
-			<ul id="results" class="cardList"></ul>
+			<ul id="results" class="cardList">
+				<li v-for="card in results" :key="card.name">
+ 					<card-preview :card="card"/>
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
 <script>
 import CardPreview from '~/components/CardPreview.vue'
 export default {
-    components: { CardPreview },
+	components: { CardPreview },
+	methods: { search () {
+		// If everything is empty, just return - no point in listing every card
+		this.results = []
+		if (!this.inputName && !this.inputLevel && !this.inputColor && !this.inputType && !this.inputClass) return
+		this.$socket.emit('cardSearch', {
+			inputName: this.inputName,
+			inputLevel: this.inputLevel,
+			inputColor: this.inputColor,
+			inputType: this.inputType,
+			inputClass: this.inputClass,
+			checkBurst: this.checkBurst,
+			checkNoBurst: this.checkNoBurst
+		})
+	}},
+	data () { 
+		return { 
+			results: [],
+			inputName: '',
+			inputLevel: '',
+			inputColor: '',
+			inputType: '',
+			inputClass: '',
+			checkBurst: '',
+			checkNoBurst: ''
+		}
+	},
+	socket: {
+  		events: {
+    		cardMatches (cardMatches) {
+				//console.log(cardMatches)
+				this.results.push(cardMatches)
+				console.log(this.results)
+			}
+		}
+	}
 }
 </script>
 <style>
@@ -82,5 +121,19 @@ export default {
 }
 .search-sidebar input {
     text-align: center;
+}
+.cardList {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.card {
+    width: 80px;
+}
+.card-preview {
+    display: block;
+    width: 100%;
+    margin: 0;
 }
 </style>
