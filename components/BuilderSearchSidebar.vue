@@ -58,7 +58,7 @@
 			<!-- List that will contain card placeholders - children are added dynamically -->
 		<div>
 			<ul id="results" class="cardList">
-				<li v-for="card in results" :key="card.name">
+				<li v-for="card in results" :key="card.name" @mouseover='preview(card)'>
  					<card-preview :card="card"/>
 				</li>
 			</ul>
@@ -69,20 +69,26 @@
 import CardPreview from '~/components/CardPreview.vue'
 export default {
 	components: { CardPreview },
-	methods: { search () {
-		// If everything is empty, just return - no point in listing every card
-		this.results = []
-		if (!this.inputName && !this.inputLevel && !this.inputColor && !this.inputType && !this.inputClass) return
-		this.$socket.emit('cardSearch', {
-			inputName: this.inputName,
-			inputLevel: this.inputLevel,
-			inputColor: this.inputColor,
-			inputType: this.inputType,
-			inputClass: this.inputClass,
-			checkBurst: this.checkBurst,
-			checkNoBurst: this.checkNoBurst
-		})
-	}},
+	methods: { 
+		search () {
+			// If everything is empty, just return - no point in listing every card
+			this.results = []
+			if (!this.inputName && !this.inputLevel && !this.inputColor && !this.inputType && !this.inputClass) return
+			this.$socket.emit('cardSearch', {
+				inputName: this.inputName,
+				inputLevel: this.inputLevel,
+				inputColor: this.inputColor,
+				inputType: this.inputType,
+				inputClass: this.inputClass,
+				checkBurst: this.checkBurst,
+				checkNoBurst: this.checkNoBurst
+			})
+		},
+		preview (card) {
+			console.log(card)
+			this.$parent.hoveredCard=card
+		}
+	},
 	data () { 
 		return { 
 			results: [],
