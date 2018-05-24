@@ -22,7 +22,6 @@ export default {
 		events: {
 			loadDeck (deck) {
 				this.decks.push(deck)
-				console.log(this.decks)
 			}
 		}
 	},

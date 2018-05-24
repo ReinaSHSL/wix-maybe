@@ -1,7 +1,13 @@
 <template>
 	<div class="builder-deck-area">
-		<ul id="mainDeckDisplay" class="cardList"></ul>
-        <ul id="lrigDeckDisplay" class="cardList"></ul>
+		<ul id="mainDeckDisplay" class="cardList">
+			<li v-for='card in deck' :key="deck.name">
+				
+			</li>
+		</ul>
+        <ul id="lrigDeckDisplay" class="cardList">
+        </ul>
+        <p>{{ deck }}</p>
 	</div>
 </template>
 <script>
@@ -12,7 +18,6 @@ export default {
 	},
 	socket: {
 		events: {
-
 		}
 	},
 	data () {
