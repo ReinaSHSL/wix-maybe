@@ -1,6 +1,6 @@
 <template>
 	<div class="builder-toolbar">
-		<select id="deckList">
+		<select id="deckList" v-model="deckId" @change="$parent.selectedDeckId = deckId">
 			<option v-for="deck in decks" :value="deck.id"> {{ deck.name }} </option>
 		</select>
 		<button type="button" button id='new' @click = 'loadDecks()'>New Deck</button>
@@ -17,19 +17,10 @@ export default {
 			this.$socket.emit('loadDecks')
 		}
 	},
-	socket: {
-		events: {
-			loadDeck (deck) {
-				for (let i of deck.name) {
-					this.decks.push(i)
-				}
-				console.log(this.decks)
-			}
-		}
-	},
+	props: [ 'decks' ],
 	data () {
 		return {
-			decks: []
+			deckId: ''
 		}
 	}
 }

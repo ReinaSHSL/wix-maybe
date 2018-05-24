@@ -1,7 +1,7 @@
 <template>
 	<div class="panel builder">
-		<builder-buttons/>
-		<builder-deck-area :card="hoveredCard"/>
+		<builder-buttons :decks="decks"/>
+		<builder-deck-area :deck="selectedDeck"/>
 		<builder-preview :card="hoveredCard"/>
 		<builder-search-sidebar/>
 	</div>
@@ -18,10 +18,25 @@ export default {
 		BuilderDeckArea,
 		BuilderButtons
 	},
+	socket: {
+		events: {
+			loadDeck (deck) {
+				this.decks.push(deck)
+				console.log(this.decks)
+			}
+		}
+	},
 	data () {
 		return {
-			hoveredCard: {}
+			hoveredCard: {},
+			decks: [],
+			selectedDeckId: ''
 		}
+	},
+	computed: {
+  		selectedDeck () {
+    	return this.decks.find(deck => deck.id === this.selectedDeckId)
+  		}
 	}
 }
 </script>

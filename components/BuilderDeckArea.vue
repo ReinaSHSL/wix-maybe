@@ -12,11 +12,7 @@ export default {
 	},
 	socket: {
 		events: {
-			/*loadDeck (deck) {
-					for (let card of deck.deck.lrig) {
-						this.lrigDeck.push(card)
-						console.log(this.lrigDeck)
-					}*/
+
 		}
 	},
 	data () {
@@ -24,6 +20,7 @@ export default {
 			mainDeck: [],
 			lrigDeck: []
 		}
-	}
+	},
+	props: [ 'deck' ]
 }
 </script>
