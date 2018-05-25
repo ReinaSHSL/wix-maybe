@@ -1,7 +1,7 @@
 <template>
 	<div class="panel builder">
 		<builder-buttons :decks="decks"/>
-		<builder-deck-area :deck="selectedDeck"/>
+		<builder-deck-area/>
 		<builder-preview :card="hoveredCard"/>
 		<builder-search-sidebar/>
 	</div>

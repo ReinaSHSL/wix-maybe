@@ -1,13 +1,15 @@
 <template>
 	<div class="builder-deck-area">
 		<ul id="mainDeckDisplay" class="cardList">
-			<li v-for='card in deck' :key="deck.name">
-				
+			<li v-for='card in mainDeck[0]' :key="mainDeck.card" @mouseover='preview(card)'>
+				<card-preview :card="card"/>
 			</li>
 		</ul>
         <ul id="lrigDeckDisplay" class="cardList">
+        	<li v-for='card in lrigDeck[0]' :key="lrigDeck.card" @mouseover='preview(card)'>
+				<card-preview :card="card"/>
+			</li>
         </ul>
-        <p>{{ deck }}</p>
 	</div>
 </template>
 <script>
@@ -18,6 +20,12 @@ export default {
 	},
 	socket: {
 		events: {
+			deckUpdate (deck) {
+				this.mainDeck = []
+				this.lrigDeck = []
+				this.mainDeck.push(deck.main)
+				this.lrigDeck.push(deck.lrig)
+			}
 		}
 	},
 	data () {
@@ -26,6 +34,10 @@ export default {
 			lrigDeck: []
 		}
 	},
-	props: [ 'deck' ]
+	methods: {
+		preview (card) {
+			this.$parent.hoveredCard=card
+		}
+	}
 }
 </script>
