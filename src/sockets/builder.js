@@ -113,7 +113,7 @@ module.exports = function (io, socket, r, conn) {
 			if (err) return console.log(err)
 			cursor.toArray(function (err, result) {
 				if (err) return console.log(err)
-				if (!result[0]) return console.log('reee')
+				if (!result[0]) return console.log(result)
 				if (result) {
 					var deck = {}
 					deck.lrig = result[0].deck.lrig.map(id => allCards.find(card => card.id === id))

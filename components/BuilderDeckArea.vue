@@ -51,7 +51,6 @@ export default {
 		addCard: function () {
 			if (this.addCard.type === 'SIGNI' || this.addCard.type === 'SPELL') {
 				this.mainDeck.push(this.addCard)
-				console.log('uwu')
 			} else {
 				this.lrigDeck.push(this.addCard)
 			}
