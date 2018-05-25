@@ -58,7 +58,7 @@
 			<!-- List that will contain card placeholders - children are added dynamically -->
 		<div>
 			<ul id="results" class="cardList">
-				<li v-for="card in results" :key="card.name" @mouseover='preview(card)'>
+				<li v-for="card in results" :key="card.name" @mouseover='preview(card)' @click='add(card)'>
  					<card-preview :card="card"/>
 				</li>
 			</ul>
@@ -85,8 +85,10 @@ export default {
 			})
 		},
 		preview (card) {
-			console.log(card)
 			this.$parent.hoveredCard=card
+		},
+		add (card) {
+			this.$parent.addedCard=card
 		}
 	},
 	data () { 
@@ -104,9 +106,7 @@ export default {
 	socket: {
   		events: {
     		cardMatches (cardMatches) {
-				//console.log(cardMatches)
 				this.results.push(cardMatches)
-				console.log(this.results)
 			}
 		}
 	}
