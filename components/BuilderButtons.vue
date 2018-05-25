@@ -3,7 +3,7 @@
 		<select id="deckList" v-model="deckId" @change="updateDecks()">
 			<option v-for="deck in decks" :value="deck.id"> {{ deck.name }} </option>
 		</select>
-		<button type="button" button id='new' @click = 'loadDecks()'>New Deck</button>
+		<button type="button" button id='new'>New Deck</button>
 		<button type="button" button id='ren'>Rename Deck</button>
 		<button type="button" button id='save'>Save Deck</button>
 		<button type="button" button id='del'>Delete Deck</button>
@@ -13,9 +13,6 @@
 <script>
 export default {
 	methods: {
-		loadDecks () {
-			this.$socket.emit('loadDecks')
-		},
 		updateDecks () {
 			this.$socket.emit('updateDeck', this.deckId)
 		}
