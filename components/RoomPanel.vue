@@ -2,7 +2,8 @@
 	<div class="room-panel">
 		<table class="room-messages">
 			<room-message
-				v-for="message in room.messages"
+				v-for="(message, index) in room.messages"
+				:key="index"
 				:message="message"
 			/>
 		</table>
