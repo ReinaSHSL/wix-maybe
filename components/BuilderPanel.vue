@@ -22,6 +22,12 @@ export default {
 		events: {
 			loadDeck (deck) {
 				this.decks.push(deck)
+			},
+			deckUpdate (deck) {
+				this.mainDeck = []
+				this.lrigDeck = []
+				this.mainDeck = deck.main
+				this.lrigDeck = deck.lrig
 			}
 		}
 	},

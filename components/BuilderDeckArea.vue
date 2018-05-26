@@ -1,11 +1,11 @@
 <template>
 	<div class="builder-deck-area">
-		<ul id="mainDeckDisplay" class="deckAreaCardList">
+		<ul id="mainDeckDisplay" class="cardList">
 			<li v-for='card in mainDeck' :key="mainDeck.card" @mouseover='preview(card)' @click='removeMain(card)'>
 				<card-preview :card="card"/>
 			</li>
 		</ul>
-        <ul id="lrigDeckDisplay" class="deckAreaCardList">
+        <ul id="lrigDeckDisplay" class="cardList">
         	<li v-for='card in lrigDeck' :key="lrigDeck.card" @mouseover='preview(card)' @click='removeLrig(card)'>
 				<card-preview :card="card"/>
 			</li>
@@ -20,12 +20,7 @@ export default {
 	},
 	socket: {
 		events: {
-			deckUpdate (deck) {
-				this.$parent.mainDeck = []
-				this.$parent.lrigDeck = []
-				this.$parent.mainDeck = deck.main
-				this.$parent.lrigDeck = deck.lrig
-			}
+			//
 		}
 	},
 	methods: {
@@ -56,13 +51,13 @@ export default {
 </script>
 <style>
 	.cardList {
-	  max-width: 800px;
+		 max-width: 800px;
 	}
 	.cardList .card-preview {
-	 width: 80px;
-     list-style: none;
+		width: 80px;
+    	list-style: none;
 	}
-	.deckAreaCardList li {
+	.cardList li {
  		display: inline-block;
 	}
 </style>
