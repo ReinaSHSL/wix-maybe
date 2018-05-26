@@ -1,11 +1,11 @@
 <template>
 	<div class="builder-deck-area">
-		<ul id="mainDeckDisplay" class="cardList">
+		<ul id="mainDeckDisplay" class="deckAreaCardList">
 			<li v-for='card in mainDeck' :key="mainDeck.card" @mouseover='preview(card)' @click='removeMain(card)'>
 				<card-preview :card="card"/>
 			</li>
 		</ul>
-        <ul id="lrigDeckDisplay" class="cardList">
+        <ul id="lrigDeckDisplay" class="deckAreaCardList">
         	<li v-for='card in lrigDeck' :key="lrigDeck.card" @mouseover='preview(card)' @click='removeLrig(card)'>
 				<card-preview :card="card"/>
 			</li>
@@ -21,17 +21,11 @@ export default {
 	socket: {
 		events: {
 			deckUpdate (deck) {
-				this.mainDeck = []
-				this.lrigDeck = []
-				this.mainDeck = deck.main
-				this.lrigDeck = deck.lrig
+				this.$parent.mainDeck = []
+				this.$parent.lrigDeck = []
+				this.$parent.mainDeck = deck.main
+				this.$parent.lrigDeck = deck.lrig
 			}
-		}
-	},
-	data () {
-		return {
-			mainDeck: [],
-			lrigDeck: []
 		}
 	},
 	methods: {
@@ -39,24 +33,36 @@ export default {
 			this.$parent.hoveredCard=card
 		},
 		removeMain (card) {
-			let index = this.mainDeck.findIndex(x => x === card)
-			this.mainDeck.splice(index, 1)
+			let index = this.$parent.mainDeck.findIndex(x => x === card)
+			this.$parent.mainDeck.splice(index, 1)
 		},
 		removeLrig (card) {
-			let index = this.lrigDeck.findIndex(x => x === card)
-			this.lrigDeck.splice(index, 1)
+			let index = this.$parent.lrigDeck.findIndex(x => x === card)
+			this.$parent.lrigDeck.splice(index, 1)
 		}
 	},
 	watch: {
 		addCard: function () {
 			if (this.addCard.type === 'SIGNI' || this.addCard.type === 'SPELL') {
-				this.mainDeck.push(this.addCard)
+				this.$parent.mainDeck.push(this.addCard)
 			} else {
-				this.lrigDeck.push(this.addCard)
+				this.$parent.lrigDeck.push(this.addCard)
 			}
 		}
 	},
-	props: [ 'addCard' ]
+	props: [ 'addCard', 'mainDeck', 'lrigDeck' ]
 }
 
 </script>
+<style>
+	.cardList {
+	  max-width: 800px;
+	}
+	.cardList .card-preview {
+	 width: 80px;
+     list-style: none;
+	}
+	.deckAreaCardList li {
+ 		display: inline-block;
+	}
+</style>

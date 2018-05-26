@@ -129,13 +129,9 @@ export default {
     text-align: center;
 }
 .cardList {
-    display: flex;
     margin: 0;
     padding: 0;
     list-style: none;
-}
-.card {
-    width: 80px;
 }
 .card-preview {
     display: block;

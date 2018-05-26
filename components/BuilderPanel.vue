@@ -1,7 +1,7 @@
 <template>
 	<div class="panel builder">
 		<builder-buttons :decks="decks"/>
-		<builder-deck-area :addCard='addedCard'/>
+		<builder-deck-area :addCard='addedCard' :mainDeck='mainDeck' :lrigDeck='lrigDeck'/>
 		<builder-preview :card="hoveredCard"/>
 		<builder-search-sidebar/>
 	</div>
@@ -29,7 +29,9 @@ export default {
 		return {
 			hoveredCard: {},
 			decks: [],
-			addedCard: {}
+			addedCard: {},
+			mainDeck: [],
+			lrigDeck: []
 		}
 	},
 	computed: {
