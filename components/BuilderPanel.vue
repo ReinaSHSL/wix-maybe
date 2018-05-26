@@ -1,7 +1,7 @@
 <template>
 	<div class="panel builder">
 		<builder-buttons :decks="decks"/>
-		<builder-deck-area :addCard='addedCard' :mainDeck='mainDeck' :lrigDeck='lrigDeck'/>
+		<builder-deck-area :mainDeck='mainDeck' :lrigDeck='lrigDeck'/>
 		<builder-preview :card="hoveredCard"/>
 		<builder-search-sidebar/>
 	</div>
@@ -24,8 +24,6 @@ export default {
 				this.decks.push(deck)
 			},
 			deckUpdate (deck) {
-				this.mainDeck = []
-				this.lrigDeck = []
 				this.mainDeck = deck.main
 				this.lrigDeck = deck.lrig
 			}
@@ -35,15 +33,9 @@ export default {
 		return {
 			hoveredCard: {},
 			decks: [],
-			addedCard: {},
 			mainDeck: [],
 			lrigDeck: []
 		}
-	},
-	computed: {
-  		selectedDeck () {
-    	return this.decks.find(deck => deck.id === this.selectedDeckId)
-  		}
 	}
 }
 </script>

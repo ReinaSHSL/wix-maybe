@@ -88,7 +88,11 @@ export default {
 			this.$parent.hoveredCard=card
 		},
 		add (card) {
-			this.$parent.addedCard=card
+			if (card.type === 'SIGNI' || card.type === 'SPELL') {
+				this.$parent.mainDeck.push(card)
+			} else {
+				this.$parent.lrigDeck.push(card)
+			}
 		}
 	},
 	data () { 

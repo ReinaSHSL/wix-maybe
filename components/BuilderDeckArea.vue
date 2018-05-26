@@ -36,16 +36,7 @@ export default {
 			this.$parent.lrigDeck.splice(index, 1)
 		}
 	},
-	watch: {
-		addCard: function () {
-			if (this.addCard.type === 'SIGNI' || this.addCard.type === 'SPELL') {
-				this.$parent.mainDeck.push(this.addCard)
-			} else {
-				this.$parent.lrigDeck.push(this.addCard)
-			}
-		}
-	},
-	props: [ 'addCard', 'mainDeck', 'lrigDeck' ]
+	props: [ 'mainDeck', 'lrigDeck' ]
 }
 
 </script>
