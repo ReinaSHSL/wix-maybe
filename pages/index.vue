@@ -1,8 +1,9 @@
 <template>
-	<div class="app">
+	<div class="app" :class="{mobile}">
 		<app-header
 			:user="user"
 			:rooms="joinedRooms"
+			:mobile="mobile"
 		/>
 		<login-panel
 			v-if="!user"
@@ -46,6 +47,7 @@ export default {
 			joinedRooms: [],
 			allRooms: [],
 			activeRoomId: null,
+			sizes: {},
 			loginForm: {
 				username: '',
 				password: ''
@@ -57,6 +59,9 @@ export default {
 		}
 	},
 	computed: {
+		mobile () {
+			return this.sizes.width <= 600
+		},
 		activeRoom () {
 			return this.joinedRooms.find(room => room.id === this.activeRoomId)
 		},
@@ -134,6 +139,21 @@ export default {
 				room.members = users
 			},
 		}
+	},
+	mounted () {
+		const window = this.$el.ownerDocument.defaultView
+		this.sizes = {
+			width: window.innerWidth,
+			height: window.innerHeight
+		}
+		this.$nextTick(() => {
+			window.addEventListener('resize', () => {
+				this.sizes = {
+					width: window.innerWidth,
+					height: window.innerHeight
+				}
+			})
+		})
 	}
 }
 </script>
@@ -159,17 +179,27 @@ body {
 		"content" calc(100% - 33px)
 		/ 100%;
 }
+.app.mobile {
+	grid:
+		"header" 41px
+		"content" calc(100% - 41px)
+		/ 100%;
+}
 
 .panel {
 	grid-area: content;
 }
 
 /* Generics */
-input {
+input[type="text"],
+input[type="password"] {
 	border: 1px solid #A9A9A9;
+	border-radius: 2px;
 	font-size: 13px;
 	line-height: 15px;
 	padding: 2px 5px;
+	-webkit-appearance: none; /* mobile safari */
+	margin: 0; /* also mobile safari, apparently we have to reset *everything* */
 }
 input[type="submit"],
 button {

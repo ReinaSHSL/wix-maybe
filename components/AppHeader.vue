@@ -1,6 +1,6 @@
 <template>
 	<header class="header">
-		<div class="left" :class="{mobile}">
+		<div class="left">
 			<h1 class="title">
 				<a href="#">Batoru</a>
 			</h1>
@@ -58,7 +58,12 @@
 				<input type='Submit' value='Log Out' class='logout-button'>
 			</form>
 		</div>
-		<div v-if="mobile" class="drawer" :class="{shown: drawerShown}">
+		<div
+			v-if="mobile"
+			class="drawer"
+			:class="{shown: drawerShown}"
+			@click.stop="drawerShown = false"
+		>
 			<ul class="drawer-list">
 				<generic-tab
 					class="vertical"
@@ -81,7 +86,7 @@ import ColoredUsername from '~/components/ColoredUsername.vue'
 import GenericTab from '~/components/GenericTab.vue'
 
 export default {
-	props: ['user', 'rooms'],
+	props: ['user', 'rooms', 'mobile'],
 	components: {
 		ColoredUsername,
 		GenericTab
@@ -89,14 +94,10 @@ export default {
 	data () {
 		return {
 			joinedRooms: [],
-			sizes: {},
 			drawerShown: false
 		}
 	},
 	computed: {
-		mobile () {
-			return this.sizes.width <= 600
-		},
 		hideOtherTabs () {
 			return this.mobile && this.drawerShown
 		},
@@ -123,21 +124,6 @@ export default {
 			this.$parent.showRoom(room.id)
 			this.drawerShown = false
 		}
-	},
-	mounted () {
-		const window = this.$el.ownerDocument.defaultView
-		this.sizes = {
-			width: window.innerWidth,
-			height: window.innerHeight
-		}
-		this.$nextTick(() => {
-			window.addEventListener('resize', () => {
-				this.sizes = {
-					width: window.innerWidth,
-					height: window.innerHeight
-				}
-			})
-		})
 	}
 }
 </script>
@@ -148,9 +134,9 @@ export default {
 	flex: 0 0 auto;
 	background: #F7F7F7;
 	border-bottom: 1px solid #BBB;
-	line-height: 32px;
 	padding: 0 10px;
 	display: flex;
+	line-height: 32px;
 	justify-content: space-between;
 }
 .header .left {
@@ -184,13 +170,19 @@ export default {
 }
 
 /* Mobile things */
-.header .left.mobile {
+.mobile .header {
+	font-size: 1.2em;
+	line-height: 40px;
+	padding-right: 0;
+}
+.mobile .header .left {
+	/* The right part doesn't exist so we spread this out */
 	flex: 100%;
 	justify-content: space-between;
 }
 .header .drawer {
 	position: fixed;
-	top: 33px;
+	top: 41px;
 	bottom: 0;
 	left: 0;
 	width: 100vw;

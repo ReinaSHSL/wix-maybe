@@ -105,8 +105,14 @@ export default {
 	box-sizing: border-box;
 	width: 100%;
 }
+.login-panel .form input[type="text"] {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
 .login-panel .form input[type="password"] {
 	border-top: 0;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
 }
 .login-panel .form input[type="submit"] {
 	margin-top: 5px;
