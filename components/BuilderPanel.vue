@@ -48,7 +48,7 @@ export default {
 	max-height: 100%;
 	display: grid;
 	grid:
-		"info toolbar search" 33px
+		"toolbar toolbar toolbar" 33px
 		"info deck    search" calc(100% - 33px)
 		/ 251px auto 251px;
 }
@@ -59,7 +59,7 @@ export default {
 
 .builder-toolbar {
 	grid-area: toolbar;
-	background: #F7F7F7;
+	background: #FFF;
 	border-bottom: 1px solid #DDD;
 	line-height: 32px;
 	padding: 0 10px;
@@ -69,7 +69,7 @@ export default {
 	grid-area: info;
 	padding: 10px;
 	border-right: 1px solid #DDD;
-	background: #EEE;
+	background: #FFF;
 	overflow-y: scroll;
 }
 </style>

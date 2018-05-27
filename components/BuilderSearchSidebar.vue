@@ -57,7 +57,7 @@
 		</div>
 			<!-- List that will contain card placeholders - children are added dynamically -->
 		<div>
-			<ul id="results" class="cardList">
+			<ul id="results" class="resultList">
 				<li v-for="card in results" :key="card.name" @mouseover='preview(card)' @click='add(card)'>
  					<card-preview :card="card"/>
 				</li>
@@ -121,7 +121,7 @@ export default {
     grid-area: search;
     padding: 10px;
     border-left: 1px solid #DDD;
-    background: #EEE;
+    background: #FFF;
 }
 .search-sidebar .cardList {
     justify-content: space-between;
@@ -132,14 +132,16 @@ export default {
 .search-sidebar input {
     text-align: center;
 }
-.cardList {
+.resultList {
     margin: 0;
     padding: 0;
     list-style: none;
+    display: flex;
 }
-.card-preview {
-    display: block;
-    width: 100%;
-    margin: 0;
+.resultList li {
+	flex: 0 0 33%;
+}
+.resultList .card-preview {
+	max-width: 100%;
 }
 </style>

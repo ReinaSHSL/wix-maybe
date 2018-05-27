@@ -41,14 +41,23 @@ export default {
 
 </script>
 <style>
-	.cardList {
-		 max-width: 800px;
-	}
-	.cardList .card-preview {
-		width: 80px;
-    	list-style: none;
-	}
-	.cardList li {
- 		display: inline-block;
-	}
+.builder-deck-area {
+	background: #F7F7F7;
+	padding: 10px;
+}
+.cardList {
+	max-width: 800px;
+	margin: 0 auto 5px;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+}
+.cardList li {
+ 	flex: 0 0 10%;
+}
+.cardList .card-preview {
+	display: block;
+	max-width: 100%;
+}
 </style>
