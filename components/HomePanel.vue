@@ -34,7 +34,10 @@
 			</ul>
 		</div>
 		<div class="related-actions">
-			More things will go here
+			<h2>Links</h2>
+			<ul>
+				<li><a href="/about">About Batoru</a></li>
+			</ul>
 		</div>
 	</section>
 </template>
@@ -111,5 +114,27 @@ export default {
 
 .home-panel {
 	overflow-y: auto;
+	display: flex;
+}
+.battle-actions {
+	flex: 1 1 100%;
+	padding: 10px 0 10px 10px;
+}
+.related-actions {
+	flex: 0 1 200px;
+	float: right;
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid #DDD;
+	border-radius: 5px;
+	background: #EEE;
+}
+.related-actions h2 {
+	margin: 0;
+	font-size: inherit;
+}
+.related-actions ul {
+	margin: 5px 0 0;
+	padding-left: 20px;
 }
 </style>

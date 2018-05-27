@@ -245,7 +245,7 @@ export default {
 .header .tab.vertical {
 	margin: 0;
 	border: 0;
-	padding: 5px 20px 5px 10px;
+	padding: 5px 10px;
 	justify-content: space-between;
 	background: none;
 }
