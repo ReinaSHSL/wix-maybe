@@ -116,7 +116,7 @@ export default {
 			this.drawerShown = false
 		},
 		builderClick () {
-			this.$parent.currentPanel = 'HomePanel'
+			this.$parent.currentPanel = 'BuilderPanel'
 			this.drawerShown = false
 		},
 		roomClick (room) {
