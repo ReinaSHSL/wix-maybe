@@ -201,6 +201,15 @@ input[type="password"] {
 	-webkit-appearance: none; /* mobile safari */
 	margin: 0; /* also mobile safari, apparently we have to reset *everything* */
 }
+select {
+	border: 0;
+	box-shadow: inset 0 0 0 1px #A9A9A9;
+	border-radius: 2px;
+	font-size: 13px;
+	height: 21px;
+	line-height: 15px;
+	padding: 0 5px;
+}
 input[type="submit"],
 button {
 	border: 1px solid #939393;
