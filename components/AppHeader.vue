@@ -8,7 +8,7 @@
 				<generic-tab
 					hide-close="true"
 					tab-title="Home"
-					@click="$parent.currentPanel = 'HomePanel'"
+					@click="homeClick"
 					:active="homeActive"
 				>
 					<i class="fas fa-home"></i>
@@ -17,7 +17,7 @@
 				<generic-tab
 					hide-close="true"
 					tab-title="Deck Builder"
-					@click="$parent.currentPanel = 'BuilderPanel'"
+					@click="builderClick"
 					:active="builderActive"
 				>
 					<i class="fas fa-clone"></i>
@@ -28,7 +28,7 @@
 					v-for="room in rooms"
 					:key="room.id"
 					:tab-title="'Battle room: ' + room.name"
-					@click="$parent.showRoom(room.id)"
+					@click="roomClick(room)"
 					@close="$parent.leaveRoom(room.id)"
 					:active="$parent.currentPanel === 'RoomPanel' && $parent.activeRoomId === room.id"
 				>
@@ -65,7 +65,7 @@
 					v-for="room in rooms"
 					:key="room.id"
 					:tab-title="'Battle room: ' + room.name"
-					@click="$parent.showRoom(room.id)"
+					@click="roomClick(room)"
 					@close="$parent.leaveRoom(room.id)"
 					:active="$parent.currentPanel === 'RoomPanel' && $parent.activeRoomId === room.id"
 				>
@@ -108,6 +108,20 @@ export default {
 		},
 		roomActive () {
 			return this.$parent.currentPanel === 'RoomPanel'
+		},
+	},
+	methods: {
+		homeClick () {
+			this.$parent.currentPanel = 'HomePanel'
+			this.drawerShown = false
+		},
+		builderClick () {
+			this.$parent.currentPanel = 'HomePanel'
+			this.drawerShown = false
+		},
+		roomClick (room) {
+			this.$parent.showRoom(room.id)
+			this.drawerShown = false
 		}
 	},
 	mounted () {
