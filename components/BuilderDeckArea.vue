@@ -1,6 +1,6 @@
 <template>
 	<div class="builder-deck-area">
-		<ul id="mainDeckDisplay" class="cardList">
+		<ul v-if="!empty" id="mainDeckDisplay" class="cardList">
 			<li
 				v-for='(card, index) in mainDeck'
 				:key="index"
@@ -10,7 +10,7 @@
 				<card-preview :card="card"/>
 			</li>
 		</ul>
-		<ul id="lrigDeckDisplay" class="cardList">
+		<ul v-if="!empty" id="lrigDeckDisplay" class="cardList">
 			<li
 				v-for='(card, index) in lrigDeck'
 				:key="index"
@@ -20,6 +20,9 @@
 				<card-preview :card="card"/>
 			</li>
 		</ul>
+		<div v-else class="empty-deck-display">
+			No deck here. Try making a new one or something?
+		</div>
 	</div>
 </template>
 <script>
@@ -39,7 +42,7 @@ export default {
 			this.$parent.lrigDeck.splice(index, 1)
 		}
 	},
-	props: [ 'mainDeck', 'lrigDeck' ]
+	props: [ 'mainDeck', 'lrigDeck', 'empty' ]
 }
 
 </script>

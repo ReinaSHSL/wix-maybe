@@ -16,7 +16,7 @@
 			<button type="button" button id='del' @click='deleteDeck()'>Delete Deck</button>
 			<button type="button" button id='exim'>Export/Import</button>
 		</div>
-		<builder-deck-area :mainDeck='mainDeck' :lrigDeck='lrigDeck'/>
+		<builder-deck-area :empty="!deckId" :mainDeck='mainDeck' :lrigDeck='lrigDeck'/>
 		<builder-preview :card="hoveredCard"/>
 		<builder-search-sidebar/>
 	</div>
@@ -63,6 +63,7 @@ export default {
 			this.$socket.emit('deleteDeck', this.deckId)
 			let index = this.decks.findIndex(deck => deck.id === this.deckId)
 			this.decks.splice(index, 1)
+			this.deckId = ''
 			this.mainDeck = []
 			this.lrigDeck = []
 		},
