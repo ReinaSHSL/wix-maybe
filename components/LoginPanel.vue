@@ -93,6 +93,9 @@ export default {
 	justify-content: center;
 	align-items: center;
 }
+.mobile .login-panel {
+	flex-direction: column;
+}
 .login-panel h1 {
 	margin: 0;
 }

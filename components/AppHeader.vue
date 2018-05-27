@@ -59,24 +59,39 @@
 			</form>
 		</div>
 		<div
-			v-if="mobile"
+			v-if="mobile && user"
 			class="drawer"
 			:class="{shown: drawerShown}"
 			@click.stop="drawerShown = false"
 		>
-			<ul class="drawer-list">
-				<generic-tab
-					class="vertical"
-					v-for="room in rooms"
-					:key="room.id"
-					:tab-title="'Battle room: ' + room.name"
-					@click="roomClick(room)"
-					@close="$parent.leaveRoom(room.id)"
-					:active="$parent.currentPanel === 'RoomPanel' && $parent.activeRoomId === room.id"
-				>
-					{{room.name}} ({{room.members.length}})
-				</generic-tab>
-			</ul>
+			<div class="drawer-content">
+				<ul class="drawer-list">
+					<li
+						v-for="room in rooms"
+						:key="room.id"
+					>
+						<generic-tab
+							class="vertical"
+							:tab-title="'Battle room: ' + room.name"
+							@click="roomClick(room)"
+							@close="$parent.leaveRoom(room.id)"
+							:active="$parent.currentPanel === 'RoomPanel' && $parent.activeRoomId === room.id"
+						>
+							{{room.name}} ({{room.members.length}})
+						</generic-tab>
+					</li>
+				</ul>
+				<div class="user-info">
+					<colored-username :user="user"/>
+					<form
+						action='/logout'
+						method='post'
+						class='logout-form'
+					>
+						<input type='Submit' value='Log Out' class='logout-button'>
+					</form>
+				</div>
+			</div>
 		</div>
 	</header>
 </template>
@@ -198,7 +213,7 @@ export default {
 	opacity: 1;
 	visibility: visible;
 }
-.header .drawer-list {
+.header .drawer-content {
 	margin: 0;
 	padding: 0;
 	position: relative;
@@ -206,20 +221,54 @@ export default {
 	width: calc(100vw - 50px);
 	max-width: calc(80vw);
 	height: 100%;
-	background: #FFF;
+	background: #F7F7F7;
 	border-left: 1px solid #BBB;
 	transition: inherit;
+	display: flex;
+	flex-direction: column;
 }
-.header .drawer.shown .drawer-list {
+.header .drawer.shown .drawer-content {
 	left: 0;
+}
+
+.header .drawer-list {
+	margin: 0;
+	padding: 0;
+	overflow: auto;
+}
+.header .drawer-list li {
+	list-style: none;
+}
+.header .drawer-list li + li {
+	border-top: 1px solid #DDD;
 }
 .header .tab.vertical {
 	margin: 0;
-	border-right: 0;
-	border-top: 0;
-	border-bottom-width: 1px;
+	border: 0;
+	padding: 5px 20px 5px 10px;
+	justify-content: space-between;
+	background: none;
+}
+.header .tab.vertical .tab-content {
+	max-width: calc(100% - 25px);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.header .tab.vertical .tab-close {
+	width: 25px;
+	height: 25px;
 }
 .header .tab.vertical.active {
+	background: #FFF;
 	box-shadow: inset 3px 0 orange;
+}
+
+.header .drawer .user-info {
+	justify-self: flex-end;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 10px;
+	border-top: 1px solid #BBB;
 }
 </style>
