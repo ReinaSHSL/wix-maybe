@@ -123,6 +123,9 @@ export default {
     border-left: 1px solid #DDD;
     background: #FFF;
 }
+.mobile .search-sidebar {
+	display: none;
+}
 .search-sidebar .cardList {
     justify-content: space-between;
 }

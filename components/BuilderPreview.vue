@@ -1,7 +1,7 @@
 <template>
 	<div class="builder-info-sidebar">
 		<!-- This will be the card preview and shit -->
-		<card-preview :card="card"/>
+		<card-preview id="previewCard" :card="card"/>
 		<div id="cardInfo">
 			<p id='cardsName'>{{ card.name }}</p>
 			<p>
@@ -15,7 +15,7 @@
 			<p id='cardsClass'>{{ card.class }}</p>
 			<p id='cardsLrigType'>{{ card.lrigType }}</p>
 
-			<textarea id="cardsText" name="txt">{{ card.text }}</textarea>
+			<pre class="card-text">{{ card.text }}</pre>
 		</div>
 	</div>
 </template>
@@ -45,12 +45,8 @@ export default {
     font-weight: bold;
 }
 
-#cardsText {
-    height: 250px;
-    width: 100%;
-    overflow-y: scroll;
-    margin: 0;
-    resize: none;
+#card-text {
+	white-space: pre-wrap;
 }
 
 textarea#cardsText:empty {

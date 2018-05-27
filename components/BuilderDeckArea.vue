@@ -47,6 +47,7 @@ export default {
 .builder-deck-area {
 	background: #F7F7F7;
 	padding: 10px;
+	overflow: auto;
 }
 .cardList {
 	max-width: 800px;
@@ -57,7 +58,10 @@ export default {
 	flex-wrap: wrap;
 }
 .cardList li {
-	flex: 0 0 10%;
+	flex: 0 0 80px;
+}
+.mobile .cardList li {
+	flex: 0 0 40px;
 }
 .cardList .card-preview {
 	display: block;
