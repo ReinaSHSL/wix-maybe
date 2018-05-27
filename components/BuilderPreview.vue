@@ -1,22 +1,19 @@
 <template>
 	<div class="builder-info-sidebar">
 		<!-- This will be the card preview and shit -->
-		<card-preview id="previewCard" :card="card"/>
-		<div id="cardInfo">
-			<p id='cardsName'>{{ card.name }}</p>
-			<p>
-				<span id='cardsType'>{{ card.type }}</span>
-				<span id='cardsColor' style="float:right;">{{ card.color  }}</span>
-			</p>
-			<p id='cardsLevel'>{{ card.level }}</p>
-			<p id='cardsAttack'>{{ card.attack }}</p>
-			<p id='cardsCost'>{{ card.cost }}</p>
-			<p id='cardsLimit'>{{ card.limit }}</p>
-			<p id='cardsClass'>{{ card.class }}</p>
-			<p id='cardsLrigType'>{{ card.lrigType }}</p>
-
-			<pre class="card-text">{{ card.text }}</pre>
-		</div>
+		<card-preview :card="card"/>
+		<p class="card-name">{{ card.name }}</p>
+		<p>
+			<span id='cardsType'>{{ card.type }}</span>
+			<span id='cardsColor' style="float:right;">{{ card.color }}</span>
+		</p>
+		<p>{{ card.level }}</p>
+		<p>{{ card.attack }}</p>
+		<p>{{ card.cost }}</p>
+		<p>{{ card.limit }}</p>
+		<p>{{ card.class }}</p>
+		<p>{{ card.lrigType }}</p>
+		<p class="card-text">{{ card.text }}</p>
 	</div>
 </template>
 
@@ -29,27 +26,20 @@ export default {
 }
 </script>
 <style>
-/* Preview image and left panel stuff */
-#previewCard {
+.builder-info-sidebar p {
+    margin: 5px 0;
+}
+.builder-info-sidebar .card-preview {
     margin-bottom: 0px;
     padding: 0px;
     width: 100%;
 }
-
-#cardInfo p {
-    margin: 5px 0;
-}
-
-#cardsName {
+.card-name {
     text-align: center;
     font-weight: bold;
 }
-
-#card-text {
-	white-space: pre-wrap;
+.card-text {
+	font-size: smaller;
 }
 
-textarea#cardsText:empty {
-    display: none;
-}
 </style>
