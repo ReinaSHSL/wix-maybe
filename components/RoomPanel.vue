@@ -212,13 +212,14 @@ export default {
 .room-deck-select {
 	display: block;
 	background: #FFF;
-	border: 0;
-	border-top: 1px solid #DDD;
-	border-left: 1px solid #DDD;
+	box-shadow: inset 1px 1px #DDD;
 	border-radius: 0;
 	grid-area: deck;
 	height: 100%;
 	width: 100%;
+}
+.mobile .room-deck-select {
+	box-shadow: inset -1px 1px #DDD;
 }
 
 /* Ready/start game buttons */
@@ -230,6 +231,11 @@ export default {
 	border-left: 1px solid #DDD;
 	border-top: 1px solid #DDD;
 }
+.mobile .ready-button,
+.mobile .start-button {
+	border-left: 0;
+}
+
 .ready-input {
 	margin: 0 5px 0 0;
 }

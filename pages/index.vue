@@ -209,6 +209,7 @@ input[type="password"] {
 	margin: 0; /* also mobile safari, apparently we have to reset *everything* */
 }
 select {
+	background: #FFF;
 	border: 0;
 	box-shadow: inset 0 0 0 1px #A9A9A9;
 	border-radius: 2px;

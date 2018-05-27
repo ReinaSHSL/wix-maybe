@@ -155,11 +155,16 @@ export default {
 	justify-content: space-between;
 }
 .header .left {
+	flex: 1 1 auto;
 	display: flex;
+}
+.header .right {
+	flex: 0 0 auto;
 }
 .header .title {
 	margin: 0;
 	font-size: inherit;
+	flex: 0 0 auto;
 }
 .header .title a {
 	color: inherit;
@@ -167,6 +172,7 @@ export default {
 }
 
 .header .tabs {
+	flex: 0 1 auto;
 	margin-left: 10px;
 	display: flex;
 	align-items: stretch;

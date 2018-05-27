@@ -126,6 +126,9 @@ export default {
 	line-height: 32px;
 	padding: 0 10px;
 }
+.builder-toolbar * + * {
+	margin-left: 5px;
+}
 
 .builder-info-sidebar {
 	grid-area: info;
