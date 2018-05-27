@@ -269,6 +269,8 @@ export default {
 	display: flex;
 	justify-content: space-between;
 	padding: 0 10px;
+}
+.header .drawer-list:not(:empty) + .user-info {
 	border-top: 1px solid #BBB;
 }
 </style>

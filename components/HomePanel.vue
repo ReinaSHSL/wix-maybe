@@ -112,4 +112,8 @@ export default {
 .rooms-list .rooms-list-item .info:before {
 	content: " - "
 }
+
+.home-panel {
+	overflow-y: auto;
+}
 </style>
