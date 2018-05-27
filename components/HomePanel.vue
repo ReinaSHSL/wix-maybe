@@ -1,5 +1,5 @@
 <template>
-	<section v-if="activeRoomId == null" class="panel home-panel">
+	<section class="panel home-panel">
 		<div class="battle-actions">
 			<h2>Create a room</h2>
 			<form @submit.prevent="createRoom">
@@ -51,10 +51,6 @@ export default {
 		}
 	},
 	methods: {
-		selectRoom (id) {
-			console.log(id)
-			this.activeRoomId = id
-		},
 		joinRoom (id) {
 			console.log('@joinRoom', id)
 			const room = this.allRooms.find(room => room.id === id)

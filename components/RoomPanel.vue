@@ -141,7 +141,7 @@ export default {
 	font-size: 14px;
 }
 
-.room-chatbar {
+.room-panel .room-chatbar {
 	grid-area: chatbar;
 	border: 0;
 	border-top: 1px solid #DDD;
@@ -155,6 +155,7 @@ export default {
 	border: 0;
 	border-top: 1px solid #DDD;
 	border-left: 1px solid #DDD;
+	border-radius: 0;
 	grid-area: deck;
 	height: 100%;
 	width: 100%;

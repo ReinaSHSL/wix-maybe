@@ -62,9 +62,9 @@
 			v-if="mobile && user"
 			class="drawer"
 			:class="{shown: drawerShown}"
-			@click.stop="drawerShown = false"
+			@click="drawerShown = false"
 		>
-			<div class="drawer-content">
+			<div class="drawer-content" @click.stop>
 				<ul class="drawer-list">
 					<li
 						v-for="room in rooms"
