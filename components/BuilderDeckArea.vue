@@ -1,15 +1,25 @@
 <template>
 	<div class="builder-deck-area">
 		<ul id="mainDeckDisplay" class="cardList">
-			<li v-for='card in mainDeck' :key="mainDeck.card" @mouseover='preview(card)' @click='removeMain(card)'>
+			<li
+				v-for='(card, index) in mainDeck'
+				:key="index"
+				@mouseover='preview(card)'
+				@click='removeMain(index)'
+			>
 				<card-preview :card="card"/>
 			</li>
 		</ul>
-        <ul id="lrigDeckDisplay" class="cardList">
-        	<li v-for='card in lrigDeck' :key="lrigDeck.card" @mouseover='preview(card)' @click='removeLrig(card)'>
+		<ul id="lrigDeckDisplay" class="cardList">
+			<li
+				v-for='(card, index) in lrigDeck'
+				:key="index"
+				@mouseover='preview(card)'
+				@click='removeLrig(index)'
+			>
 				<card-preview :card="card"/>
 			</li>
-        </ul>
+		</ul>
 	</div>
 </template>
 <script>
@@ -18,21 +28,14 @@ export default {
 	components: {
 		CardPreview
 	},
-	socket: {
-		events: {
-			//
-		}
-	},
 	methods: {
 		preview (card) {
 			this.$parent.hoveredCard=card
 		},
-		removeMain (card) {
-			let index = this.$parent.mainDeck.findIndex(x => x === card)
+		removeMain (index) {
 			this.$parent.mainDeck.splice(index, 1)
 		},
-		removeLrig (card) {
-			let index = this.$parent.lrigDeck.findIndex(x => x === card)
+		removeLrig (index) {
 			this.$parent.lrigDeck.splice(index, 1)
 		}
 	},
@@ -54,7 +57,7 @@ export default {
 	flex-wrap: wrap;
 }
 .cardList li {
- 	flex: 0 0 10%;
+	flex: 0 0 10%;
 }
 .cardList .card-preview {
 	display: block;
