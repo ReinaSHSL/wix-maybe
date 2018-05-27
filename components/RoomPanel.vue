@@ -113,9 +113,17 @@ export default {
 	grid:
 		"messages users" calc(100% - 64px)
 		"messages deck " 32px
-		"chatbar  ready " 32px
+		"chatbar  ready" 32px
 		/ calc(100% - 150px) 150px;
 	font-family: monospace;
+}
+
+.mobile .room-panel {
+	grid:
+		"messages messages" calc(100% - 64px)
+		"chatbar  chatbar " 32px
+		"deck     ready   " 32px
+		/ 50% 50%;
 }
 
 /* Main message display area */
