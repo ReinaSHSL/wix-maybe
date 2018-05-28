@@ -26,6 +26,13 @@
 			:disabled="ready"
 		>
 			<option disabled selected>Choose a deck...</option>
+			<option
+					v-for="deck in decks"
+					:key="deck.id"
+					:value="deck.id"
+			>
+					{{ deck.name }}
+			</option> 
 		</select>
 		<label
 			v-if="room.owner.id !== user.id"
@@ -65,7 +72,8 @@ export default {
 		return {
 			draftedMessage: '',
 			ready: false,
-			selectedDeck: null
+			selectedDeck: null,
+			decks: []
 		}
 	},
 	computed: {
@@ -99,6 +107,13 @@ export default {
 				this.$socket.emit('unReady', this.room.id)
 			}
 		},
+	},
+	socket: {
+		events: {
+			loadDeck (decks) {
+				this.decks = decks
+			}
+		}
 	},
 	components: {
 		RoomMessage,

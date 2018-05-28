@@ -60,12 +60,15 @@ export default {
 			if (room.hasPassword) {
 				var password = window.prompt('Room password?')
 				this.$socket.emit('joinRoom', {id, password})
+				this.$socket.emit('loadDecks')
 			} else {
 				this.$socket.emit('joinRoom', {id})
+				this.$socket.emit('loadDecks')
 			}
 		},
 		createRoom () {
 			this.$socket.emit('createRoom', this.createRoomForm)
+			this.$socket.emit('loadDecks')
 		},
 		isInRoom (roomId) {
 			return this.joinedRooms.find(r => r.id === roomId)

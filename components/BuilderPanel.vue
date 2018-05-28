@@ -66,6 +66,7 @@ export default {
 			this.deckId = ''
 			this.mainDeck = []
 			this.lrigDeck = []
+			this.$socket.emit('loadDecks')
 		},
 		saveDeck () {
 			let deckName = this.decks.find(deck => deck.id === this.deckId).name
@@ -78,6 +79,7 @@ export default {
 				main: mainDeck.map(card => card.id)
 			}
 			this.$socket.emit('saveDeck', {deck: currentDeck, name: deckName, id: deckId})
+			this.$socket.emit('loadDecks')
 		}
 	},
 	socket: {
