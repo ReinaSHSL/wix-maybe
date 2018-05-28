@@ -82,8 +82,8 @@ export default {
 	},
 	socket: {
 		events: {
-			loadDeck (deck) {
-				this.decks.push(deck)
+			loadDeck (decks) {
+				this.decks = decks
 			},
 			deckUpdate (deck) {
 				this.mainDeck = deck.main

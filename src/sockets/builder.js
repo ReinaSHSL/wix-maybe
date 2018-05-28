@@ -100,8 +100,8 @@ module.exports = function (io, socket, r, conn) {
 			if (err) return console.log (err)
 			cursor.toArray(function (err, result) {
 				if (err) return console.log(err)
-				for (let deck of result) {
-					socket.emit('loadDeck', deck)
+				if (result) {
+					socket.emit('loadDeck', result)
 				}
 			})
 		})
