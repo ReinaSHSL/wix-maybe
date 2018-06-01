@@ -32,7 +32,7 @@
 					:value="deck.id"
 			>
 					{{ deck.name }}
-			</option> 
+			</option>
 		</select>
 		<label
 			v-if="room.owner.id !== user.id"

@@ -18,12 +18,14 @@
 			<builder-panel
 				v-show="currentPanel === 'BuilderPanel'"
 			/>
-			<room-panel
-				v-for="room in joinedRooms"
-				:key="room.id"
-				v-if="room && currentPanel === 'RoomPanel' && activeRoomId === room.id"
-				:room="room"
-			/>
+			<keep-alive>
+				<room-panel
+					v-for="room in joinedRooms"
+					:key="room.id"
+					v-if="room && currentPanel === 'RoomPanel' && activeRoomId === room.id"
+					:room="room"
+				/>
+			</keep-alive>
 		</template>
 	</div>
 </template>
