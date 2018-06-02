@@ -1,11 +1,12 @@
 const path = require('path')
+const config = require('./config')
 
 // Express
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
-const nuxt = require('./nuxt.js')
+const nuxt = require('./src/nuxt.js')
 
 // Sockets
 const socketio = require('socket.io')
@@ -13,7 +14,6 @@ const sharedsession = require('express-socket.io-session')
 
 // Database
 const r = require('rethinkdb')
-const dbConfig = require('./dbConfig.json')
 
 
 // Create an express app
@@ -24,24 +24,26 @@ const server = require('http').createServer(app)
 const sessionStore = new expressSession.MemoryStore() // TODO
 const session = new expressSession({
 	store: sessionStore,
-	secret: 'this is hell'
-	// resave: true,
-	// saveUninitialized: true
+	secret: 'this is hell',
+
+	// TODO: Change these two when shiftinf off MemoryStore
+	resave: true,
+	saveUninitialized: true
 })
 app.use(session)
 // public stuff temp TODO
 app.use(express.static(path.resolve(__dirname, '..', 'static')))
 // Cookies and parsers
-app.use(bodyParser())
+// app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 app.use(cookieParser())
 
 // Nuxt stuff
 app.use(nuxt)
 
 // Initialize the HTTP web server
-const port = process.env.PORT || 3000
-server.listen(port, function () {
-	console.log('[http] Server listening on', port)
+server.listen(config.server.port, function () {
+	console.log('[http] Server listening on', config.server.port)
 })
 
 // Set up websocket shit
@@ -51,12 +53,12 @@ io.use(sharedsession(session, {
 }), cookieParser)
 
 // Initialize the database connection and start our stuff after
-r.connect(dbConfig, function (err, conn) {
+r.connect(config.db, function (err, conn) {
 	if (err) {
 		console.log(err)
 		process.exit(1)
 	}
-	console.log('[db] Database listening on', dbConfig.port)
+	console.log('[db] Database listening on', config.db.port)
 
 	// Log everyone out on server start because lul
 	r.db('batorume').table('selectors').update({loggedIn: false}).run(conn)
