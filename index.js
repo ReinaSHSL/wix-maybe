@@ -1,5 +1,5 @@
 const path = require('path')
-const config = require('./config')
+const config = require('./config.js')
 
 // Express
 const express = require('express')
@@ -64,13 +64,13 @@ r.connect(config.db, function (err, conn) {
 	r.db('batorume').table('selectors').update({loggedIn: false}).run(conn)
 
 	// Register express paths for logging in/out
-	require('./logins.js')(app, r, conn)
+	require('./src/logins.js')(app, r, conn)
 
 	// Accept incoming socket connections
 	io.on('connection', function (socket) {
-		require('./sockets/builder.js')(io, socket, r, conn)
-		require('./sockets/rooms.js')(io, socket, r, conn)
-		require('./sockets/misc.js')(io, socket, r, conn)
+		require('./src/sockets/builder.js')(io, socket, r, conn)
+		require('./src/sockets/rooms.js')(io, socket, r, conn)
+		require('./src/sockets/misc.js')(io, socket, r, conn)
 	})
 })
 
