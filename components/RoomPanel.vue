@@ -119,14 +119,6 @@ export default {
 			} else {
 				this.$socket.emit('unReady', this.room.id)
 			}
-		},
-		shuffle () {
-			for (let i in this.gameDeck) {
-				const j = Math.floor(Math.random() * this.gameDeck.length)
-				const temp = this.gameDeck[i]
-				this.gameDeck[i] = this.gameDeck[j]
-				this.gameDeck[j] = temp
-			}
 		}
 	},
 	socket: {

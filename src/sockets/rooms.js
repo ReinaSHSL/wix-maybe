@@ -50,15 +50,6 @@ module.exports = function (io, socket, r, conn) {
 
 		room.addMember(socket.handshake.session.user)
 		socket.join(roomId)
-		r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
-			if (err) return console.log (err)
-			cursor.toArray(function (err, result) {
-				if (err) return console.log(err)
-				for (let deck of result) {
-					socket.emit('roomDecks', deck)
-				}
-			})
-		})
 		socket.emit('joinRoomSuccess', room.withMessages())
 		io.sockets.emit('activeRooms', rooms)
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
@@ -96,15 +87,6 @@ module.exports = function (io, socket, r, conn) {
 			return socket.emit('joinRoomFail', 'Missing or incorrect password')
 		}
 		if (!socket.handshake.session.user) return console.log("user isn't defined aaaa")
-		r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
-			if (err) return console.log (err)
-			cursor.toArray(function (err, result) {
-				if (err) return console.log(err)
-				for (let deck of result) {
-					socket.emit('roomDecks', deck)
-				}
-			})
-		})
 		socket.join(id)
 		room.addMember({
 			id: socket.handshake.session.user.id,
@@ -149,6 +131,7 @@ module.exports = function (io, socket, r, conn) {
 			})
 		})
 	})
+	
 	//Unready
 	socket.on('unReady', function (roomId) {
 		if (!socket.handshake.session) return
@@ -249,4 +232,14 @@ module.exports = function (io, socket, r, conn) {
 	socket.on('eval', function (data) {
 		console.log(eval(data))
 	})
+
+	//Shuffling
+	shuffle () {
+		for (let i in this.gameDeck) {
+			const j = Math.floor(Math.random() * this.gameDeck.length)
+			const temp = this.gameDeck[i]
+			this.gameDeck[i] = this.gameDeck[j]
+			this.gameDeck[j] = temp
+		}
+	}
 }
