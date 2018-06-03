@@ -139,16 +139,16 @@ module.exports = function (io, socket, r, conn) {
 			room.memberDeck(userId, 'YES THIS IS A DECK')
 		}
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
-		// r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
-		// 	if (err) return console.log(err)
-		// 	value.toArray(function (err, decks) {
-		// 		if (err) return console.log(err)
-		// 		if (!decks.length) return console.log('Deck not found')
-		// 		console.log(decks[0])
-		// 		room.memberDeck(userId, decks[0])
-		// 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
-		// 	})
-		// })
+		r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
+		 	if (err) return console.log(err)
+		 	value.toArray(function (err, decks) {
+		 		if (err) return console.log(err)
+		 		if (!decks.length) return console.log('Deck not found')
+		 		console.log(decks[0])
+		 		room.memberDeck(userId, decks[0])
+		 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
+			})
+		})
 	})
 	//Unready
 	socket.on('unReady', function (roomId) {

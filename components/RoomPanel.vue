@@ -24,6 +24,7 @@
 		<select
 			class="room-deck-select"
 			:disabled="ready"
+			v-model="selectedDeck"
 		>
 			<option disabled selected>Choose a deck...</option>
 			<option
@@ -100,9 +101,9 @@ export default {
 		},
 		readyChange () {
 			if (this.ready) {
-				// TODO: once we have the deck things built out, send the deck ID here
-				// FIXME: trying to send a deck that doesn't exist breaks the UI
-				this.$socket.emit('deckInRoom', this.room.id, 'uwu')
+				let roomId = this.room.id
+				let deckId = this.selectedDeck
+				this.$socket.emit('deckInRoom', roomId, deckId)
 			} else {
 				this.$socket.emit('unReady', this.room.id)
 			}
