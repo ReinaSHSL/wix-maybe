@@ -15,8 +15,7 @@
 			@keydown.enter="sendMessage"
 		/>
 		<div class="game-area" v-if="inGame">
-			<div class="deckZone">{{ deckSize }} {{ gameDeck }}</div>
-			<button @click="shuffle()">uhhh</button>
+			<button @click="inGame = !inGame">uhhh</button>
 		</div>
 		<template v-else>
 			<!-- Things that show up when the game is not being played -->
@@ -82,8 +81,7 @@ export default {
 			ready: false,
 			selectedDeck: null,
 			decks: [],
-			inGame: true, // TODO: move to prop
-			gameDeck: [22, 21, 47, 35]
+			inGame: false, // TODO: move to prop
 		}
 	},
 	computed: {
@@ -94,9 +92,6 @@ export default {
 			// The owner isn't labeled as ready, but one other user must have a deck
 			// the game to start
 			return this.room.members.some(user => user.ready)
-		},
-		deckSize () {
-			return this.gameDeck.length
 		}
 	},
 	methods: {
@@ -109,24 +104,22 @@ export default {
 		},
 		start () {
 			// TODO: there is not yet a server event for this
-			this.$socket.emit('startGame', this.room.id, this.selectedDeck.id)
+			this.$socket.emit('startGame', this.room.id, this.selectedDeck)
 		},
 		readyChange () {
-			this.$socket.emit('deckInRoom', this.room.id, this.ready ? this.selectedDeck.id : null)
+			this.$socket.emit('deckInRoom', this.room.id, this.ready ? this.selectedDeck : null)
 		},
-		shuffle () {
-			for (let i in this.gameDeck) {
-				const j = Math.floor(Math.random() * this.gameDeck.length)
-				const temp = this.gameDeck[i]
-				this.gameDeck[i] = this.gameDeck[j]
-				this.gameDeck[j] = temp
-			}
-		}
 	},
 	socket: {
 		events: {
 			loadDeck (decks) {
 				this.decks = decks
+			},
+			gameStart (roomId) {
+				if (this.room.id !== roomId) {
+					return
+				}
+				this.inGame = true 
 			}
 		}
 	},

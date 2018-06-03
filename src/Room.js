@@ -40,7 +40,7 @@ module.exports = class Room {
 		const index = this.members.findIndex(u => u.id === id)
 		this.members[index].deck = deck
 		this.members[index].ready = deck ? true : false
-		console.log(this.members[index])
+		console.log(this.members[index].deck)
 	}
 
 	set owner (user) {

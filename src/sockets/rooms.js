@@ -106,6 +106,28 @@ module.exports = function (io, socket, r, conn) {
 		io.sockets.in(id).emit('newMessage', msg)
 	})
 
+	//Start Game
+	socket.on('startGame', function (roomId, deckId) {
+		if (!socket.handshake.session) return
+		const room = getRoom(roomId)
+		if (!room) return
+		const userId = socket.handshake.session.user.id
+		if (!deckId) {
+			console.log('uwu')
+				return
+			}
+		r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
+			if (err) return console.log(err)
+			value.toArray(function (err, [deck]) {
+				if (err) return console.log(err)
+				if (!deck) return console.log('Deck not found')
+				console.log(deck)
+				room.memberDeck(userId, deck)
+				io.sockets.in(roomId).emit('gameStart', roomId)
+			})
+		})
+	})
+
 	// User sends ready
 	socket.on('deckInRoom', function (roomId, deckId) {
 		console.log('[deckInRoom', roomId, deckId)
@@ -131,7 +153,7 @@ module.exports = function (io, socket, r, conn) {
 			})
 		})
 	})
-	
+
 	//Unready
 	socket.on('unReady', function (roomId) {
 		if (!socket.handshake.session) return
@@ -141,7 +163,6 @@ module.exports = function (io, socket, r, conn) {
 		const userIndex = room.members.findIndex(u => u.id === userId)
 		room.members[userIndex].ready = false
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
-		console.log(room.members[userIndex].ready)
 	})
 
 	// Record the user leaving a room
@@ -229,12 +250,8 @@ module.exports = function (io, socket, r, conn) {
 		io.sockets.in(data.roomId).emit('newMessage', _msg)
 	})
 
-	socket.on('eval', function (data) {
-		console.log(eval(data))
-	})
-
-	//Shuffling
-	shuffle () {
+	//shuffling
+	function shuffle () {
 		for (let i in this.gameDeck) {
 			const j = Math.floor(Math.random() * this.gameDeck.length)
 			const temp = this.gameDeck[i]
@@ -242,4 +259,8 @@ module.exports = function (io, socket, r, conn) {
 			this.gameDeck[j] = temp
 		}
 	}
+
+	socket.on('eval', function (data) {
+		console.log(eval(data))
+	})
 }
