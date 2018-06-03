@@ -1,5 +1,5 @@
 <template>
-	<div class="room-panel">
+	<div class="room-panel" :class="{'in-game': inGame}">
 		<table class="room-messages">
 			<room-message
 				v-for="(message, index) in room.messages"
@@ -7,13 +7,6 @@
 				:message="message"
 			/>
 		</table>
-		<ul class="room-users-list">
-			<room-users-list-item
-				v-for="user in room.members"
-				:key="user.id"
-				:user="user"
-			/>
-		</ul>
 		<input
 			class="room-chatbar"
 			type="text"
@@ -21,45 +14,60 @@
 			v-model="draftedMessage"
 			@keydown.enter="sendMessage"
 		/>
-		<select
-			class="room-deck-select"
-			:disabled="ready"
-			v-model="selectedDeck"
-		>
-			<option disabled selected>Choose a deck...</option>
-			<option
-					v-for="deck in decks"
-					:key="deck.id"
-					:value="deck.id"
-			>
-					{{ deck.name }}
-			</option>
-		</select>
-		<label
-			v-if="room.owner.id !== user.id"
-			class="ready-button"
-		>
-			<input
-				type="checkbox"
-				class="ready-input"
-				v-model="ready"
-				:disabled="room.members.find(u => u.ready && u.id !== user.id)"
-				@change="readyChange"
-			/>
-			Ready?
-		</label>
-		<div
-			v-if="room.owner.id === user.id"
-			class="start-button"
-		>
-			<button
-				class="start-button-inner"
-				@click="start"
-				:disabled="!canStart"
-			>
-				Start!
-			</button>
+		<div class="game-area" v-if="inGame">
+			<!-- Things that show up when the game is being played -->
+			<!-- oh god oh god what do i do uhhhh -->
+			<button @click="inGame = !inGame">uhhh</button>
 		</div>
+		<template v-else>
+			<!-- Things that show up when the game is not being played -->
+			<ul class="room-users-list">
+				<room-users-list-item
+					v-for="user in room.members"
+					:key="user.id"
+					:user="user"
+				/>
+			</ul>
+			<select
+				class="room-deck-select"
+				:disabled="ready"
+				v-model="selectedDeck"
+			>
+				<option disabled selected>Choose a deck...</option>
+				<option
+						v-for="deck in decks"
+						:key="deck.id"
+						:value="deck.id"
+				>
+						{{ deck.name }}
+				</option>
+			</select>
+			<label
+				v-if="room.owner.id !== user.id"
+				class="ready-button"
+			>
+				<input
+					type="checkbox"
+					class="ready-input"
+					v-model="ready"
+					:disabled="room.members.find(u => u.ready && u.id !== user.id)"
+					@change="readyChange"
+				/>
+				Ready?
+			</label>
+			<div
+				v-if="room.owner.id === user.id"
+				class="start-button"
+			>
+				<button
+					class="start-button-inner"
+					@click="start"
+					:disabled="!canStart"
+				>
+					Start!
+				</button>
+			</div>
+		</template>
 	</div>
 </template>
 
@@ -74,7 +82,8 @@ export default {
 			draftedMessage: '',
 			ready: false,
 			selectedDeck: null,
-			decks: []
+			decks: [],
+			inGame: true // TODO: move to prop
 		}
 	},
 	computed: {
@@ -133,13 +142,23 @@ export default {
 		/ calc(100% - 150px) 150px;
 	font-family: monospace;
 }
-
+.room-panel.in-game {
+	grid:
+		"game messages" calc(100% - 32px)
+		"game chatbar"  32px
+		/ calc(100% - 200px) 200px;
+}
 .mobile .room-panel {
 	grid:
 		"messages messages" calc(100% - 64px)
 		"chatbar  chatbar " 32px
 		"deck     ready   " 32px
 		/ 50% 50%;
+}
+.mobile .room-panel.in-game {
+	grid:
+		"game" 100%
+		/ 100%;
 }
 
 /* Main message display area */
@@ -201,5 +220,10 @@ export default {
 	flex: 1 1 100%;
 	display: block;
 	margin: 0 5px;
+}
+
+.game-area {
+	grid-area: game;
+	border-right: 1px solid #DDD;
 }
 </style>
