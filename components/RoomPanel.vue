@@ -108,16 +108,18 @@ export default {
 			this.draftedMessage = ''
 		},
 		start () {
-			// if (this.canStart)
-			console.log('hi your shits broken')
+			// TODO: there is not yet a server event for this
+			this.$socket.emit('startGame', this.room.id, this.selectedDeck.id)
 		},
 		readyChange () {
-			if (this.ready) {
-				let roomId = this.room.id
-				let deckId = this.selectedDeck
-				this.$socket.emit('deckInRoom', roomId, deckId)
-			} else {
-				this.$socket.emit('unReady', this.room.id)
+			this.$socket.emit('deckInRoom', this.room.id, this.ready ? this.selectedDeck.id : null)
+		},
+		shuffle () {
+			for (let i in this.gameDeck) {
+				const j = Math.floor(Math.random() * this.gameDeck.length)
+				const temp = this.gameDeck[i]
+				this.gameDeck[i] = this.gameDeck[j]
+				this.gameDeck[j] = temp
 			}
 		}
 	},
