@@ -126,6 +126,8 @@ module.exports = function (io, socket, r, conn) {
 				io.sockets.in(roomId).emit('gameStart', roomId)
 			})
 		})
+		    const player1 = this.members.find(member => member.owner)
+    const player2 = this.members.find(member => member.ready)
 	})
 
 	// User sends ready

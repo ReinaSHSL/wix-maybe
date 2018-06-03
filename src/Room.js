@@ -1,5 +1,5 @@
 const {escapeHTML} = require('./util.js')
-
+const Field = require('field.js')
 module.exports = class Room {
 	constructor (name, password, id) {
 		this.name = name
@@ -13,6 +13,7 @@ module.exports = class Room {
 		this.id += '' // this shouldn't be necessary but we add it for safety
 		this.members = []
 		this.ownerId = undefined
+		this.fields = {}
 	}
 
 	addMember (member) {
@@ -82,5 +83,15 @@ module.exports = class Room {
 
 	inspect () {
 		return this.toJSON()
+	}
+
+	startGame () {
+	    const player1 = this.members.find(member => member.owner)
+	    const player2 = this.members.find(member => member.ready)
+	    for (let player of [player1, player2]) {
+		    this.fields[player.id] = new Field()
+		    this.fields[player.id].deck.addCard(...player.mainDeck)
+		    this.fields[player.id].lrigDeck.addCard(...player.lrigDeck)
+		}
 	}
 }
