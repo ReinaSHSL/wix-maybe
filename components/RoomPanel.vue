@@ -15,7 +15,10 @@
 			@keydown.enter="sendMessage"
 		/>
 		<div class="game-area" v-if="inGame">
-			<button @click="inGame = !inGame">uhhh</button>
+			<!-- <builder-preview :card="{}"/> -->
+			<div class="game-field">
+				test
+			</div>
 		</div>
 		<template v-else>
 			<!-- Things that show up when the game is not being played -->
@@ -72,6 +75,7 @@
 <script>
 import RoomMessage from '~/components/RoomMessage.vue'
 import RoomUsersListItem from '~/components/RoomUsersListItem.vue'
+import BuilderPreview from '~/components/BuilderPreview.vue'
 
 export default {
 	props: ['room'],
@@ -119,13 +123,14 @@ export default {
 				if (this.room.id !== roomId) {
 					return
 				}
-				this.inGame = true 
+				this.inGame = true
 			}
 		}
 	},
 	components: {
 		RoomMessage,
 		RoomUsersListItem,
+		BuilderPreview,
 	}
 }
 </script>
@@ -223,5 +228,24 @@ export default {
 .game-area {
 	grid-area: game;
 	border-right: 1px solid #DDD;
+	position: relative;
+	display: flex;
+}
+.game-area-content {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+
+	width: calc(100vw - 200px);
+	height: calc(2 * (100vw - 200px) / 3);
+	max-width: calc(3 / 2 * (100vh - 33px));
+	max-height: calc(100vh - 33px);
+}
+
+.game-area .builder-info-sidebar {
+	flex: 0 0 200px;
 }
 </style>

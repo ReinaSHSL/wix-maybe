@@ -114,8 +114,8 @@ module.exports = function (io, socket, r, conn) {
 		const userId = socket.handshake.session.user.id
 		if (!deckId) {
 			console.log('uwu')
-				return
-			}
+			return
+		}
 		r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
 			if (err) return console.log(err)
 			value.toArray(function (err, [deck]) {
@@ -203,7 +203,7 @@ module.exports = function (io, socket, r, conn) {
 				roomId: roomId,
 				timestamp: Date.now()
 			}
-			room.messages.push(msg)
+			room.messages.push(msg2)
 			io.sockets.in(roomId).emit('newMessage', msg2)
 		}
 	}
