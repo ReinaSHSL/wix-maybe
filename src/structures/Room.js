@@ -1,6 +1,6 @@
-const Field = require('./field.js')
+const Field = require('./Field.js')
 
-module.exports = class Room {
+class Room {
 	constructor (name, password, id) {
 		this.name = name
 		this.password = password
@@ -85,12 +85,14 @@ module.exports = class Room {
 	}
 
 	startGame () {
-	    const player1 = this.members.find(member => member.owner)
-	    const player2 = this.members.find(member => member.ready)
-	    for (let player of [player1, player2]) {
-		    this.fields[player.id] = new Field()
-		    this.fields[player.id].deck.addCard(...player.mainDeck)
-		    this.fields[player.id].lrigDeck.addCard(...player.lrigDeck)
+		const player1 = this.members.find(member => member.owner)
+		const player2 = this.members.find(member => member.ready)
+		for (let player of [player1, player2]) {
+			this.fields[player.id] = new Field()
+			this.fields[player.id].deck.addCard(...player.mainDeck)
+			this.fields[player.id].lrigDeck.addCard(...player.lrigDeck)
 		}
 	}
 }
+
+module.exports = Room
