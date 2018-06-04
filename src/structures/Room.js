@@ -53,11 +53,13 @@ class Room {
 	}
 
 	get memberList () {
-		return this.members.map(u => {
-			if (u.id === this.ownerId) u.owner = true
-			u.deck = undefined
-			return u
-		}).sort((u1, u2) => {
+		// Remember: Object.assign(a, b) puts the properties of b onto a, but we
+		// want to make a copy without modifying the original, so we do
+		// Object.assign({}, a, b) to get a copy with the properties modified
+		return this.members.map(u => Object.assign({}, u, { // create clone of u with modified properties
+			deck: undefined, // Don't send the client the decks of other users
+			owner: u.id === this.ownerId // Easier client-side rendering
+		})).sort((u1, u2) => {
 			if (u1.owner && !u2.owner) return -1
 			if (u2.owner && !u1.owner) return 1
 			return u1.username.localeCompare(u2.username)
