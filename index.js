@@ -41,11 +41,6 @@ app.use(cookieParser())
 // Nuxt stuff
 app.use(nuxt)
 
-// Initialize the HTTP web server
-server.listen(config.server.port, function () {
-	console.log('[http] Server listening on', config.server.port)
-})
-
 // Set up websocket shit
 const io = socketio(server)
 io.use(sharedsession(session, {
@@ -53,12 +48,9 @@ io.use(sharedsession(session, {
 }), cookieParser)
 
 // Initialize the database connection and start our stuff after
-r.connect(config.db, function (err, conn) {
-	if (err) {
-		console.log(err)
-		process.exit(1)
-	}
-	console.log('[db] Database listening on', config.db.port)
+r.connect(config.db, async function (err, conn) {
+	if (err) throw err
+	console.log('RethinkDB connected on port', config.db.port)
 
 	// Log everyone out on server start because lul
 	r.db('batorume').table('selectors').update({loggedIn: false}).run(conn)
@@ -72,10 +64,19 @@ r.connect(config.db, function (err, conn) {
 		require('./src/sockets/rooms.js')(io, socket, r, conn)
 		require('./src/sockets/misc.js')(io, socket, r, conn)
 	})
+
+	// Build the Nuxt application
+	await nuxt.start(config.nuxt)
+
+	// Now that we're built and everything's good, we can start the server
+	server.listen(config.server.port, function () {
+		console.log('HTTP server listening on', config.server.port)
+	})
 })
 
 // Nuxt event handling
 process.on('nuxt:build:done', err => {
+	console.log('[nuxt:build:done]')
 	if (err) {
 		console.log(err)
 		process.exit(1)

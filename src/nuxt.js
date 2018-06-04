@@ -2,29 +2,38 @@
 const resolve = require('path').resolve
 const { Nuxt, Builder } = require('nuxt')
 
-// Setup nuxt.js
-let config = {}
-try {
-	config = require('../nuxt.config.js')
-} catch (e) {} // eslint-disable-line no-empty
-config.rootDir = resolve(__dirname, '..')
-config.dev = process.env.NODE_ENV !== 'production'
+let nuxt
 
-const nuxt = new Nuxt(config)
-if (config.dev) {
-	const builder = new Builder(nuxt)
-	builder.build().then(() => process.emit('nuxt:build:done'))
-} else {
-	process.nextTick(() => process.emit('nuxt:build:done'))
+// Setup nuxt.js
+function start (config = {}) {
+	config.rootDir = resolve(__dirname, '..')
+	nuxt = new Nuxt(config)
+
+	return new Promise(resolve => {
+		if (config.dev) {
+			const builder = new Builder(nuxt)
+			builder.build().then(() => {
+				process.emit('nuxt:build:done')
+				resolve()
+			})
+		} else {
+			process.nextTick(() => {
+				process.emit('nuxt:build:done')
+				resolve()
+			})
+		}
+	})
 }
 
 // Add nuxt.js middleware
-module.exports = function (req, res, next) {
-	const url = require('url').parse(req.url)
-	console.log(req.method, url.pathname)
+function middleware (req, res, next) {
+	// TODO: better logic should probably be here and/or in nuxt.config.js
 	if (req.method === 'GET') {
 		nuxt.render(req, res)
 	} else {
 		next()
 	}
 }
+
+module.exports = middleware
+module.exports.start = start

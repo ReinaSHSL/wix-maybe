@@ -1,6 +1,8 @@
+const dev = process.env.NODE_ENV !== 'production'
+
 module.exports = {
 	// Dev mode (auto-rebuild, etc.) enabled if true
-	dev: process.env.NODE_ENV !== 'production',
+	dev,
 	// Database configuration
 	db: {
 		host: process.env.RETHINKDB_HOST || 'localhost',
@@ -11,5 +13,5 @@ module.exports = {
 	server: {
 		port: process.env.PORT || 3000
 	},
-	nuxt: require('./nuxt.config')
+	nuxt: Object.assign(require('./nuxt.config'), {dev})
 }
