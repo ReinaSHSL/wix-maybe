@@ -85,12 +85,14 @@ class Room {
 	}
 
 	startGame () {
-		const player1 = this.members.find(member => member.owner)
-		const player2 = this.members.find(member => member.ready)
-		for (let player of [player1, player2]) {
+		console.log('=== Starting game ===')
+		const players = this.members.filter(user => user.ready).slice(0, 2)
+		console.log('players', players)
+		for (let player of players) {
+			console.log(player)
 			this.fields[player.id] = new Field()
-			this.fields[player.id].deck.addCard(...player.mainDeck)
-			this.fields[player.id].lrigDeck.addCard(...player.lrigDeck)
+			this.fields[player.id].zones.mainDeck.addCard(...player.deck.deck.main)
+			this.fields[player.id].zones.lrigDeck.addCard(...player.deck.deck.lrig)
 		}
 	}
 }

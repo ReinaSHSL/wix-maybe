@@ -1,4 +1,4 @@
-const Room = require('../Room.js')
+const Room = require('../structures/Room.js')
 const escapeHTML = require('../util.js').escapeHTML
 
 let rooms = []
@@ -124,10 +124,9 @@ module.exports = function (io, socket, r, conn) {
 				console.log(deck)
 				room.memberDeck(userId, deck)
 				io.sockets.in(roomId).emit('gameStart', roomId)
+				room.startGame()
 			})
 		})
-		    const player1 = this.members.find(member => member.owner)
-    const player2 = this.members.find(member => member.ready)
 	})
 
 	// User sends ready
