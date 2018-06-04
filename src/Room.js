@@ -1,5 +1,5 @@
-const {escapeHTML} = require('./util.js')
 const Field = require('./field.js')
+
 module.exports = class Room {
 	constructor (name, password, id) {
 		this.name = name
@@ -67,7 +67,6 @@ module.exports = class Room {
 	toJSON () {
 		return {
 			name: this.name,
-			safeName: escapeHTML(this.name),
 			id: this.id,
 			members: this.memberList,
 			owner: this.owner,
