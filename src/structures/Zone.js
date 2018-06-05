@@ -3,8 +3,8 @@ class Zone {
 		this.cards = []
 		this.downed = false
 	}
-	addCard (card) {
-		this.cards.push(card)
+	addCard (...cards) {
+		this.cards.push(...cards)
 	}
 	removeCard (card) {
 		let index = this.cards.findIndex(anotherCard => card.id === anotherCard.id)
