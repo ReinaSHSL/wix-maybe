@@ -49,6 +49,7 @@ export default {
 	props: ['message', 'compact'],
 	computed: {
 		time () {
+			// TODO: timezones
 			return new Date(this.message.timestamp).toTimeString().substr(0, 5)
 		},
 		cssClass () {
@@ -77,9 +78,7 @@ export default {
 </script>
 
 <style>
-.message:hover {
-	background: #F7F7F7;
-}
+/* Layout */
 .message .timestamp,
 .message .author,
 .message .decoration,
@@ -102,13 +101,29 @@ export default {
 .message .content {
 	width: 100%;
 }
+
+/* Visibility */
+.message:hover {
+	background: #F7F7F7;
+}
+
+/* Styles for specific types of messages */
 .message:not(.user-message) .content { color: #666 }
 .join-message .decoration { color: green }
 .leave-message .decoration { color: red }
 
+/* Compact styles fr in-game */
 .message.compact {
 	display: block;
+	padding: 1px 3px;
 }
-
+.message.compact td {
+	display: inline;
+	padding: 0;
+	border: 0;
+}
+.message.compact td:after {
+	content: " ";
+}
 </style>
 
