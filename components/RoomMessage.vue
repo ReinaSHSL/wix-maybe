@@ -4,33 +4,41 @@
 		:class="cssClass"
 	>
 		<td class="timestamp">{{time}}</td>
-		<td v-if="message.type === 'normal'" class="author">
-			<colored-username
-				:user="message.author"
-			/>
-		</td>
-		<td v-if="message.type === 'normal'" class="content">{{message.content}}</td>
-		<td v-if="message.type === 'join'" class="decoration">--&gt;</td>
-		<td v-if="message.type === 'join'" class="content">
-			<colored-username
-				:user="{username: message.username}"
-			/>
-			has joined.
-		</td>
-		<td v-if="message.type === 'leave'" class="decoration">&lt;--</td>
-		<td v-if="message.type === 'leave'" class="content">
-			<colored-username
-				:user="{username: message.username}"
-			/>
-			has left.
-		</td>
-		<td v-if="message.type === 'ownerChange'" class="decoration">---</td>
-		<td v-if="message.type === 'ownerChange'" class="content">
-			<colored-username
-				:user="{username: message.username}"
-			/>
-			is now the owner.
-		</td>
+		<template v-if="message.type === 'normal'">
+			<td class="author">
+				<colored-username
+					:user="message.author"
+				/>
+			</td>
+			<td class="content">{{message.content}}</td>
+		</template>
+		<template v-if="mesage.type === 'join'">
+			<td class="decoration">--&gt;</td>
+			<td class="content">
+				<colored-username
+					:user="{username: message.username}"
+				/>
+				has joined.
+			</td>
+		</template>
+		<template v-if="message.type === 'leave'">
+			<td class="decoration">&lt;--</td>
+			<td class="content">
+				<colored-username
+					:user="{username: message.username}"
+				/>
+				has left.
+			</td>
+		</template>
+		<template v-if="message.type === 'ownerChange'">
+			<td class="decoration">---</td>
+			<td class="content">
+				<colored-username
+					:user="{username: message.username}"
+				/>
+				is now the owner.
+			</td>
+		</template>
 	</tr>
 </template>
 
@@ -38,22 +46,28 @@
 import ColoredUsername from '~/components/ColoredUsername.vue'
 
 export default {
-	props: ['message'],
+	props: ['message', 'compact'],
 	computed: {
 		time () {
 			return new Date(this.message.timestamp).toTimeString().substr(0, 5)
 		},
 		cssClass () {
+			let type
 			switch (this.message.type) {
 				case 'normal':
-					return 'user-message'
+					type = 'user-message'
+					break
 				case 'join':
-					return 'join-message'
+					type = 'join-message'
+					break
 				case 'leave':
-					return 'leave-message'
+					type = 'leave-message'
+					break
 				case 'ownerChange':
-					return 'owner-change-message'
+					type = 'owner-change-message'
+					break
 			}
+			return [type, {compact: this.compact}]
 		}
 	},
 	components: {
@@ -91,6 +105,10 @@ export default {
 .message:not(.user-message) .content { color: #666 }
 .join-message .decoration { color: green }
 .leave-message .decoration { color: red }
+
+.message.compact {
+	display: block;
+}
 
 </style>
 
