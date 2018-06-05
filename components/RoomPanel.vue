@@ -18,6 +18,7 @@
 		<div class="game-area" v-if="room.inGame">
 			<!-- <builder-preview :card="{}"/> -->
 			<div class="game-field">
+				<!-- future: https://codepen.io/Geo1088/pen/ERPKOR?editors=1000 -->
 				{{room}}
 			</div>
 		</div>
@@ -129,7 +130,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .room-panel {
 	display: grid;
 	grid:
@@ -219,24 +220,31 @@ export default {
 	margin: 0 5px;
 }
 
+/* Field has fixed aspect ratio for consistency, may regret this later */
+/* Mixin adapted from https://stackoverflow.com/a/24894523/1070107 */
+@mixin viewportRatio($x, $y, $offsetX, $offsetY) {
+	width: calc(100vw - #{$offsetX});
+	height: calc(#{$y} * (100vw - #{$offsetX}) / #{$x});
+	max-width: calc(#{$x} / #{$y} * (100vh - #{$offsetY}));
+	max-height: calc(100vh - #{$offsetY});
+}
+
+.in-game .room-messages {
+	border-left: 1px solid #DDD;
+}
 .game-area {
 	grid-area: game;
-	border-right: 1px solid #DDD;
 	position: relative;
 	display: flex;
 }
-.game-area-content {
+.game-field {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
-
-	width: calc(100vw - 200px);
-	height: calc(2 * (100vw - 200px) / 3);
-	max-width: calc(3 / 2 * (100vh - 33px));
-	max-height: calc(100vh - 33px);
+	@include viewportRatio(3, 2, 200px, 33px);
 }
 
 .game-area .builder-info-sidebar {
