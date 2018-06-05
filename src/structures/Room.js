@@ -39,9 +39,11 @@ class Room {
 
 	memberDeck (id, deck) {
 		const index = this.members.findIndex(u => u.id === id)
+		// We can't have more than two people ready at once
+		if (deck && this.members.filter(u => u.ready).length >= 2) return
+
 		this.members[index].deck = deck
 		this.members[index].ready = deck ? true : false
-		console.log(this.members[index].deck)
 	}
 
 	set owner (user) {
@@ -87,14 +89,12 @@ class Room {
 	}
 
 	startGame () {
-		console.log('=== Starting game ===')
-		const players = this.members.filter(user => user.ready).slice(0, 2)
-		console.log('players', players)
-		for (let player of players) {
-			console.log(player)
-			this.fields[player.id] = new Field()
-			this.fields[player.id].zones.mainDeck.addCard(...player.deck.deck.main)
-			this.fields[player.id].zones.lrigDeck.addCard(...player.deck.deck.lrig)
+		// Initialize a field for the two ready players
+		for (let player of this.members.filter(user => user.ready).slice(0, 2)) {
+			const field = new Field()
+			field.zones.mainDeck.addCard(...player.deck.deck.main)
+			field.zones.lrigDeck.addCard(...player.deck.deck.lrig)
+			this.fields[player.id] = field
 		}
 	}
 }
