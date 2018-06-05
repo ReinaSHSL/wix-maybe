@@ -140,6 +140,14 @@ export default {
 				if (!room) return console.warn(new TypeError('roomUsers: room not found'))
 				room.members = users
 			},
+
+			// A game has started
+			gameStart (roomId, fields) {
+				const room = this.joinedRooms.find(room => room.id === roomId)
+				if (!room) return console.warn(new TypeError('gameStart: room not found'))
+				room.fields = fields
+				room.inGame = true
+			}
 		}
 	},
 	mounted () {

@@ -14,6 +14,7 @@ class Room {
 		this.members = []
 		this.ownerId = undefined
 		this.fields = {}
+		this.inGame = false
 	}
 
 	addMember (member) {
@@ -75,6 +76,7 @@ class Room {
 			members: this.memberList,
 			owner: this.owner,
 			hasPassword: this.password ? true : false,
+			inGame: this.inGame,
 		}
 	}
 
@@ -96,6 +98,7 @@ class Room {
 			field.zones.lrigDeck.addCard(...player.deck.deck.lrig)
 			this.fields[player.id] = field
 		}
+		this.inGame = true
 	}
 }
 

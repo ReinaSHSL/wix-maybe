@@ -1,10 +1,11 @@
 <template>
-	<div class="room-panel" :class="{'in-game': inGame}">
+	<div class="room-panel" :class="{'in-game': room.inGame}">
 		<table class="room-messages">
 			<room-message
 				v-for="(message, index) in room.messages"
 				:key="index"
 				:message="message"
+				:compact="room.inGame"
 			/>
 		</table>
 		<input
@@ -14,10 +15,10 @@
 			v-model="draftedMessage"
 			@keydown.enter="sendMessage"
 		/>
-		<div class="game-area" v-if="inGame">
+		<div class="game-area" v-if="room.inGame">
 			<!-- <builder-preview :card="{}"/> -->
 			<div class="game-field">
-				test
+				{{room}}
 			</div>
 		</div>
 		<template v-else>
@@ -85,7 +86,6 @@ export default {
 			ready: false,
 			selectedDeck: null,
 			decks: [],
-			inGame: false, // TODO: move to prop
 		}
 	},
 	computed: {
@@ -119,12 +119,6 @@ export default {
 			loadDeck (decks) {
 				this.decks = decks
 			},
-			gameStart (roomId) {
-				if (this.room.id !== roomId) {
-					return
-				}
-				this.inGame = true
-			}
 		}
 	},
 	components: {
