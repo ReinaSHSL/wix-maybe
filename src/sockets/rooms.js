@@ -237,14 +237,35 @@ module.exports = function (io, socket, r, conn) {
 
 		if (!socket.handshake.session) return
 
+		data.msg = data.msg.replace(/^\s+|\s+$/g, '')
 		const room = getRoom(data.roomId)
+
+		if (data.msg.startsWith('/')) {
+			// Boom command
+			const args = data.msg.substr(1).split(' ')
+			const command = args.shift().toLowerCase()
+
+			if (['me', 'action'].includes(command)) {
+				return io.sockets.in(data.roomId).emit('newMessage', {
+					type: 'action',
+					author: {
+						id: socket.handshake.session.user.id,
+						username: socket.handshake.session.user.username,
+					},
+					content: args.join(' '),
+					roomId: data.roomId,
+					timestamp: Date.now()
+				})
+			}
+		}
+
 		const _msg = {
 			type: 'normal',
 			author: {
 				id: socket.handshake.session.user.id,
 				username: socket.handshake.session.user.username
 			},
-			content: data.msg.replace(/^\s+|\s+$/g, ''),
+			content: data.msg,
 			roomId: data.roomId,
 			timestamp: Date.now()
 		}

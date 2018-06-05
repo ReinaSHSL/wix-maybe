@@ -39,6 +39,13 @@
 				is now the owner.
 			</td>
 		</template>
+		<template v-if="message.type === 'action'">
+			<td class="decoration">*</td>
+			<td class="content">
+				<colored-username :user="message.author"/>
+				{{message.content}}
+			</td>
+		</template>
 	</tr>
 </template>
 
@@ -57,6 +64,9 @@ export default {
 			switch (this.message.type) {
 				case 'normal':
 					type = 'user-message'
+					break
+				case 'action':
+					type = 'action-message'
 					break
 				case 'join':
 					type = 'join-message'
@@ -111,6 +121,7 @@ export default {
 .message:not(.user-message) .content { color: #666 }
 .join-message .decoration { color: green }
 .leave-message .decoration { color: red }
+.action-message .content { font-style: italic }
 
 /* Compact styles fr in-game */
 .message.compact {
