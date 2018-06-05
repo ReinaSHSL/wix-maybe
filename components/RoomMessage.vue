@@ -12,7 +12,7 @@
 			</td>
 			<td class="content">{{message.content}}</td>
 		</template>
-		<template v-if="mesage.type === 'join'">
+		<template v-if="message.type === 'join'">
 			<td class="decoration">--&gt;</td>
 			<td class="content">
 				<colored-username
