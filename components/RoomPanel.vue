@@ -19,9 +19,8 @@
 			<!-- <builder-preview :card="{}"/> -->
 			<div class="game-field">
 				<!-- future: https://codepen.io/Geo1088/pen/ERPKOR?editors=1000 -->
-				<div v-for="(field, playerId) in room.fields" v-key="playerId">
+				<div v-for="(field, playerId) in room.fields" :key="playerId">
 					<card-stack :zone="field.zones.mainDeck"/>
-					}
 				</div>
 			</div>
 		</div>
