@@ -19,7 +19,10 @@
 			<!-- <builder-preview :card="{}"/> -->
 			<div class="game-field">
 				<!-- future: https://codepen.io/Geo1088/pen/ERPKOR?editors=1000 -->
-				{{room}}
+				<div v-for="(field, playerId) in room.fields" v-key="playerId">
+					<card-stack :zone="field.zones.mainDeck"/>
+					}
+				</div>
 			</div>
 		</div>
 		<template v-else>
@@ -78,6 +81,7 @@
 import RoomMessage from '~/components/RoomMessage.vue'
 import RoomUsersListItem from '~/components/RoomUsersListItem.vue'
 import BuilderPreview from '~/components/BuilderPreview.vue'
+import CardStack from '~/components/CardStack.vue'
 
 export default {
 	props: ['room'],
@@ -108,7 +112,6 @@ export default {
 			this.draftedMessage = ''
 		},
 		start () {
-			// TODO: there is not yet a server event for this
 			this.$socket.emit('startGame', this.room.id, this.selectedDeck)
 		},
 		readyChange () {
@@ -126,6 +129,7 @@ export default {
 		RoomMessage,
 		RoomUsersListItem,
 		BuilderPreview,
+		CardStack,
 	}
 }
 </script>
