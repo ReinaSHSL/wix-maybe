@@ -17,7 +17,6 @@ class Zone {
 	toJSON () {
     	downed: this.downed,
 		cards: this.cards.map(id => ALLCARDS.find(card => card.id === id)),
-		hidden: this.hidden
 	}
 	privateJSON () {
 		return this.toJSON()
