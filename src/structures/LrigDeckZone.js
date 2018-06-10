@@ -8,10 +8,11 @@ class LrigDeckZone extends Zone {
 
 	toJSON () {
 		return {
-			topCard: {image: 'https://i.imgur.com/39NPwdZ.png'},
+			topCard: this.cards.length ? {image: 'https://i.imgur.com/39NPwdZ.png'} : {},
 			size: this.cards.length
 		}
 	}
+
 	privateJSON () {
 		this.cards.map(id => ALLCARDS.find(card => card.id === id))
 	}

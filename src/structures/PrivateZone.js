@@ -6,7 +6,7 @@ class PrivateZone extends Zone {
 
 	toJSON () {
 		return {
-			topCard: {image: 'https://i.imgur.com/39NPwdZ.png'},
+			topCard: this.cards.length ? {image: 'https://i.imgur.com/39NPwdZ.png'} : {},
 			size: this.cards.length
 		}
 	}

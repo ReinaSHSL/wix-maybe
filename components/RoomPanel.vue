@@ -296,8 +296,10 @@ export default {
 .game-field.mine {
 	order: 0;
 }
+
 // lazy lul
 .game-field:not(.mine) {
+	order: 1;
 	&, .card-preview, .card-stack-count {
 		transform: rotate(180deg);
 		transform-origin: center;
