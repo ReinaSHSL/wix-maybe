@@ -20,7 +20,7 @@
 			<div class="game-field">
 				<!-- future: https://codepen.io/Geo1088/pen/ERPKOR?editors=1000 -->
 				<div v-for="(field, playerId) in room.fields" :key="playerId">
-					<card-stack :zone="field.zones.mainDeck"/>
+					<card-stack class="main-deck" :zone="field.zones.mainDeck"/>
 				</div>
 			</div>
 		</div>
@@ -248,9 +248,22 @@ export default {
 	right: 0;
 	margin: auto;
 	@include viewportRatio(3, 2, 200px, 33px);
+
+	display: grid;
+	grid:
+		"ener lc   signi1 signi2 signi3 signi3 signi3 .    mtrsh .     ltrsh" 7fr
+		"ener lc   check  lrig   .      ldeck  .      .    mdeck .     .    " 7fr
+		"ener hand hand   hand   hand   hand   hand   hand hand  hand  hand " 5fr
+		/5fr  7fr  7fr    7fr    1fr    5fr    1fr    1fr 5fr   1fr 5fr;
+	flex: 50%;
 }
 
-.game-area .builder-info-sidebar {
+.game-field .main-deck {
+	grid-area: mdeck;
+	background: red;
+}
+
+.game-area .builder-info-sidebar { // this will happen eventually
 	flex: 0 0 200px;
 }
 </style>

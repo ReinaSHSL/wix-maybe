@@ -1,4 +1,6 @@
 const Zone = require('./Zone.js')
+const ALLCARDS = require('../allCards.json')
+
 class LrigDeckZone extends Zone {
 	constructor () {
 		super()

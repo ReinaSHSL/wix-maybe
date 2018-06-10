@@ -1,14 +1,14 @@
 const Zone = require('./Zone.js')
 class PrivateZone extends Zone {
-    constructor () {
-        super()
-    }
+	constructor () {
+		super()
+	}
 
-    toJSON () {
-        return {
-            topCard: {image: 'https://i.imgur.com/39NPwdZ.png'},
-            size: this.cards.length
-        }
-    }
+	toJSON () {
+		return {
+			topCard: {image: 'https://i.imgur.com/39NPwdZ.png'},
+			size: this.cards.length
+		}
+	}
 }
 module.exports = PrivateZone

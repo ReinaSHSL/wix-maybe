@@ -53,7 +53,6 @@ module.exports = function (io, socket, r, conn) {
 		socket.emit('joinRoomSuccess', room.withMessages())
 		io.sockets.emit('activeRooms', rooms)
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
-
 		const msg = {
 			type: 'join',
 			username: socket.handshake.session.user.username,
@@ -126,7 +125,17 @@ module.exports = function (io, socket, r, conn) {
 				room.startGame()
 				console.log('=== Started game yo')
 				console.log('Room:\n', room)
-				io.sockets.in(roomId).emit('gameStart', roomId, room.fields)
+
+				// Emit the things to the people
+				const roomSockets = Object.values(io.in(roomId).sockets)
+				roomSockets.forEach(roomSocket => {
+					const userId = roomSocket.handshake.session.user.id
+					const fields = {...room.fields}
+					if (userId in room.fields) {
+						fields[userId] = fields[userId].privateJSON()
+					}
+					roomSocket.emit('gameStart', roomId, room.fields)
+				})
 			})
 		})
 	})

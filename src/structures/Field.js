@@ -18,6 +18,14 @@ class Field {
 			ener: new Zone()
 		}
 	}
+
+	privateJSON () {
+		const privateZones = {}
+		for (let zoneName in this.zones) {
+			privateZones[zoneName] = this.zones[zoneName].privateJSON()
+		}
+		return privateZones
+	}
 }
 
 module.exports = Field
