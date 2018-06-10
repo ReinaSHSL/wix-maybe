@@ -12,11 +12,13 @@ class Zone {
 		this.cards.splice(index, 1)
 	}
 	get size () {
-    return this.cards.length
+		return this.cards.length
 	}
 	toJSON () {
-    	downed: this.downed,
-		cards: this.cards.map(id => ALLCARDS.find(card => card.id === id)),
+		return {
+			downed: this.downed,
+			cards: this.cards.map(id => ALLCARDS.find(card => card.id === id)),
+		}
 	}
 	privateJSON () {
 		return this.toJSON()
