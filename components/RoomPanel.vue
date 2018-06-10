@@ -7,6 +7,7 @@
 				:message="message"
 				:compact="room.inGame"
 			/>
+			{{typeof user.id}}
 		</table>
 		<input
 			class="room-chatbar"
@@ -17,10 +18,25 @@
 		/>
 		<div class="game-area" v-if="room.inGame">
 			<!-- <builder-preview :card="{}"/> -->
-			<div class="game-field">
-				<!-- future: https://codepen.io/Geo1088/pen/ERPKOR?editors=1000 -->
-				<div v-for="(field, playerId) in room.fields" :key="playerId">
+			<div class="game-fields">
+				<div
+					v-for="(field, playerId) in room.fields"
+					class="game-field"
+					:class="{mine: playerId === '' + user.id} /* TODO: user IDs need to be reworked */"
+					:key="playerId"
+				>
+					<card-stack class="hand" :zone="field.zones.hand"/>
 					<card-stack class="main-deck" :zone="field.zones.mainDeck"/>
+					<card-stack class="lrig-deck" :zone="field.zones.lrigDeck"/>
+					<card-stack class="left-signi" :zone="field.zones.leftSigni"/>
+					<card-stack class="mid-signi" :zone="field.zones.midSigni"/>
+					<card-stack class="right-signi" :zone="field.zones.rightSigni"/>
+					<card-stack class="lrig" :zone="field.zones.lrig"/>
+					<card-stack class="main-trash" :zone="field.zones.mainTrash"/>
+					<card-stack class="lrig-trash" :zone="field.zones.lrigTrash"/>
+					<card-stack class="check" :zone="field.zones.check"/>
+					<card-stack class="life-cloth" :zone="field.zones.lifeCloth"/>
+					<card-stack class="ener" :zone="field.zones.ener"/>
 				</div>
 			</div>
 		</div>
@@ -223,8 +239,10 @@ export default {
 	margin: 0 5px;
 }
 
-/* Field has fixed aspect ratio for consistency, may regret this later */
-/* Mixin adapted from https://stackoverflow.com/a/24894523/1070107 */
+// In-game things
+
+// Field has fixed aspect ratio for consistency, may regret this later
+// Mixin adapted from https://stackoverflow.com/a/24894523/1070107
 @mixin viewportRatio($x, $y, $offsetX, $offsetY) {
 	width: calc(100vw - #{$offsetX});
 	height: calc(#{$y} * (100vw - #{$offsetX}) / #{$x});
@@ -240,27 +258,55 @@ export default {
 	position: relative;
 	display: flex;
 }
-.game-field {
+.game-fields {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
-	@include viewportRatio(3, 2, 200px, 33px);
+	@include viewportRatio(3, 3, 200px, 33px);
+	display: flex;
+	flex-direction: column-reverse;
+}
 
+.game-field {
+	flex: 50%;
 	display: grid;
 	grid:
 		"ener lc   signi1 signi2 signi3 signi3 signi3 .    mtrsh .     ltrsh" 7fr
 		"ener lc   check  lrig   .      ldeck  .      .    mdeck .     .    " 7fr
 		"ener hand hand   hand   hand   hand   hand   hand hand  hand  hand " 5fr
 		/5fr  7fr  7fr    7fr    1fr    5fr    1fr    1fr 5fr   1fr 5fr;
-	flex: 50%;
+	flex: 0 0 50%;
+}
+.hand {grid-area: hand}
+.main-deck {grid-area: mdeck}
+.lrig-deck {grid-area: ldeck}
+.left-signi {grid-area: signi1}
+.mid-signi {grid-area: signi2}
+.right-signi {grid-area: signi3}
+.lrig {grid-area: lrig}
+.main-trash {grid-area: mtrsh}
+.lrig-trash {grid-area: ltrsh}
+.check {grid-area: check}
+.life-cloth {grid-area: lc}
+.ener {grid-area:ener}
+
+.game-field.mine {
+	order: 0;
+}
+// lazy lul
+.game-field:not(.mine) {
+	&, .card-preview, .card-stack-count {
+		transform: rotate(180deg);
+		transform-origin: center;
+	}
 }
 
-.game-field .main-deck {
-	grid-area: mdeck;
-	background: red;
+.game-field .card-preview {
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .game-area .builder-info-sidebar { // this will happen eventually

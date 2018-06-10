@@ -1,12 +1,12 @@
 <template>
 	<div class="card-stack">
-		<template v-if="this.cards">
-			<card-preview :card="this.zone.cards[0]"/>
-			<div class="card-stack-count">{{this.zone.cards.length}}</div>
+		<template v-if="zone.cards">
+			<card-preview :card="zone.cards[0] || {}"/>
+			<div class="card-stack-count">{{zone.cards.length}}</div>
 		</template>
 		<template v-else>
-			<card-preview :card="this.zone.topCard"/>
-			<div class="card-stack-count">{{this.zone.size}}</div>
+			<card-preview :card="zone.topCard"/>
+			<div class="card-stack-count">{{zone.size}}</div>
 		</template>
 	</div>
 </template>

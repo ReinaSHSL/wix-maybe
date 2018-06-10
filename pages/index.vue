@@ -31,12 +31,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 import AppHeader from '~/components/AppHeader.vue'
 import LoginPanel from '~/components/LoginPanel.vue'
 import HomePanel from '~/components/HomePanel.vue'
-// import GlobalChatPanel from '~/components/GlobalChatPanel.vue'
 import BuilderPanel from '~/components/BuilderPanel.vue'
 import RoomPanel from '~/components/RoomPanel.vue'
 
