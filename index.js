@@ -32,7 +32,7 @@ const session = new expressSession({
 })
 app.use(session)
 // public stuff temp TODO
-app.use(express.static(path.resolve(__dirname, '..', 'static')))
+app.use(express.static(path.resolve(__dirname, 'public')))
 // Cookies and parsers
 // app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
