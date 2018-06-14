@@ -1,4 +1,6 @@
+const config = require('./config.js')
 module.exports = {
+	dev: config.dev,
 	/*
 	** Headers of the page
 	*/

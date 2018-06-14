@@ -6,21 +6,13 @@ let nuxt
 
 // Setup nuxt.js
 function start (config = {}) {
-	config.rootDir = resolve(__dirname, '..')
-	nuxt = new Nuxt(config)
-
 	return new Promise(resolve => {
+		nuxt = new Nuxt(config)
 		if (config.dev) {
 			const builder = new Builder(nuxt)
-			builder.build().then(() => {
-				process.emit('nuxt:build:done')
-				resolve()
-			})
+			builder.build().then(resolve)
 		} else {
-			process.nextTick(() => {
-				process.emit('nuxt:build:done')
-				resolve()
-			})
+			process.nextTick(resolve)
 		}
 	})
 }

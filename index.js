@@ -1,6 +1,3 @@
-const path = require('path')
-const config = require('./config.js')
-
 // Express
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -14,6 +11,16 @@ const sharedsession = require('express-socket.io-session')
 
 // Database
 const r = require('rethinkdb')
+
+// Configuration
+const config = require('./config.js')
+const nuxtConfig = require('./nuxt.config.js')
+// Passing dev argument from command
+if (process.argv.includes('--dev')) {
+	config.dev = nuxtConfig.dev = true
+} else if (process.argv.includes('--production')) {
+	config.dev = nuxtConfig.dev = false
+}
 
 
 // Create an express app
@@ -31,12 +38,8 @@ const session = new expressSession({
 	saveUninitialized: true
 })
 app.use(session)
-// Cookies and parsers
-// app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.use(cookieParser())
-
-// Nuxt stuff
 app.use(nuxt)
 
 // Set up websocket server
@@ -46,7 +49,7 @@ io.use(sharedsession(session, {
 }), cookieParser)
 
 // Initialize the database connection and start our stuff after
-r.connect(config.rethinkdb, async function (err, conn) {
+r.connect(config.rethinkdb, async (err, conn) => {
 	if (err) throw err
 	console.log('RethinkDB connected on port', config.rethinkdb.port)
 
@@ -64,22 +67,10 @@ r.connect(config.rethinkdb, async function (err, conn) {
 	})
 
 	// Build the Nuxt application
-	await nuxt.start(config.nuxt)
+	await nuxt.start(nuxtConfig)
 
 	// Now that we're built and everything's good, we can start the server
-	server.listen(config.server.port, function () {
+	server.listen(config.server.port, () => {
 		console.log('HTTP server listening on', config.server.port)
 	})
 })
-
-// Nuxt event handling
-process.on('nuxt:build:done', err => {
-	console.log('[nuxt:build:done]')
-	if (err) {
-		console.log(err)
-		process.exit(1)
-	}
-})
-
-// TODO: User class, have the rooms only store the ID, this will let us do
-// actions in a room when a person changes usernames and stuff
