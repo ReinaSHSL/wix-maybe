@@ -48,9 +48,9 @@ io.use(sharedsession(session, {
 }), cookieParser)
 
 // Initialize the database connection and start our stuff after
-r.connect(config.db, async function (err, conn) {
+r.connect(config.rethinkdb, async function (err, conn) {
 	if (err) throw err
-	console.log('RethinkDB connected on port', config.db.port)
+	console.log('RethinkDB connected on port', config.rethinkdb.port)
 
 	// Log everyone out on server start because lul
 	r.db('batorume').table('selectors').update({loggedIn: false}).run(conn)
