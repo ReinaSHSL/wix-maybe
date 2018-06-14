@@ -5,6 +5,7 @@
   "author": "Geo1088 <georgej1088@gmail.com>",
   "private": true,
   "scripts": {
+    "setup": "node dbinit.js",
     "start": "node index.js",
     "dev": "node --inspect index.js",
     "test": "eslint --ext .js,.vue --ignore-path .gitignore ."
