@@ -29,5 +29,8 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0"
+  },
+  "resolutions": {
+    "node-sass/**/request": "^2.82.0"
   }
 }
