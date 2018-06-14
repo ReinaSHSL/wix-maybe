@@ -1,5 +1,5 @@
 const r = require('rethinkdb')
-const dbConfig = require('./dbConfig')
+const dbConfig = require('./config.js').rethinkdb
 
 const dbName = 'batorume'
 const dbTables = [
