@@ -31,8 +31,6 @@ const session = new expressSession({
 	saveUninitialized: true
 })
 app.use(session)
-// public stuff temp TODO
-app.use(express.static(path.resolve(__dirname, 'public')))
 // Cookies and parsers
 // app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -41,7 +39,7 @@ app.use(cookieParser())
 // Nuxt stuff
 app.use(nuxt)
 
-// Set up websocket shit
+// Set up websocket server
 const io = socketio(server)
 io.use(sharedsession(session, {
 	autoSave:true
