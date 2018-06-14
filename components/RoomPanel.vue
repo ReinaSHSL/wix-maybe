@@ -7,7 +7,6 @@
 				:message="message"
 				:compact="room.inGame"
 			/>
-			{{typeof user.id}}
 		</table>
 		<input
 			class="room-chatbar"
