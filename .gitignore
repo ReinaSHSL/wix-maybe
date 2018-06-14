@@ -1,5 +1,6 @@
 # dependencies
 node_modules
+package-lock.json # we use Yarn
 
 # logs
 npm-debug.log
