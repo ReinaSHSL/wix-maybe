@@ -203,6 +203,7 @@ export default {
 }
 .header .drawer {
 	position: fixed;
+	z-index: 1;
 	top: 41px;
 	bottom: 0;
 	left: 0;

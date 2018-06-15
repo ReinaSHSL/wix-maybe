@@ -149,6 +149,7 @@ export default {
 </script>
 
 <style lang="scss">
+* { overflow: auto !important; }
 .room-panel {
 	display: grid;
 	grid:
@@ -173,7 +174,9 @@ export default {
 }
 .mobile .room-panel.in-game {
 	grid:
-		"game" 100%
+		"game" calc(100vw)
+		"messages" auto
+		"chatbar" 32px
 		/ 100%;
 }
 
@@ -255,8 +258,14 @@ export default {
 	max-height: calc(100vh - #{$offsetY});
 }
 
-.in-game .room-messages {
+.in-game .room-messages,
+.in-game .room-chatbar {
 	border-left: 1px solid #DDD;
+}
+.mobile .in-game .room-messages,
+.mobile .in-game .room-chatbar {
+	border-left: 0;
+	border-top: 1px solid #DDD;
 }
 .game-area {
 	grid-area: game;
@@ -270,9 +279,21 @@ export default {
 	left: 0;
 	right: 0;
 	margin: auto;
-	@include viewportRatio(3, 3, 200px, 33px);
+	@include viewportRatio(1, 1, 200px, 33px);
 	display: flex;
 	flex-direction: column-reverse;
+}
+.mobile .game-area {
+	position: static !important;
+}
+.mobile .game-fields {
+	@include viewportRatio(1, 1, 0, 40px);
+	position: static;
+	top: unset;
+	bottom: unset;
+	left: unset;
+	right: unset;
+	margin: 0;
 }
 
 .game-field {

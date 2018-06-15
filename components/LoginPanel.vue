@@ -86,38 +86,37 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .login-panel {
-	flex: 0 0 auto;
+	flex: 1 1 auto;
+	align-self: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-.mobile .login-panel {
-	flex-direction: column;
-}
-.login-panel h1 {
-	margin: 0;
-}
-.login-panel .form {
-	width: 200px;
-	margin: 10px;
-}
-.login-panel .form * {
-	display: block;
-	box-sizing: border-box;
-	width: 100%;
-}
-.login-panel .form input[type="text"] {
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
-.login-panel .form input[type="password"] {
-	border-top: 0;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-}
-.login-panel .form input[type="submit"] {
-	margin-top: 5px;
+	flex-wrap: wrap;
+	.form {
+		width: 200px;
+		margin: 10px;
+		* {
+			display: block;
+			box-sizing: border-box;
+			width: 100%;
+		}
+		[type="text"] {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		[type="password"] {
+			border-top: 0;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+		[type="submit"] {
+			margin-top: 5px;
+		}
+	}
+	h1 {
+		margin: 0;
+	}
 }
 </style>
