@@ -21,7 +21,7 @@
 				<div
 					v-for="(field, playerId) in room.fields"
 					class="game-field"
-					:class="{mine: playerId === '' + user.id} /* TODO: user IDs need to be reworked */"
+					:class="playerId === '' + user.id ? 'mine' : 'theirs' /* TODO: user IDs need to be reworked to not be numbers here */"
 					:key="playerId"
 				>
 					<card-stack class="hand" :zone="field.zones.hand"/>
@@ -34,8 +34,11 @@
 					<card-stack class="main-trash" :zone="field.zones.mainTrash"/>
 					<card-stack class="lrig-trash" :zone="field.zones.lrigTrash"/>
 					<card-stack class="check" :zone="field.zones.check"/>
-					<card-stack class="life-cloth" :zone="field.zones.lifeCloth"/>
-					<card-stack class="ener" :zone="field.zones.ener"/>
+					<!--<card-stack class="life-cloth" :zone="field.zones.lifeCloth"/>-->
+					<!--<card-stack class="ener" :zone="field.zones.ener"/>-->
+				</div>
+				<div class="midfield">
+					things will be here eventually??
 				</div>
 			</div>
 		</div>
@@ -149,7 +152,6 @@ export default {
 </script>
 
 <style lang="scss">
-* { overflow: auto !important; }
 .room-panel {
 	display: grid;
 	grid:
@@ -182,6 +184,7 @@ export default {
 
 /* Main message display area */
 .room-messages {
+	box-sizing: border-box;
 	grid-area: messages;
 	display: block;
 	width: 100%;
@@ -282,29 +285,23 @@ export default {
 	@include viewportRatio(1, 1, 200px, 33px);
 	display: flex;
 	flex-direction: column-reverse;
-}
-.mobile .game-area {
-	position: static !important;
+	background: transparent;
 }
 .mobile .game-fields {
 	@include viewportRatio(1, 1, 0, 40px);
 	position: static;
-	top: unset;
-	bottom: unset;
-	left: unset;
-	right: unset;
 	margin: 0;
+	overflow: hidden;
 }
 
 .game-field {
-	flex: 50%;
 	display: grid;
 	grid:
-		"ener lc   signi1 signi2 signi3 signi3 signi3 .    mtrsh .     ltrsh" 7fr
-		"ener lc   check  lrig   .      ldeck  .      .    mdeck .     .    " 7fr
-		"ener hand hand   hand   hand   hand   hand   hand hand  hand  hand " 5fr
-		/5fr  7fr  7fr    7fr    1fr    5fr    1fr    1fr 5fr   1fr 5fr;
-	flex: 0 0 50%;
+		"ener lc   signi1 signi2 signi3 mtrsh ltrsh" 7fr
+		"ener lc   check  lrig   ldeck  mdeck .    " 7fr
+		"ener hand hand   hand   hand   hand  hand " 7fr
+		/7fr  7fr  7fr    7fr    7fr    7fr   7fr;
+	flex: 0 0 calc(3 / 7 * 100%);
 }
 .hand {grid-area: hand}
 .main-deck {grid-area: mdeck}
@@ -322,10 +319,9 @@ export default {
 .game-field.mine {
 	order: 0;
 }
-
 // lazy lul
-.game-field:not(.mine) {
-	order: 1;
+.game-field.theirs {
+	order: 2;
 	&, .card-preview, .card-stack-count {
 		transform: rotate(180deg);
 		transform-origin: center;
@@ -339,5 +335,10 @@ export default {
 
 .game-area .builder-info-sidebar { // this will happen eventually
 	flex: 0 0 200px;
+}
+
+// Middle bar thing
+.midfield {
+	flex: 0 1 calc(1 / 7 * 100%);
 }
 </style>

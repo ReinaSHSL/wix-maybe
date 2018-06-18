@@ -1,5 +1,8 @@
 <template>
-	<img class="card-preview" :src="card.image" :attr-image="card.image" :attr-name="card.name" :attr-color="card.color" :attr-class="card.class" :attr-type="card.type" :attr-text="card.text" :attr-burst="card.burst" :attr-level="card.level" :attr-id="card.id" :attr-attack="card.attack" :attr-cost="card.cost" :attr-lrigType="card.lrigType"/>
+	<img
+		class="card-preview"
+		:src="card.image || 'http://via.placeholder.com/364x500'"
+	/>
 </template>
 <script>
 	export default {
