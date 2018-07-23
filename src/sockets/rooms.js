@@ -1,17 +1,8 @@
+const Collection = require('../structures/Collection.js')
 const Room = require('../structures/Room.js')
 const escapeHTML = require('../util.js').escapeHTML
 
-let rooms = []
-function getRoom (id) {
-	console.log('[getRoom]', id, rooms.map(r => r.id))
-	return rooms.find(r => r.id === id)
-}
-function getRoomIndex (id) {
-	return rooms.findIndex(r => r.id === id)
-}
-function deleteRoom (id) {
-	return rooms.splice(getRoomIndex(id), 1)
-}
+let rooms = new Collection(Room)
 
 module.exports = function (io, socket, r, conn) {
 	console.log('[connection]')
@@ -45,7 +36,7 @@ module.exports = function (io, socket, r, conn) {
 		console.log(data.name)
 		const roomPass = data.password
 		const room = new Room(roomName, roomPass, roomId)
-		rooms.push(room)
+		rooms.add(room)
 		console.log(room.name)
 
 		room.addMember(socket.handshake.session.user)
@@ -72,7 +63,7 @@ module.exports = function (io, socket, r, conn) {
 		const id = data.id
 		const password = data.password
 
-		const room = getRoom(id)
+		const room = rooms.get(id)
 		if (!room) {
 			return socket.emit('joinRoomFail', 'Room does not exist')
 		}
@@ -108,7 +99,7 @@ module.exports = function (io, socket, r, conn) {
 	//Start Game
 	socket.on('startGame', function (roomId, deckId) {
 		if (!socket.handshake.session) return
-		const room = getRoom(roomId)
+		const room = rooms.get(roomId)
 		if (!room) return
 		const userId = socket.handshake.session.user.id
 		if (!deckId) {
@@ -144,7 +135,7 @@ module.exports = function (io, socket, r, conn) {
 	socket.on('deckInRoom', function (roomId, deckId) {
 		console.log('[deckInRoom', roomId, deckId)
 		if (!socket.handshake.session) return
-		const room = getRoom(roomId)
+		const room = rooms.get(roomId)
 		if (!room) return
 
 		const userId = socket.handshake.session.user.id
@@ -169,7 +160,7 @@ module.exports = function (io, socket, r, conn) {
 	//Unready
 	socket.on('unReady', function (roomId) {
 		if (!socket.handshake.session) return
-		const room = getRoom(roomId)
+		const room = rooms.get(roomId)
 		if (!room) return
 		const userId = socket.handshake.session.user.id
 		const userIndex = room.members.findIndex(u => u.id === userId)
@@ -180,7 +171,7 @@ module.exports = function (io, socket, r, conn) {
 	// Record the user leaving a room
 	function leaveRoom (roomId) {
 		if (!socket.handshake.session) return
-		const room = getRoom(roomId)
+		const room = rooms.get(roomId)
 		if (!room) return
 
 		const ownerChanged = socket.handshake.session.user.id === room.ownerId
@@ -191,7 +182,7 @@ module.exports = function (io, socket, r, conn) {
 
 		// If the room is empty, remove it
 		if (!room.members.length) {
-			deleteRoom(roomId)
+			rooms.delete(roomId)
 			return io.sockets.emit('activeRooms', rooms)
 		}
 
@@ -247,7 +238,7 @@ module.exports = function (io, socket, r, conn) {
 		if (!socket.handshake.session) return
 
 		data.msg = data.msg.replace(/^\s+|\s+$/g, '')
-		const room = getRoom(data.roomId)
+		const room = rooms.get(data.roomId)
 
 		if (data.msg.startsWith('/')) {
 			// Boom command
