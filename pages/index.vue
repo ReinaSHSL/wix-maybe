@@ -148,6 +148,10 @@ export default {
 		}
 	},
 	mounted () {
+		// Request the initial list of active rooms
+		this.$socket.emit('getActiveRooms')
+
+		// Handle resizes (used to compute responsive CSS classes)
 		const window = this.$el.ownerDocument.defaultView
 		this.sizes = {
 			width: window.innerWidth,
