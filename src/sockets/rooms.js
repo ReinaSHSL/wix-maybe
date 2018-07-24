@@ -8,6 +8,7 @@ module.exports = function (io, socket, r, conn) {
 	console.log('[connection]')
 
 	socket.use(function (packet, next) {
+		console.log(`[${packet[0]}]`, packet[1])
 		socket.handshake.session.reload(function (err) {
 			if (err && err.message !== 'failed to load session') {
 				return next(new Error(err))
@@ -23,7 +24,6 @@ module.exports = function (io, socket, r, conn) {
 
 	// Creates rooms
 	socket.on('createRoom', function (data) {
-		console.log('[createRoom]', data)
 
 		if (!socket.handshake.session) return
 
@@ -52,7 +52,6 @@ module.exports = function (io, socket, r, conn) {
 
 	//Joining Rooms
 	socket.on('joinRoom', function (data) {
-		console.log('[joinRoom]', data)
 
 		if (!socket.handshake.session) return
 
@@ -129,7 +128,6 @@ module.exports = function (io, socket, r, conn) {
 
 	// User sends ready
 	socket.on('deckInRoom', function (roomId, deckId) {
-		console.log('[deckInRoom', roomId, deckId)
 		if (!socket.handshake.session) return
 		const room = rooms.get(roomId)
 		if (!room) return
@@ -229,7 +227,6 @@ module.exports = function (io, socket, r, conn) {
 
 	// Room chatting
 	socket.on('sendRoomMessage', function (data) {
-		console.log('[sendRoomMessage]', data.roomId, data.msg)
 
 		if (!socket.handshake.session) return
 
