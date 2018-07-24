@@ -55,19 +55,25 @@ export default {
 	},
 	methods: {
 		joinRoom (id) {
-			console.log('@joinRoom', id)
 			const room = this.allRooms.find(room => room.id === id)
+			let password
 			if (room.hasPassword) {
-				var password = window.prompt('Room password?')
-				this.$socket.emit('joinRoom', {id, password})
-				this.$socket.emit('loadDecks')
-			} else {
-				this.$socket.emit('joinRoom', {id})
-				this.$socket.emit('loadDecks')
+				password = window.prompt('Room password?')
 			}
+			if (password == null) return // prompt returns null if cancelled
+			this.$socket.emit('joinRoom', {id, password}, ({error, room}) => {
+				if (error) return window.alert(error)
+				this.$parent.joinedRooms.push(room)
+				this.$parent.showRoom(room.id)
+			})
+			this.$socket.emit('loadDecks')
 		},
 		createRoom () {
-			this.$socket.emit('createRoom', this.createRoomForm)
+			this.$socket.emit('createRoom', this.createRoomForm, ({error, room}) => {
+				if (error) return window.alert(error)
+				this.$parent.joinedRooms.push(room)
+				this.$parent.showRoom(room.id)
+			})
 			this.$socket.emit('loadDecks')
 		},
 		isInRoom (roomId) {

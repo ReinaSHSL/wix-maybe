@@ -111,19 +111,6 @@ export default {
 				this.allRooms = rooms
 			},
 
-			// We joined a room
-			joinRoomSuccess (room) {
-				console.log('[joinRoomSuccess]', room)
-				this.joinedRooms.push(room)
-				this.showRoom(room.id)
-			},
-
-			// We couldn't join a room
-			joinRoomFail (reason) {
-				console.log('[joinRoomFail]', reason)
-				window.alert(`Failed to join room: ${reason}`)
-			},
-
 			// Someone sent a message
 			newMessage (message) {
 				const room = this.joinedRooms.find(room => room.id === message.roomId)

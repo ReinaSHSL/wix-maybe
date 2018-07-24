@@ -23,21 +23,20 @@ module.exports = function (io, socket, r, conn) {
 	})
 
 	// Creates rooms
-	socket.on('createRoom', function (data) {
+	socket.on('createRoom', function (data, res) {
 
 		if (!socket.handshake.session) return
 
+		let roomName = room.name.replace(/^\s+|\s+$/g, '')
+		if (!roomName) return res({error: 'Room name is required'})
+
 		const roomId = `${Math.floor(Date.now())}-${Math.floor(Math.random()*1000)}`
-		const roomName = data.name
-		console.log(data.name)
-		const roomPass = data.password
-		const room = new Room(roomName, roomPass, roomId)
+		const room = new Room(data.name, data.password, roomId)
 		rooms.add(room)
-		console.log(room.name)
 
 		room.addMember(socket.handshake.session.user)
 		socket.join(roomId)
-		socket.emit('joinRoomSuccess', room.withMessages())
+		res({room: room.withMessages()})
 		io.sockets.emit('activeRooms', rooms)
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 		const msg = {
@@ -51,7 +50,7 @@ module.exports = function (io, socket, r, conn) {
 	})
 
 	//Joining Rooms
-	socket.on('joinRoom', function (data) {
+	socket.on('joinRoom', function (data, res) {
 
 		if (!socket.handshake.session) return
 
@@ -60,16 +59,13 @@ module.exports = function (io, socket, r, conn) {
 
 		const room = rooms.get(id)
 		if (!room) {
-			return socket.emit('joinRoomFail', 'Room does not exist')
+			return res({error: 'Room does not exist'})
 		}
 		if (room.members.find(u => u.id === socket.handshake.session.user.id)) {
-			return socket.emit('joinRoomFail', 'You are already in this room')
+			return res({error: 'You are already in this room'})
 		}
-		// if (room.members.length > 1) {
-		// 	return socket.emit('joinRoomFail', 'Room full')
-		// }
 		if (room.password && password !== room.password) {
-			return socket.emit('joinRoomFail', 'Missing or incorrect password')
+			return res({error: 'Missing or incorrect password'})
 		}
 		if (!socket.handshake.session.user) return console.log("user isn't defined aaaa")
 		socket.join(id)
@@ -78,7 +74,7 @@ module.exports = function (io, socket, r, conn) {
 			username: socket.handshake.session.user.username
 		})
 
-		socket.emit('joinRoomSuccess', room.withMessages())
+		res({room: room.withMessages()})
 		io.sockets.in(id).emit('roomUsers', id, room.memberList)
 		const msg = {
 			type: 'join',
