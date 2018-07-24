@@ -149,7 +149,9 @@ export default {
 	},
 	mounted () {
 		// Request the initial list of active rooms
-		this.$socket.emit('getActiveRooms')
+		this.$socket.emit('getActiveRooms', null, rooms => {
+			this.allRooms = rooms
+		})
 
 		// Handle resizes (used to compute responsive CSS classes)
 		const window = this.$el.ownerDocument.defaultView

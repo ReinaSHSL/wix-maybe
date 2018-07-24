@@ -17,8 +17,8 @@ module.exports = function (io, socket, r, conn) {
 	})
 
 	// When the client requests the active rooms, send them
-	socket.on('getActiveRooms', function () {
-		socket.emit('activeRooms', rooms)
+	socket.on('getActiveRooms', (data, cb) => {
+		cb(rooms)
 	})
 
 	// Creates rooms
