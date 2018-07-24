@@ -27,7 +27,7 @@ module.exports = function (io, socket, r, conn) {
 
 		if (!socket.handshake.session) return
 
-		let roomName = room.name.replace(/^\s+|\s+$/g, '')
+		let roomName = data.name.replace(/^\s+|\s+$/g, '')
 		if (!roomName) return res({error: 'Room name is required'})
 
 		const roomId = `${Math.floor(Date.now())}-${Math.floor(Math.random()*1000)}`
