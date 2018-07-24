@@ -4,41 +4,41 @@ const allCards = require('../allCards.json')
 module.exports = function (io, socket, r, conn) {
 
 	//Filters cards
-	socket.on('cardSearch', function (cardSearch) {
+	socket.on('cardSearch', function (options, res) {
 		// Execute the search and store matches
 		var matchingCards = allCards.filter(card => {
-			if (cardSearch.inputName) {
-				if (!(card.name.toLowerCase().includes(cardSearch.inputName.toLowerCase()))) {
+			if (options.inputName) {
+				if (!(card.name.toLowerCase().includes(options.inputName.toLowerCase()))) {
 					return false
 				}
 			}
-			if (cardSearch.inputLevel) {
-				if (!card.level || card.level !== cardSearch.inputLevel) {
+			if (options.inputLevel) {
+				if (!card.level || card.level !== options.inputLevel) {
 					return false
 				}
 			}
-			if (cardSearch.inputColor) {
-				if (!card.color || card.color !== cardSearch.inputColor) {
+			if (options.inputColor) {
+				if (!card.color || card.color !== options.inputColor) {
 					return false
 				}
 			}
-			if (cardSearch.inputType) {
-				if (!card.type || card.type !== cardSearch.inputType) {
+			if (options.inputType) {
+				if (!card.type || card.type !== options.inputType) {
 					return false
 				}
 			}
-			if (cardSearch.inputClass) {
-				if (!card.class || card.class !== cardSearch.inputClass) {
+			if (options.inputClass) {
+				if (!card.class || card.class !== options.inputClass) {
 					return false
 				}
 			}
-			if (cardSearch.checkBurst) {
-				if (!card.burst || card.burst !== cardSearch.checkBurst) {
+			if (options.checkBurst) {
+				if (!card.burst || card.burst !== options.checkBurst) {
 					return false
 				}
 			}
-			if (cardSearch.checkNoBurst) {
-				if (card.burst || card.burst == cardSearch.checkBurst) {
+			if (options.checkNoBurst) {
+				if (card.burst || card.burst == options.checkBurst) {
 					return false
 				}
 			}
@@ -46,19 +46,12 @@ module.exports = function (io, socket, r, conn) {
 			return true
 		})
 
-		// All right, we got all the matches, let's add them back to the page now
-		for (var card of matchingCards) {
-			socket.emit('cardMatches', card)
-		}
-
-		// Dereference the objects so when they're removed they don't memleak the event handlers
-		if (card) {
-			card = null
-		}
+		// Send the list of matches back to the client
+		res({success: true, cards: matchingCards})
 	})
 
 	//Save
-	socket.on('saveDeck', function (data) {
+	socket.on('saveDeck', function (data, res) {
 		if (!socket.handshake.session) return
 
 		r.table('decks').filter(r.row('id').eq(data.id || '')).run(conn, function (err, cursor) {
@@ -69,7 +62,7 @@ module.exports = function (io, socket, r, conn) {
 					r.table('decks').get(data.id).update({deck: data.deck, name: data.name}).run(conn, function (err, updated) {
 						if (err) return console.log(err)
 						if (updated) {
-							socket.emit('updatedDeck')
+							res({success: true})
 							return
 						}
 					})
@@ -83,7 +76,7 @@ module.exports = function (io, socket, r, conn) {
 						if (err) return console.log(err)
 						if (insert) {
 							let genKey = insert.generated_keys[0]
-							socket.emit('savedDeck', genKey)
+							res({success: true, key: genKey})
 						}
 					})
 				}
@@ -92,8 +85,7 @@ module.exports = function (io, socket, r, conn) {
 	})
 
 	//Load decks on login
-	socket.on('loadDecks', function () {
-		console.log('loading decks')
+	socket.on('loadDecks', function (_, res) {
 		console.log(socket.handshake.session.user)
 		if (!socket.handshake.session) return
 		r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
@@ -101,14 +93,14 @@ module.exports = function (io, socket, r, conn) {
 			cursor.toArray(function (err, result) {
 				if (err) return console.log(err)
 				if (result) {
-					socket.emit('loadDeck', result)
+					res({success: true, decks: result})
 				}
 			})
 		})
 	})
 
 	//Load cards
-	socket.on('updateDeck', function (data) {
+	socket.on('updateDeck', function (data, res) {
 		r.table('decks').filter(r.row('id').eq(data)).run(conn, function (err, cursor) {
 			if (err) return console.log(err)
 			cursor.toArray(function (err, result) {
@@ -118,14 +110,14 @@ module.exports = function (io, socket, r, conn) {
 					var deck = {}
 					deck.lrig = result[0].deck.lrig.map(id => allCards.find(card => card.id === id))
 					deck.main = result[0].deck.main.map(id => allCards.find(card => card.id === id))
-					socket.emit('deckUpdate', deck)
+					res({success: true, deck})
 				}
 			})
 		})
 	})
 
 	//Changing Decks
-	socket.on('deckChange', function (data) {
+	socket.on('deckChange', function (data, res) {
 		r.table('decks').filter(r.row('id').eq(data)).run(conn, function (err, cursor) {
 			if (err) return console.log(err)
 			cursor.toArray(function (err, result) {
@@ -135,75 +127,77 @@ module.exports = function (io, socket, r, conn) {
 					var deck = {}
 					deck.lrig = result[0].deck.lrig.map(id => allCards.find(card => card.id === id))
 					deck.main = result[0].deck.main.map(id => allCards.find(card => card.id === id))
-					socket.emit('deckUpdate', deck)
+					res({success: true, deck})
 				}
 			})
 		})
 	})
 
 	//Deleting decks
-	socket.on('deleteDeck', function (data) {
+	socket.on('deleteDeck', function (data, res) {
 		if (!data) {
-			socket.emit('deleted')
+			res({success: true})
 		}
 		r.table('decks').get(data).delete().run(conn, function (err) {
 			if (err) return console.log(err)
-			socket.emit('deleted')
+			res({success: true})
 		})
 	})
 
 	//Importing decks
-	socket.on('importDeck', function (data) {
+	socket.on('importDeck', function (data, res) {
 		try {
 			let oldDeck = JSON.parse(data.deck)
 			let newDeck = {}
 			newDeck.lrig = oldDeck.lrig.map(id => allCards.find(card => card.id === id))
 			newDeck.main = oldDeck.main.map(id => allCards.find(card => card.id === id))
 			let tempId = Math.random()
-			socket.emit('importComplete', {deck: newDeck, name: data.name, tempId: tempId})
+			res({success: true, deck: newDeck, name: data.name, tempId: tempId})
 		} catch (err) {
 			return console.log(err)
 		}
 	})
 
 	//Checks if an already saved deck has unsaved changes
-	socket.on('checkIfSaved', function (data) {
+	socket.on('checkIfSaved', function (data, res) {
 		r.table('decks').get(data.dbDeck).run(conn, function (err, deck) {
 			if (err) return console.log(err)
 			if (deck) {
 				if (data.currentDeck.lrig.length !== deck.deck.lrig.length) {
-					socket.emit('unsavedDeck')
+					res({success: true, unsaved: true})
 					return
 				}
 				if (data.currentDeck.main.length !== deck.deck.main.length) {
-					socket.emit('unsavedDeck')
+					res({success: true, unsaved: true})
 					return
 				}
 				for (let card in deck.lrig) {
 					if (deck.deck.lrig[card] !== data.currentDeck.lrig[card]) {
-						socket.emit('unsavedDeck')
+						res({success: true, unsaved: true})
 						return
 					}
 				}
 				for (let card in deck.main) {
 					if (deck.deck.main[card] !== data.currentDeck.main[card]) {
-						socket.emit('unsavedDeck')
+						res({success: true, unsaved: true})
 						return
 					}
 				}
-				r.table('decks').filter(r.row('id').eq(data.newDeck)).run(conn, function (err, cursor) {
-					if (err) return console.log(err)
-					cursor.toArray(function (err, result) {
-						if (err) return console.log(err)
-						if (!result[0]) return
-						if (result) {
-							var deck = {}
-							deck.lrig = result[0].deck.lrig.map(id => allCards.find(card => card.id === id))
-							deck.main = result[0].deck.main.map(id => allCards.find(card => card.id === id))
-							socket.emit('deckUpdate', deck)
-						}
-					})
-				})
+				res({success: true, unsaved: false})
+
+				// r.table('decks').filter(r.row('id').eq(data.newDeck)).run(conn, function (err, cursor) {
+				// 	if (err) return console.log(err)
+				// 	cursor.toArray(function (err, result) {
+				// 		if (err) return console.log(err)
+				// 		if (!result[0]) return
+				// 		if (result) {
+				// 			var deck = {}
+				// 			deck.lrig = result[0].deck.lrig.map(id => allCards.find(card => card.id === id))
+				// 			deck.main = result[0].deck.main.map(id => allCards.find(card => card.id === id))
+				// 			socket.emit('deckUpdate', deck)
+				// 		}
+				// 	})
+				// })
 			}
 		})
 	})

@@ -22,6 +22,7 @@ function middleware (req, res, next) {
 	// TODO: better logic should probably be here and/or in nuxt.config.js
 	if (req.method === 'GET') {
 		nuxt.render(req, res)
+		// res.end('test')
 	} else {
 		next()
 	}

@@ -42,7 +42,10 @@ export default {
 	},
 	methods: {
 		updateDecks () {
-			this.$socket.emit('updateDeck', this.deckId)
+			this.$socket.emit('updateDeck', this.deckId, deck => {
+				this.mainDeck = deck.main
+				this.lrigDeck = deck.lrig
+			})
 		},
 		newDeck () {
 			let deckName = prompt('Enter new deck name.')
@@ -60,13 +63,19 @@ export default {
 			this.decks.find(deck => deck.id === this.deckId).name = newName
 		},
 		deleteDeck () {
-			this.$socket.emit('deleteDeck', this.deckId)
+			this.$socket.emit('deleteDeck', this.deckId, ({success, error}) => {
+				if (success) {
+					alert('Deck deleted')
+				} else {
+					alert('Failed to delete deck: ' + error)
+				}
+			})
 			let index = this.decks.findIndex(deck => deck.id === this.deckId)
 			this.decks.splice(index, 1)
 			this.deckId = ''
 			this.mainDeck = []
 			this.lrigDeck = []
-			this.$socket.emit('loadDecks')
+			this.refreshDecks()
 		},
 		saveDeck () {
 			let deckName = this.decks.find(deck => deck.id === this.deckId).name
@@ -78,21 +87,17 @@ export default {
 				lrig: lrigDeck.map(card => card.id),
 				main: mainDeck.map(card => card.id)
 			}
-			this.$socket.emit('saveDeck', {deck: currentDeck, name: deckName, id: deckId})
-			this.$socket.emit('loadDecks')
-		}
-	},
-	socket: {
-		events: {
-			loadDeck (decks) {
+			this.$socket.emit('saveDeck', {deck: currentDeck, name: deckName, id: deckId}, ({success}) => {
+				if (success) alert('Deck saved')
+			})
+			this.refreshDecks()
+		},
+		refreshDecks () {
+			this.$socket.emit('loadDecks', null, decks => {
 				this.decks = decks
-			},
-			deckUpdate (deck) {
-				this.mainDeck = deck.main
-				this.lrigDeck = deck.lrig
-			}
+			})
 		}
-	},
+	}
 }
 </script>
 <style>

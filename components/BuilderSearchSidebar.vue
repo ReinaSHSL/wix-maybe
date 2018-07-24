@@ -69,10 +69,10 @@
 import CardPreview from '~/components/CardPreview.vue'
 export default {
 	components: { CardPreview },
-	methods: { 
+	methods: {
 		search () {
-			// If everything is empty, just return - no point in listing every card
 			this.results = []
+			// If everything is empty, just return - no point in listing every card
 			if (!this.inputName && !this.inputLevel && !this.inputColor && !this.inputType && !this.inputClass) return
 			this.$socket.emit('cardSearch', {
 				inputName: this.inputName,
@@ -82,6 +82,8 @@ export default {
 				inputClass: this.inputClass,
 				checkBurst: this.checkBurst,
 				checkNoBurst: this.checkNoBurst
+			}, results => {
+				this.results = results
 			})
 		},
 		preview (card) {
@@ -95,8 +97,8 @@ export default {
 			}
 		}
 	},
-	data () { 
-		return { 
+	data () {
+		return {
 			results: [],
 			inputName: '',
 			inputLevel: '',
@@ -105,13 +107,6 @@ export default {
 			inputClass: '',
 			checkBurst: '',
 			checkNoBurst: ''
-		}
-	},
-	socket: {
-  		events: {
-    		cardMatches (cardMatches) {
-				this.results.push(cardMatches)
-			}
 		}
 	}
 }
