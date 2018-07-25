@@ -82,7 +82,7 @@ class Room {
 		return json
 	}
 
-	inspect () {
+	[require('util').inspect.custom] () {
 		return this.toJSON()
 	}
 
