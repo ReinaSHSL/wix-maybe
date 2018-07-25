@@ -42,9 +42,11 @@ export default {
 	},
 	methods: {
 		updateDecks () {
-			this.$socket.emit('updateDeck', this.deckId, deck => {
-				this.mainDeck = deck.main
-				this.lrigDeck = deck.lrig
+			this.$socket.emit('updateDeck', this.deckId, ({success, deck}) => {
+				if (success) {
+					this.mainDeck = deck.main
+					this.lrigDeck = deck.lrig
+				}
 			})
 		},
 		newDeck () {

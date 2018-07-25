@@ -135,18 +135,18 @@ export default {
 			this.$socket.emit('deckInRoom', this.room.id, this.ready ? this.selectedDeck : null)
 		},
 	},
-	socket: {
-		events: {
-			loadDeck (decks) {
-				this.decks = decks
-			},
-		}
-	},
 	components: {
 		RoomMessage,
 		RoomUsersListItem,
 		BuilderPreview,
 		CardStack,
+	},
+	mounted () {
+		this.$socket.emit('loadDecks', null, ({success, decks}) => {
+			if (success) {
+				this.decks = decks
+			}
+		})
 	}
 }
 </script>

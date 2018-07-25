@@ -1,3 +1,6 @@
+// Logging
+const log = require('another-logger')('index')
+
 // Express
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -41,6 +44,10 @@ app.use(session)
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(nuxt)
+app.use((req, res, next) => {
+	log.http(req.method, req.path, req.query)
+	next()
+})
 
 // Set up websocket server
 const io = socketio(server)
@@ -51,7 +58,7 @@ io.use(sharedsession(session, {
 // Initialize the database connection and start our stuff after
 r.connect(config.rethinkdb, async (err, conn) => {
 	if (err) throw err
-	console.log('RethinkDB connected on port', config.rethinkdb.port)
+	log.success('RethinkDB connected on port', config.rethinkdb.port)
 
 	// Log everyone out on server start because lul
 	r.db('batorume').table('selectors').update({loggedIn: false}).run(conn)
@@ -71,6 +78,6 @@ r.connect(config.rethinkdb, async (err, conn) => {
 
 	// Now that we're built and everything's good, we can start the server
 	server.listen(config.server.port, () => {
-		console.log('HTTP server listening on', config.server.port)
+		log.success('HTTP server listening on', config.server.port)
 	})
 })

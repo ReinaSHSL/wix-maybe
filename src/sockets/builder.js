@@ -1,3 +1,4 @@
+const log = require('another-logger')('builder')
 const allCards = require('../allCards.json')
 
 //Fucking murder me builder shit
@@ -55,12 +56,12 @@ module.exports = function (io, socket, r, conn) {
 		if (!socket.handshake.session) return
 
 		r.table('decks').filter(r.row('id').eq(data.id || '')).run(conn, function (err, cursor) {
-			if (err) return console.log (err)
+			if (err) return log.warn.trace (err)
 			cursor.toArray(function (err, result) {
-				if (err) return console.log(err)
+				if (err) return log.warn.trace(err)
 				if (result[0]) {
 					r.table('decks').get(data.id).update({deck: data.deck, name: data.name}).run(conn, function (err, updated) {
-						if (err) return console.log(err)
+						if (err) return log.warn.trace(err)
 						if (updated) {
 							res({success: true})
 							return
@@ -73,7 +74,7 @@ module.exports = function (io, socket, r, conn) {
 						owner: socket.handshake.session.user.id,
 						name: data.name
 					}).run(conn, function (err, insert) {
-						if (err) return console.log(err)
+						if (err) return log.warn.trace(err)
 						if (insert) {
 							let genKey = insert.generated_keys[0]
 							res({success: true, key: genKey})
@@ -86,12 +87,12 @@ module.exports = function (io, socket, r, conn) {
 
 	//Load decks on login
 	socket.on('loadDecks', function (_, res) {
-		console.log(socket.handshake.session.user)
+		log.debug(socket.handshake.session.user)
 		if (!socket.handshake.session) return
 		r.table('decks').filter(r.row('owner').eq(socket.handshake.session.user.id)).run(conn, function (err, cursor) {
-			if (err) return console.log (err)
+			if (err) return log.warn.trace(err)
 			cursor.toArray(function (err, result) {
-				if (err) return console.log(err)
+				if (err) return log.warn.trace(err)
 				if (result) {
 					res({success: true, decks: result})
 				}
@@ -102,10 +103,10 @@ module.exports = function (io, socket, r, conn) {
 	//Load cards
 	socket.on('updateDeck', function (data, res) {
 		r.table('decks').filter(r.row('id').eq(data)).run(conn, function (err, cursor) {
-			if (err) return console.log(err)
+			if (err) return log.warn.trace(err)
 			cursor.toArray(function (err, result) {
-				if (err) return console.log(err)
-				if (!result[0]) return console.log(result)
+				if (err) return log.warn.trace(err)
+				if (!result[0]) return log.warn.trace(result)
 				if (result) {
 					var deck = {}
 					deck.lrig = result[0].deck.lrig.map(id => allCards.find(card => card.id === id))
@@ -119,9 +120,9 @@ module.exports = function (io, socket, r, conn) {
 	//Changing Decks
 	socket.on('deckChange', function (data, res) {
 		r.table('decks').filter(r.row('id').eq(data)).run(conn, function (err, cursor) {
-			if (err) return console.log(err)
+			if (err) return log.warn.trace(err)
 			cursor.toArray(function (err, result) {
-				if (err) return console.log(err)
+				if (err) return log.warn.trace(err)
 				if (!result[0]) return //Safety feature
 				if (result) {
 					var deck = {}
@@ -139,7 +140,7 @@ module.exports = function (io, socket, r, conn) {
 			res({success: true})
 		}
 		r.table('decks').get(data).delete().run(conn, function (err) {
-			if (err) return console.log(err)
+			if (err) return log.warn.trace(err)
 			res({success: true})
 		})
 	})
@@ -154,14 +155,14 @@ module.exports = function (io, socket, r, conn) {
 			let tempId = Math.random()
 			res({success: true, deck: newDeck, name: data.name, tempId: tempId})
 		} catch (err) {
-			return console.log(err)
+			return log.warn.trace(err)
 		}
 	})
 
 	//Checks if an already saved deck has unsaved changes
 	socket.on('checkIfSaved', function (data, res) {
 		r.table('decks').get(data.dbDeck).run(conn, function (err, deck) {
-			if (err) return console.log(err)
+			if (err) return log.warn.trace(err)
 			if (deck) {
 				if (data.currentDeck.lrig.length !== deck.deck.lrig.length) {
 					res({success: true, unsaved: true})
@@ -186,9 +187,9 @@ module.exports = function (io, socket, r, conn) {
 				res({success: true, unsaved: false})
 
 				// r.table('decks').filter(r.row('id').eq(data.newDeck)).run(conn, function (err, cursor) {
-				// 	if (err) return console.log(err)
+				// 	if (err) return log.warn.trace(err)
 				// 	cursor.toArray(function (err, result) {
-				// 		if (err) return console.log(err)
+				// 		if (err) return log.warn.trace(err)
 				// 		if (!result[0]) return
 				// 		if (result) {
 				// 			var deck = {}

@@ -1,9 +1,8 @@
-const config = require('./config.js')
+const config = require('./config')
 module.exports = {
+	// Dev mode is determined by root config
 	dev: config.dev,
-	/*
-	** Headers of the page
-	*/
+	// HTML page head
 	head: {
 		title: 'wix-maybe',
 		meta: [
@@ -22,16 +21,13 @@ module.exports = {
 			{ src: 'https://use.fontawesome.com/releases/v5.0.8/js/all.js', defer: true }
 		]
 	},
-	/*
-	** Customize the progress bar color
-	*/
+	// Loading bar color (do we even use this?)
 	loading: { color: '#3B8070' },
-	/*
-	** Build configuration
-	*/
+	// Build settings
 	build: {
 		vendor: ['axios']
 	},
+	// Custom plugins
 	plugins: [
 		{src: '~/plugins/vue-websocket.js', ssr: false}
 	]

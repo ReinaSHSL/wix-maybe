@@ -63,7 +63,6 @@ export default {
 		login () {
 			axios.post('/login', this.loginForm).then(response => {
 				this.$emit('login', response.data)
-				this.$socket.emit('loadDecks')
 			}).catch(err => {
 				if (err.response) {
 					window.alert(err.response.data)
@@ -78,9 +77,6 @@ export default {
 			}).catch(err => {
 				window.alert(err.response.data)
 			})
-		},
-		loadDecks () {
-			this.$socket.emit('loadDecks')
 		},
 	}
 }

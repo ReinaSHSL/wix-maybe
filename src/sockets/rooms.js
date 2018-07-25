@@ -1,14 +1,14 @@
+const log = require('another-logger')('rooms')
 const Collection = require('../structures/Collection.js')
 const Room = require('../structures/Room.js')
-const escapeHTML = require('../util.js').escapeHTML
 
 let rooms = new Collection(Room)
 
 module.exports = function (io, socket, r, conn) {
-	console.log('[connection]')
+	log.ws('[connection]')
 
 	socket.use(function (packet, next) {
-		console.log(`[${packet[0]}]`, packet[1])
+		log.ws(`[${packet[0]}]`, packet[1])
 		socket.handshake.session.reload(function (err) {
 			if (err && err.message !== 'failed to load session') {
 				return next(new Error(err))
@@ -67,7 +67,7 @@ module.exports = function (io, socket, r, conn) {
 		if (room.password && password !== room.password) {
 			return res({error: 'Missing or incorrect password'})
 		}
-		if (!socket.handshake.session.user) return console.log("user isn't defined aaaa")
+		if (!socket.handshake.session.user) return log.warn.trace("user isn't defined aaaa")
 		socket.join(id)
 		room.addMember({
 			id: socket.handshake.session.user.id,
@@ -94,19 +94,19 @@ module.exports = function (io, socket, r, conn) {
 		if (!room) return
 		const userId = socket.handshake.session.user.id
 		if (!deckId) {
-			console.log('uwu')
+			log.debug('uwu')
 			return
 		}
 		r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
-			if (err) return console.log(err)
+			if (err) return log.warn.trace(err)
 			value.toArray(function (err, [deck]) {
-				if (err) return console.log(err)
-				if (!deck) return console.log('Deck not found')
-				console.log(deck)
+				if (err) return log.warn.trace(err)
+				if (!deck) return log.warn.trace('Deck not found')
+				log.debug(deck)
 				room.memberDeck(userId, deck)
 				room.startGame()
-				console.log('=== Started game yo')
-				console.log('Room:\n', room)
+				log.debug('=== Started game yo')
+				log.debug('Room:\n', room)
 
 				// Emit the things to the people
 				const roomSockets = Object.values(io.in(roomId).sockets)
@@ -136,11 +136,11 @@ module.exports = function (io, socket, r, conn) {
 		}
 		io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 		r.table('decks').filter(r.row('owner').eq(userId)).filter(r.row('id').eq(deckId)).run(conn, function (err, value) {
-			if (err) return console.log(err)
+			if (err) return log.warn.trace(err)
 			value.toArray(function (err, [deck]) {
-				if (err) return console.log(err)
-				if (!deck) return console.log('Deck not found')
-				console.log(deck)
+				if (err) return log.warn.trace(err)
+				if (!deck) return log.warn.trace('Deck not found')
+				log.debug(deck)
 				room.memberDeck(userId, deck)
 				io.sockets.in(roomId).emit('roomUsers', roomId, room.memberList)
 			})
@@ -206,12 +206,12 @@ module.exports = function (io, socket, r, conn) {
 	socket.on('disconnect', function () {
 		let currentUser = socket.handshake.session.user
 		if (!currentUser) return // If they weren't logged in, nothing to do
-		console.log('[disconnection]', currentUser)
+		log.ws('[disconnection]', currentUser)
 
 		// Log user out
 		r.table('selectors').get(currentUser.id).update({loggedIn: false}).run(conn, function (err) {
-			if (err) return console.log(err)
-			console.log('Log out')
+			if (err) return log.warn.trace(err)
+			log.debug('Log out')
 		})
 
 		// Leave all rooms
@@ -264,16 +264,16 @@ module.exports = function (io, socket, r, conn) {
 	})
 
 	//shuffling
-	function shuffle () {
-		for (let i in this.gameDeck) {
-			const j = Math.floor(Math.random() * this.gameDeck.length)
-			const temp = this.gameDeck[i]
-			this.gameDeck[i] = this.gameDeck[j]
-			this.gameDeck[j] = temp
-		}
-	}
+	// function shuffle () {
+	// 	for (let i in this.gameDeck) {
+	// 		const j = Math.floor(Math.random() * this.gameDeck.length)
+	// 		const temp = this.gameDeck[i]
+	// 		this.gameDeck[i] = this.gameDeck[j]
+	// 		this.gameDeck[j] = temp
+	// 	}
+	// }
 
 	socket.on('eval', function (data) {
-		console.log(eval(data))
+		log.debug(eval(data))
 	})
 }

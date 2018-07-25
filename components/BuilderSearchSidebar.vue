@@ -82,8 +82,8 @@ export default {
 				inputClass: this.inputClass,
 				checkBurst: this.checkBurst,
 				checkNoBurst: this.checkNoBurst
-			}, results => {
-				this.results = results
+			}, result => {
+				this.results = result.cards
 			})
 		},
 		preview (card) {

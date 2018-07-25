@@ -19,23 +19,19 @@ class Room {
 
 	addMember (member) {
 		member = {id: member.id, username: member.username, ready: member.ready || false}
-		console.log('[addMember]', member, '->|', this.members)
 		this.members.push(member)
 		if (this.members.length === 1) {
-			console.log('Making owner')
 			this.owner = member
 		}
 	}
 
 	removeMember (id) {
-		console.log('[removeMember]', id)
 		const index = this.members.findIndex(u => u.id === id)
 		this.members.splice(index, 1)
 
 		if (id === this.ownerId && this.members.length) {
 			this.owner = this.members[0]
 		}
-		console.log(this.members, this.membersList)
 	}
 
 	memberDeck (id, deck) {

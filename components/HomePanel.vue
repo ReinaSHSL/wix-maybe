@@ -59,14 +59,13 @@ export default {
 			let password
 			if (room.hasPassword) {
 				password = window.prompt('Room password?')
+				if (password == null) return // prompt returns null if cancelled
 			}
-			if (password == null) return // prompt returns null if cancelled
 			this.$socket.emit('joinRoom', {id, password}, ({error, room}) => {
 				if (error) return window.alert(error)
 				this.$parent.joinedRooms.push(room)
 				this.$parent.showRoom(room.id)
 			})
-			this.$socket.emit('loadDecks')
 		},
 		createRoom () {
 			this.$socket.emit('createRoom', this.createRoomForm, ({error, room}) => {
@@ -74,7 +73,6 @@ export default {
 				this.$parent.joinedRooms.push(room)
 				this.$parent.showRoom(room.id)
 			})
-			this.$socket.emit('loadDecks')
 		},
 		isInRoom (roomId) {
 			return this.joinedRooms.find(r => r.id === roomId)
