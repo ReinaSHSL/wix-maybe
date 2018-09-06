@@ -19,3 +19,20 @@ $ yarn dev # or npm run dev
 ```
 
 Production scripts aren't really a thing yet because of a focus on rapid development.
+
+---
+
+nb: this is all reina's fault and she's a wonderful human being
+-geo
+
+this project is ALL THANKS TO GEORGE MY AMAZING BOYFRIEND <3333
+-reina
+
+note i was not her boyfriend when we started this project i am now and she is an infinitely better person than me
+-geo
+
+i'm not an infinitely better person pls. you're the bestest and you know that. i love you <3
+-reina
+
+we may have broken up but there's no reason to remove the memory of a time gone past
+-reina
